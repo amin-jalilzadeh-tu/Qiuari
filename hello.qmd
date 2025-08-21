@@ -1,0 +1,70 @@
+---
+title: "My First Quarto Document"
+author: "Your Name"
+date: today
+format: 
+  html:
+    toc: true
+    code-fold: true
+jupyter: python3
+---
+
+## Introduction
+This is my first Quarto document! Let's explore data with Python.
+
+## Data Analysis
+
+Let's create a simple visualization:
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate sample data
+np.random.seed(42)
+data = pd.DataFrame({
+    'x': range(100),
+    'y': np.cumsum(np.random.randn(100))
+})
+
+# Create plot
+plt.figure(figsize=(10, 6))
+plt.plot(data['x'], data['y'])
+plt.title('Random Walk Example')
+plt.xlabel('Steps')
+plt.ylabel('Position')
+plt.grid(True, alpha=0.3)
+plt.show()
+
+
+### Step 2: Render and Preview
+- Press `Ctrl+Shift+K` (or `Cmd+Shift+K` on Mac) to preview
+- Or click the "Preview" button in the top-right corner
+- VS Code will open a preview pane showing your rendered document
+
+## 📚 Common Quarto Document Types
+
+### 1. **Data Analysis Report**
+```markdown
+---
+title: "Sales Analysis Report"
+format: 
+  html:
+    theme: cosmo
+    toc: true
+    toc-float: true
+  pdf: default
+jupyter: python3
+---
+
+## Executive Summary
+Key findings from our analysis...
+
+## Data Loading
+```{python}
+import pandas as pd
+import plotly.express as px
+
+# Your data analysis code here
+df = pd.read_csv('data.csv')

@@ -1,0 +1,304 @@
+{
+  "neo4j": {
+    "uri": "bolt://localhost:7687",
+    "user": "neo4j",
+    "password": "aminasad",
+    "database": "neo4j"
+  },
+  "paths": {
+    "mimic_data": "mimic_data",
+    "processed_data": "processed_data",
+    "model_checkpoints": "checkpoints",
+    "logs": "logs",
+    "results": "results",
+    "metrics_db": "metrics.db"
+  },
+  "graph": {
+    "node_types": [
+      "Building",
+      "MV_Transformer",
+      "LV_Network",
+      "Substation"
+    ],
+    "edge_types": [
+      "CONNECTED_TO",
+      "ADJACENT_TO",
+      "SHARES_TRANSFORMER",
+      "IN_NETWORK",
+      "COMPLEMENTS"
+    ],
+    "spatial": {
+      "distance_threshold": 500,
+      "distance_sigma": 100
+    },
+    "temporal": {
+      "correlation_threshold": 0.3,
+      "correlation_window": 96
+    }
+  },
+  "model": {
+    "type": "homo",
+    "input_dim": 14,
+    "output_dim": 10,
+    "hidden_dim": 128,
+    "num_layers": 3,
+    "dropout": 0.2,
+    "conv_type": "sage",
+    "input": {
+      "building_features": 45,
+      "transformer_features": 12,
+      "edge_features": 8,
+      "embedding_dim": 32
+    },
+    "hidden": {
+      "gnn_layers": 3,
+      "hidden_dim": 128,
+      "attention_heads": 8,
+      "dropout": 0.2,
+      "activation": "relu"
+    },
+    "temporal": {
+      "sequence_length": 96,
+      "gru_hidden": 64,
+      "gru_layers": 2
+    },
+    "physics": {
+      "enforce_kirchhoff": true,
+      "voltage_tolerance": 0.05,
+      "power_factor_min": 0.85
+    }
+  },
+  "training": {
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "epochs": 200,
+    "early_stopping_patience": 20,
+    "task_weights": {
+      "clustering": 1.0,
+      "solar": 0.8,
+      "retrofit": 0.7,
+      "thermal": 0.6,
+      "electrification": 0.7,
+      "battery": 0.8,
+      "p2p_trading": 0.6,
+      "congestion": 0.9
+    },
+    "optimizer": "adam",
+    "scheduler": "cosine",
+    "gradient_clip": 1.0,
+    "validation_split": 0.15,
+    "test_split": 0.15,
+    "cross_validation_folds": 5
+  },
+  "inference": {
+    "confidence_threshold": 0.7,
+    "max_recommendations": 10,
+    "ensemble_models": 3,
+    "uncertainty_estimation": true
+  },
+  "logging": {
+    "level": "INFO",
+    "tensorboard": true,
+    "wandb": {
+      "enabled": false,
+      "project": "energy-gnn",
+      "entity": "your-team"
+    },
+    "metrics": [
+      "loss",
+      "accuracy",
+      "peak_reduction",
+      "self_sufficiency",
+      "modularity",
+      "intervention_roi"
+    ]
+  },
+  "hardware": {
+    "device": "cuda",
+    "num_workers": 4,
+    "pin_memory": true,
+    "mixed_precision": false
+  },
+  "tasks": {
+    "clustering": {
+      "enabled": true,
+      "min_cluster_size": 3,
+      "max_cluster_size": 20,
+      "num_clusters": "auto",
+      "dmon": {
+        "collapse_regularization": 0.1,
+        "modularity_weight": 1.0,
+        "entropy_regularization": 0.5
+      },
+      "complementarity": {
+        "correlation_method": "pearson",
+        "negative_correlation_bonus": 2.0,
+        "temporal_alignment_window": 4
+      },
+      "constraints": {
+        "respect_transformer_boundaries": true,
+        "max_electrical_distance": 3,
+        "min_diversity_index": 0.3
+      }
+    },
+    "solar_optimization": {
+      "enabled": true,
+      "panel_efficiency": 0.2,
+      "degradation_rate": 0.005,
+      "system_losses": 0.14,
+      "scoring": {
+        "generation_potential": 0.3,
+        "self_consumption": 0.3,
+        "grid_relief": 0.2,
+        "economic_viability": 0.2
+      },
+      "min_roof_area": 20,
+      "max_capacity_per_building": 100,
+      "shading_threshold": 0.7
+    },
+    "retrofit": {
+      "enabled": true,
+      "age_categories": {
+        "pre_1945": 1.5,
+        "19451975": 1.3,
+        "19751995": 1.1,
+        "19952010": 0.9,
+        "post_2010": 0.5
+      },
+      "performance": {
+        "target_energy_label": "B",
+        "max_heating_demand": 50,
+        "insulation_u_value_target": 0.3
+      },
+      "economics": {
+        "investment_cap": 50000,
+        "payback_period_max": 15,
+        "energy_price_escalation": 0.03
+      }
+    },
+    "thermal_sharing": {
+      "enabled": true,
+      "heat_transfer": {
+        "wall_u_value": 2.0,
+        "temperature_difference_min": 5,
+        "sharing_efficiency": 0.85
+      },
+      "network_types": [
+        "district_heating",
+        "heat_recovery",
+        "thermal_storage_sharing"
+      ],
+      "feasibility": {
+        "min_shared_wall": 5,
+        "max_pipe_distance": 100,
+        "min_utilization_hours": 2000
+      }
+    },
+    "electrification": {
+      "enabled": true,
+      "heat_pump": {
+        "cop_air_source": 3.0,
+        "cop_ground_source": 4.0,
+        "cop_degradation_temp": 0.02
+      },
+      "electrical": {
+        "min_service_capacity": 100,
+        "power_factor": 0.95,
+        "startup_current_multiplier": 3
+      },
+      "readiness_criteria": {
+        "immediate": 0.9,
+        "conditional": 0.6,
+        "major_upgrade": 0.3
+      }
+    },
+    "battery_placement": {
+      "enabled": true,
+      "battery_specs": {
+        "efficiency_roundtrip": 0.9,
+        "depth_of_discharge": 0.85,
+        "cycles_lifetime": 6000,
+        "degradation_rate": 0.02
+      },
+      "use_cases": {
+        "peak_shaving": 0.3,
+        "solar_storage": 0.3,
+        "backup_power": 0.2,
+        "grid_services": 0.2
+      },
+      "sizing": {
+        "min_capacity": 5,
+        "max_capacity": 500,
+        "c_rate_max": 1.0,
+        "hours_autonomy_min": 2
+      }
+    },
+    "p2p_trading": {
+      "enabled": true,
+      "trading": {
+        "min_trade_volume": 1,
+        "max_trade_distance": 3,
+        "price_premium_local": 0.02
+      },
+      "matching": {
+        "correlation_threshold": -0.3,
+        "min_overlap_hours": 4,
+        "reliability_score_min": 0.8
+      },
+      "settlement": {
+        "interval": 15,
+        "blockchain_enabled": false,
+        "smart_contract_address": null
+      }
+    },
+    "congestion_prediction": {
+      "enabled": true,
+      "horizons": {
+        "short_term": 24,
+        "medium_term": 168,
+        "long_term": 8760
+      },
+      "growth_rates": {
+        "base_load": 0.02,
+        "ev_adoption": 0.15,
+        "heat_pump_adoption": 0.1,
+        "solar_adoption": 0.12
+      },
+      "alerts": {
+        "yellow": 0.8,
+        "orange": 0.9,
+        "red": 0.95
+      },
+      "mitigation": {
+        "demand_response": true,
+        "dynamic_pricing": true,
+        "curtailment": false,
+        "grid_upgrade_threshold": 0.95
+      }
+    },
+    "global": {
+      "task_priority": [
+        "congestion_prediction",
+        "clustering",
+        "solar_optimization",
+        "battery_placement",
+        "electrification",
+        "retrofit",
+        "thermal_sharing",
+        "p2p_trading"
+      ],
+      "validation": {
+        "physics_checks": true,
+        "economic_viability": true,
+        "social_acceptance": false
+      },
+      "output": {
+        "save_embeddings": true,
+        "save_attention_weights": true,
+        "generate_explanations": true,
+        "visualization": true
+      }
+    }
+  }
+}

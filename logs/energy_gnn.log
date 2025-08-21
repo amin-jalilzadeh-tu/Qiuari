@@ -1,0 +1,1171 @@
+2025-08-15 00:28:08,074 - energy_gnn - INFO - ==================================================
+2025-08-15 00:28:08,075 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:28:08,075 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:28:30,056 - energy_gnn - INFO - ==================================================
+2025-08-15 00:28:30,056 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:28:30,057 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:28:30,083 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:28:30,128 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:28:30,128 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:36:32,593 - energy_gnn - INFO - ==================================================
+2025-08-15 00:36:32,594 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:36:32,595 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:36:32,598 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:36:32,612 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:36:32,613 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:38:42,170 - energy_gnn - INFO - ==================================================
+2025-08-15 00:38:42,170 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:38:42,171 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:38:42,172 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:38:42,172 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:38:42,173 - energy_gnn - ERROR - Failed to connect to KG: KGConnector.__init__() got an unexpected keyword argument 'uri'
+2025-08-15 00:38:42,173 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:38:42,174 - energy_gnn - INFO - Loading data from files...
+2025-08-15 00:38:42,174 - energy_gnn - ERROR - System error: 'EnergyDataLoader' object has no attribute 'load_all_data'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 175, in prepare_data
+    graph_data = self.data_loader.load_all_data()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnergyDataLoader' object has no attribute 'load_all_data'
+2025-08-15 00:38:42,175 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:38:42,190 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:44:12,837 - energy_gnn - INFO - ==================================================
+2025-08-15 00:44:12,838 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:44:12,838 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:44:12,840 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:44:12,840 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:44:12,840 - energy_gnn - ERROR - Failed to connect to KG: KGConnector.__init__() got an unexpected keyword argument 'uri'
+2025-08-15 00:44:12,841 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:44:12,841 - energy_gnn - INFO - Loading data from files...
+2025-08-15 00:44:12,842 - energy_gnn - ERROR - System error: 'EnergyDataLoader' object has no attribute 'load_all_data'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 175, in prepare_data
+    graph_data = self.data_loader.load_all_data()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnergyDataLoader' object has no attribute 'load_all_data'
+2025-08-15 00:44:12,843 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:44:12,848 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:48:12,931 - energy_gnn - INFO - ==================================================
+2025-08-15 00:48:12,932 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:48:12,932 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:48:12,934 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:48:12,934 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:48:12,935 - energy_gnn - ERROR - Failed to connect to KG: 'KGConnector' object has no attribute 'get_statistics'
+2025-08-15 00:48:12,936 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:48:12,936 - energy_gnn - INFO - Loading data from files...
+2025-08-15 00:48:13,357 - energy_gnn - ERROR - System error: Parent directory processed_data does not exist.
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 178, in prepare_data
+    torch.save(graph_data, graph_file)
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 849, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 716, in _open_zipfile_writer
+    return container(name_or_buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 687, in __init__
+    super().__init__(torch._C.PyTorchFileWriter(self.name))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Parent directory processed_data does not exist.
+2025-08-15 00:48:13,380 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:50:05,353 - energy_gnn - INFO - ==================================================
+2025-08-15 00:50:05,353 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:50:05,353 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:50:05,356 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:50:05,356 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:50:05,357 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:50:05,357 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:50:05,358 - energy_gnn - INFO - Loading data from files...
+2025-08-15 00:50:05,436 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 00:50:05,436 - energy_gnn - ERROR - System error: 'nodes'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 184, in prepare_data
+    graph_data.num_nodes if hasattr(graph_data, 'num_nodes') else len(graph_data['nodes'])
+                                                                      ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 00:50:05,437 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:50:05,442 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:52:16,797 - energy_gnn - INFO - ==================================================
+2025-08-15 00:52:16,797 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:52:16,798 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:52:16,800 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:52:16,800 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:52:16,800 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:52:16,801 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:52:16,801 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:52:16,860 - energy_gnn - ERROR - System error: 'nodes'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 184, in prepare_data
+    graph_data.num_nodes if hasattr(graph_data, 'num_nodes') else len(graph_data['nodes'])
+                                                                      ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 00:52:16,861 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:52:16,866 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:53:01,018 - energy_gnn - INFO - ==================================================
+2025-08-15 00:53:01,019 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:53:01,019 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:53:01,022 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:53:01,022 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:53:01,022 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:53:01,023 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:53:01,023 - energy_gnn - INFO - Loading data from files...
+2025-08-15 00:53:01,131 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 00:53:01,131 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:53:01,132 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:53:01,134 - energy_gnn - ERROR - System error: 'type'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 221, in train_model
+    model_type=self.config['model']['type'],
+               ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'type'
+2025-08-15 00:53:01,135 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:53:01,139 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:53:26,596 - energy_gnn - INFO - ==================================================
+2025-08-15 00:53:26,596 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:53:26,596 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:53:26,598 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:53:26,598 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:53:26,599 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:53:26,599 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:53:26,599 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:53:26,684 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:53:26,684 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:53:26,684 - energy_gnn - ERROR - System error: Unknown model type: heterogeneous
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 220, in train_model
+    self.model = create_gnn_model(
+                 ^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 473, in create_gnn_model
+    raise ValueError(f"Unknown model type: {model_type}")
+ValueError: Unknown model type: heterogeneous
+2025-08-15 00:53:26,686 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:53:26,692 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:53:56,321 - energy_gnn - INFO - ==================================================
+2025-08-15 00:53:56,321 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:53:56,322 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:53:56,326 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:53:56,326 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:53:56,327 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:53:56,327 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:53:56,328 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:53:56,355 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:53:56,356 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:53:56,357 - energy_gnn - ERROR - System error: 'input_dim'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 220, in train_model
+    self.model = create_gnn_model(
+                 ^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 450, in create_gnn_model
+    input_dim=config['input_dim'],
+              ~~~~~~^^^^^^^^^^^^^
+KeyError: 'input_dim'
+2025-08-15 00:53:56,358 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:53:56,364 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:54:38,314 - energy_gnn - INFO - ==================================================
+2025-08-15 00:54:38,314 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:54:38,314 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:54:38,316 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:54:38,317 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:54:38,317 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:54:38,317 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:54:38,318 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:54:38,346 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:54:38,347 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:54:38,629 - energy_gnn - INFO - Training model...
+2025-08-15 00:54:38,655 - energy_gnn - ERROR - System error: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 227, in _train_epoch
+    outputs = self.model(batch)
+              ^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+2025-08-15 00:54:38,675 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:54:38,681 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:55:13,812 - energy_gnn - INFO - ==================================================
+2025-08-15 00:55:13,813 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:55:13,813 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:55:13,818 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:55:13,818 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:55:13,818 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:55:13,819 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:55:13,819 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:55:13,846 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:55:13,847 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:55:13,975 - energy_gnn - INFO - Training model...
+2025-08-15 00:55:13,980 - energy_gnn - ERROR - System error: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 227, in _train_epoch
+    outputs = self.model(batch)
+              ^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+2025-08-15 00:55:13,982 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:55:13,989 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:57:14,468 - energy_gnn - INFO - ==================================================
+2025-08-15 00:57:14,468 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:57:14,468 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:57:14,470 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:57:14,471 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:57:14,471 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:57:14,471 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:57:14,471 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:57:14,494 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:57:14,495 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:57:14,675 - energy_gnn - INFO - Training model...
+2025-08-15 00:57:15,011 - energy_gnn - ERROR - System error: Tensor.__contains__ only supports Tensor or scalar, but you passed in a <class 'str'>.
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 234, in _train_epoch
+    losses = self.loss_fn(outputs, batch, self.task_weights)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 85, in forward
+    physics_loss = self.physics_loss(outputs, batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 428, in forward
+    if 'power_predictions' in outputs:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\_tensor.py", line 1180, in __contains__
+    raise RuntimeError(
+RuntimeError: Tensor.__contains__ only supports Tensor or scalar, but you passed in a <class 'str'>.
+2025-08-15 00:57:15,036 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:57:15,042 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:59:03,235 - energy_gnn - INFO - ==================================================
+2025-08-15 00:59:03,235 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:59:03,236 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:59:03,238 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:59:03,239 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:59:03,239 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:59:03,240 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:59:03,240 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:59:03,265 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:59:03,266 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:59:03,396 - energy_gnn - INFO - Training model...
+2025-08-15 00:59:03,531 - energy_gnn - ERROR - System error: 'float' object has no attribute 'backward'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 244, in _train_epoch
+    total_batch_loss.backward()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'float' object has no attribute 'backward'
+2025-08-15 00:59:03,533 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:59:03,538 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:59:34,076 - energy_gnn - INFO - ==================================================
+2025-08-15 00:59:34,077 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:59:34,077 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:59:34,079 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:59:34,080 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:59:34,080 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:59:34,081 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:59:34,081 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:59:34,106 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:59:34,107 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:59:34,384 - energy_gnn - INFO - Training model...
+2025-08-15 00:59:34,506 - energy_gnn - ERROR - System error: a leaf Variable that requires grad is being used in an in-place operation.
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 238, in _train_epoch
+    losses = self.loss_fn(outputs, batch, self.task_weights)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 87, in forward
+    total_loss += physics_loss * 0.1  # Lower weight for physics constraints
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: a leaf Variable that requires grad is being used in an in-place operation.
+2025-08-15 00:59:34,509 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:59:34,514 - energy_gnn - INFO - Shutdown complete
+2025-08-15 00:59:55,893 - energy_gnn - INFO - ==================================================
+2025-08-15 00:59:55,894 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 00:59:55,894 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 00:59:55,896 - energy_gnn - INFO - System initialization complete
+2025-08-15 00:59:55,896 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 00:59:55,896 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 00:59:55,897 - energy_gnn - INFO - Preparing data...
+2025-08-15 00:59:55,897 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 00:59:55,921 - energy_gnn - INFO - Starting model training...
+2025-08-15 00:59:55,922 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 00:59:56,056 - energy_gnn - INFO - Training model...
+2025-08-15 00:59:56,181 - energy_gnn - ERROR - System error: element 0 of tensors does not require grad and does not have a grad_fn
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 244, in _train_epoch
+    total_batch_loss.backward()
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\autograd\graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn
+2025-08-15 00:59:56,211 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 00:59:56,216 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:00:27,747 - energy_gnn - INFO - ==================================================
+2025-08-15 01:00:27,748 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:00:27,748 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:00:27,751 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:00:27,751 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:00:27,752 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 01:00:27,752 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:00:27,752 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 01:00:27,778 - energy_gnn - INFO - Starting model training...
+2025-08-15 01:00:27,779 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 01:00:27,975 - energy_gnn - INFO - Training model...
+2025-08-15 01:00:28,898 - energy_gnn - INFO - Training completed
+2025-08-15 01:00:28,898 - energy_gnn - INFO - Final validation loss: 0.0254
+2025-08-15 01:00:28,900 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:00:28,916 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:05:14,873 - energy_gnn - INFO - ==================================================
+2025-08-15 01:05:14,874 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:05:14,874 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:05:14,876 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:05:14,876 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:05:14,877 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 01:05:14,877 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:05:14,878 - energy_gnn - INFO - Loading data from files...
+2025-08-15 01:05:15,100 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 01:05:15,100 - energy_gnn - INFO - Starting model training...
+2025-08-15 01:05:15,101 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 01:05:15,413 - energy_gnn - INFO - Training model...
+2025-08-15 01:05:19,237 - energy_gnn - INFO - Training completed
+2025-08-15 01:05:19,238 - energy_gnn - INFO - Final validation loss: 0.0014
+2025-08-15 01:05:19,238 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:05:19,250 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:08:03,385 - energy_gnn - INFO - ==================================================
+2025-08-15 01:08:03,386 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:08:03,386 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:08:03,398 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:08:03,398 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:08:03,399 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 01:08:03,399 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:08:03,399 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 01:08:03,458 - energy_gnn - INFO - Starting model training...
+2025-08-15 01:08:03,459 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 01:08:03,615 - energy_gnn - INFO - Training model...
+2025-08-15 01:08:08,075 - energy_gnn - INFO - Training completed
+2025-08-15 01:08:08,076 - energy_gnn - INFO - Final validation loss: 0.0016
+2025-08-15 01:08:08,077 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:08:08,097 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:12:44,054 - energy_gnn - INFO - ==================================================
+2025-08-15 01:12:44,055 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:12:44,055 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:12:44,057 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:12:44,058 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:12:44,058 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+2025-08-15 01:12:44,059 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:12:44,059 - energy_gnn - INFO - Loading data from files...
+2025-08-15 01:12:44,172 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 01:12:44,172 - energy_gnn - INFO - Starting model training...
+2025-08-15 01:12:44,174 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 01:12:44,329 - energy_gnn - INFO - Training model...
+2025-08-15 01:12:48,510 - energy_gnn - INFO - Training completed
+2025-08-15 01:12:48,510 - energy_gnn - INFO - Final validation loss: 0.0015
+2025-08-15 01:12:48,512 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:12:48,523 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:27:58,035 - energy_gnn - INFO - ==================================================
+2025-08-15 01:27:58,036 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:27:58,036 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:27:58,039 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:27:58,039 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:27:58,039 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 01:27:58,040 - energy_gnn - INFO - Processing query: Which buildings have the highest energy consumption?
+2025-08-15 01:27:58,042 - energy_gnn - INFO - Detected task: unknown (confidence: 0.00)
+2025-08-15 01:27:58,043 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 01:27:58,112 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 01:27:58,227 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:27:58,227 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 01:27:58,393 - energy_gnn - ERROR - System error: 'InferenceEngine' object has no attribute 'model_path'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 327, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 143, in predict
+    results['model_path'] = str(self.model_path)
+                                ^^^^^^^^^^^^^^^
+AttributeError: 'InferenceEngine' object has no attribute 'model_path'
+2025-08-15 01:27:58,395 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:27:58,403 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:29:32,014 - energy_gnn - INFO - ==================================================
+2025-08-15 01:29:32,014 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:29:32,015 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:29:32,018 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:29:32,019 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:29:32,019 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 01:29:32,020 - energy_gnn - INFO - Processing query: Show energy consumption patterns
+2025-08-15 01:29:32,022 - energy_gnn - INFO - Detected task: unknown (confidence: 0.00)
+2025-08-15 01:29:32,023 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 01:29:32,093 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 01:29:32,199 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:29:32,200 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 01:29:32,352 - energy_gnn - INFO - Starting unknown task
+2025-08-15 01:29:32,352 - energy_gnn - WARNING - Task unknown not implemented, returning raw outputs
+2025-08-15 01:29:32,353 - energy_gnn - INFO - Completed unknown task
+2025-08-15 01:29:32,354 - energy_gnn - ERROR - Failed unknown task
+2025-08-15 01:29:32,355 - energy_gnn - ERROR - Task unknown failed: 'penetration'
+2025-08-15 01:29:32,356 - energy_gnn - ERROR - System error: 'penetration'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 398, in run_task
+    validation = validator.validate(results, model_outputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 502, in validate
+    'physics': self.physics_validator.validate(predictions, graph_data),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 89, in validate
+    if renewable_results['penetration'] > 0.5:
+       ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'penetration'
+2025-08-15 01:29:32,357 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:29:32,365 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:29:51,466 - energy_gnn - INFO - ==================================================
+2025-08-15 01:29:51,466 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:29:51,467 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:29:51,470 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:29:51,471 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 01:29:51,471 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 01:29:51,472 - energy_gnn - INFO - Preparing data...
+2025-08-15 01:29:51,472 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 01:29:51,500 - energy_gnn - ERROR - System error: 'NoneType' object has no attribute 'predict'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 639, in main
+    outputs = system.inference_engine.predict(test_data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'predict'
+2025-08-15 01:29:51,502 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:29:51,507 - energy_gnn - INFO - Shutdown complete
+2025-08-15 01:30:22,508 - energy_gnn - INFO - ==================================================
+2025-08-15 01:30:22,509 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 01:30:22,509 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 01:30:22,511 - energy_gnn - INFO - System initialization complete
+2025-08-15 01:30:22,516 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 01:30:22,516 - energy_gnn - INFO - Shutdown complete
+2025-08-15 11:58:35,621 - energy_gnn - INFO - ==================================================
+2025-08-15 11:58:35,623 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 11:58:35,624 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 11:58:35,645 - energy_gnn - INFO - System initialization complete
+2025-08-15 11:58:35,646 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 11:58:35,647 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 11:58:35,648 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 11:58:35,650 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 11:58:35,651 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 11:58:35,805 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 11:58:35,967 - energy_gnn - INFO - Preparing data...
+2025-08-15 11:58:35,968 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 11:58:36,323 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 11:58:36,323 - energy_gnn - ERROR - Failed solar_optimization task
+2025-08-15 11:58:36,324 - energy_gnn - ERROR - Task solar_optimization failed: 'nodes'
+2025-08-15 11:58:36,324 - energy_gnn - ERROR - System error: 'nodes'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 384, in run_task
+    results = task.run(model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 60, in run
+    x = self._prepare_features(graph_data)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 96, in _prepare_features
+    buildings = graph_data['nodes']['buildings']
+                ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 11:58:36,337 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 11:58:36,351 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:02:37,244 - energy_gnn - INFO - ==================================================
+2025-08-15 12:02:37,246 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:02:37,246 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:02:37,261 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:02:37,261 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:02:37,262 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:02:37,263 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:02:37,267 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:02:37,268 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:02:37,365 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:02:37,541 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:02:37,542 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:02:38,091 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:02:38,105 - energy_gnn - ERROR - Failed solar_optimization task
+2025-08-15 12:02:38,106 - energy_gnn - ERROR - Task solar_optimization failed: 'nodes'
+2025-08-15 12:02:38,107 - energy_gnn - ERROR - System error: 'nodes'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 384, in run_task
+    results = task.run(model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 83, in run
+    solar_analysis = self._analyze_solar_potential(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 163, in _analyze_solar_potential
+    buildings = graph_data['nodes']['buildings'].copy()
+                ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 12:02:38,109 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:02:38,135 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:03:33,249 - energy_gnn - INFO - ==================================================
+2025-08-15 12:03:33,249 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:03:33,250 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:03:33,252 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:03:33,252 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:03:33,252 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:03:33,253 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:03:33,255 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:03:33,256 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:03:33,307 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:03:33,433 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:03:33,434 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:03:33,591 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:03:33,686 - energy_gnn - ERROR - Failed solar_optimization task
+2025-08-15 12:03:33,687 - energy_gnn - ERROR - Task solar_optimization failed: Cannot mask with non-boolean array containing NA / NaN values
+2025-08-15 12:03:33,688 - energy_gnn - ERROR - System error: Cannot mask with non-boolean array containing NA / NaN values
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 605, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 386, in run_task
+    results = task.run(graph_data if graph_data is not None else model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 96, in run
+    recommendations = self._generate_recommendations(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 325, in _generate_recommendations
+    constrained = feasible_installations[feasible_installations.get('grid_constraint_applied', False)]
+                  ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4092, in __getitem__
+    if com.is_bool_indexer(key):
+       ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\common.py", line 136, in is_bool_indexer
+    raise ValueError(na_msg)
+ValueError: Cannot mask with non-boolean array containing NA / NaN values
+2025-08-15 12:03:33,729 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:03:33,737 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:03:59,564 - energy_gnn - INFO - ==================================================
+2025-08-15 12:03:59,564 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:03:59,564 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:03:59,567 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:03:59,567 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:03:59,567 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:03:59,567 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:03:59,569 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:03:59,570 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:03:59,623 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:03:59,743 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:03:59,743 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:03:59,894 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:03:59,967 - energy_gnn - INFO - Completed solar_optimization task
+2025-08-15 12:03:59,967 - energy_gnn - ERROR - Failed solar_optimization task
+2025-08-15 12:03:59,968 - energy_gnn - ERROR - Task solar_optimization failed: 'penetration'
+2025-08-15 12:03:59,968 - energy_gnn - ERROR - System error: 'penetration'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 605, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 400, in run_task
+    validation = validator.validate(results, model_outputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 502, in validate
+    'physics': self.physics_validator.validate(predictions, graph_data),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 89, in validate
+    if renewable_results['penetration'] > 0.5:
+       ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'penetration'
+2025-08-15 12:03:59,970 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:03:59,976 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:05:04,257 - energy_gnn - INFO - ==================================================
+2025-08-15 12:05:04,259 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:05:04,259 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:05:04,260 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:05:04,260 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:05:04,261 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:05:04,261 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:05:04,263 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:05:04,263 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:05:04,311 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:05:04,435 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:05:04,435 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:05:04,576 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:05:04,640 - energy_gnn - INFO - Completed solar_optimization task
+2025-08-15 12:05:04,640 - energy_gnn - INFO - Updating Knowledge Graph...
+2025-08-15 12:05:04,641 - energy_gnn - INFO - KG updated: {'nodes_created': 0, 'nodes_updated': 0, 'relationships_created': 0, 'relationships_updated': 0, 'properties_updated': 0}
+2025-08-15 12:05:04,641 - energy_gnn - INFO - Creating visualizations...
+2025-08-15 12:05:04,944 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+2025-08-15 12:05:05,018 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:05:05,037 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:06:30,988 - energy_gnn - INFO - ==================================================
+2025-08-15 12:06:30,988 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:06:30,989 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:06:30,991 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:06:30,991 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:06:30,992 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:06:30,992 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:06:30,995 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:06:30,995 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:06:31,045 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:06:31,161 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:06:31,162 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:06:31,297 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:06:31,364 - energy_gnn - INFO - Completed solar_optimization task
+2025-08-15 12:06:31,365 - energy_gnn - INFO - Updating Knowledge Graph...
+2025-08-15 12:06:31,366 - energy_gnn - INFO - KG updated: {'nodes_created': 0, 'nodes_updated': 0, 'relationships_created': 0, 'relationships_updated': 0, 'properties_updated': 0}
+2025-08-15 12:06:31,366 - energy_gnn - INFO - Creating visualizations...
+2025-08-15 12:06:31,471 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+2025-08-15 12:06:31,519 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:06:31,544 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:17:21,983 - energy_gnn - INFO - ==================================================
+2025-08-15 12:17:21,984 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:17:21,985 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:17:22,004 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:17:22,005 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:17:22,005 - energy_gnn - INFO - Connected to KG with 0 nodes
+2025-08-15 12:17:22,006 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:17:22,011 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:17:22,012 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:17:22,124 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:17:22,332 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:17:22,333 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:17:22,336 - energy_gnn - ERROR - System error: "None of [Index(['area', 'height', 'roof_area', 'suitable_roof', 'peak_demand',\n       'avg_demand', 'load_factor', 'variability', 'x', 'y'],\n      dtype='object')] are in the [columns]"
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 628, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 346, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 190, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 146, in _process_building_nodes
+    num_data = buildings[numerical_features].fillna(0).values
+               ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6249, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['area', 'height', 'roof_area', 'suitable_roof', 'peak_demand',\n       'avg_demand', 'load_factor', 'variability', 'x', 'y'],\n      dtype='object')] are in the [columns]"
+2025-08-15 12:17:22,346 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:17:22,363 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:23:20,614 - energy_gnn - INFO - ==================================================
+2025-08-15 12:23:20,614 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:23:20,614 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:23:20,617 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:23:20,617 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:23:22,951 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:23:22,951 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:23:22,954 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:23:22,954 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:23:22,994 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:23:23,105 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:23:23,106 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:23:23,854 - energy_gnn - ERROR - System error: 'id'
+Traceback (most recent call last):
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 628, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 346, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 190, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 123, in _process_building_nodes
+    node_mapping = {row['id']: idx for idx, row in buildings.iterrows()}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 123, in <dictcomp>
+    node_mapping = {row['id']: idx for idx, row in buildings.iterrows()}
+                    ~~~^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\series.py", line 1121, in __getitem__
+    return self._get_value(key)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\series.py", line 1237, in _get_value
+    loc = self.index.get_loc(label)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'id'
+2025-08-15 12:23:23,860 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:23:23,867 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:23:53,401 - energy_gnn - INFO - ==================================================
+2025-08-15 12:23:53,402 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:23:53,402 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:23:53,404 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:23:53,404 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:23:55,517 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:23:55,517 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:23:55,521 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:23:55,521 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:23:55,570 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:23:55,657 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:23:55,657 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:23:56,391 - energy_gnn - ERROR - System error: "['has_battery', 'has_heat_pump'] not in index"
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 632, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 350, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 194, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 165, in _process_building_nodes
+    bin_data = buildings[binary_features].fillna(0).astype(float).values
+               ~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6252, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['has_battery', 'has_heat_pump'] not in index"
+2025-08-15 12:23:56,400 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:23:56,415 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:24:40,158 - energy_gnn - INFO - ==================================================
+2025-08-15 12:24:40,159 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:24:40,159 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:24:40,161 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:24:40,161 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:24:42,273 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:24:42,273 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:24:42,277 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:24:42,278 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:24:42,332 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:24:42,454 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:24:42,454 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:24:42,647 - energy_gnn - ERROR - System error: 'building'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 352, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 196, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 92, in build_homogeneous_graph
+    edge_index = self._build_combined_edge_index()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 346, in _build_combined_edge_index
+    n = len(self.node_mappings['building'])
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'building'
+2025-08-15 12:24:42,649 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:24:42,656 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:25:18,489 - energy_gnn - INFO - ==================================================
+2025-08-15 12:25:18,490 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:25:18,491 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:25:18,493 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:25:18,493 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:25:20,598 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:25:20,599 - energy_gnn - INFO - Processing query: Which buildings don't have solar panels but should?
+2025-08-15 12:25:20,601 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:25:20,601 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:25:20,659 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:25:20,768 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:25:20,769 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:25:21,035 - energy_gnn - ERROR - System error: 'temporal'
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 352, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 196, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 109, in build_homogeneous_graph
+    if 'energy_profiles' in self.data['temporal']:
+                            ~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'temporal'
+2025-08-15 12:25:21,038 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:25:21,044 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:25:42,365 - energy_gnn - INFO - ==================================================
+2025-08-15 12:25:42,365 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:25:42,365 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:25:42,368 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:25:42,368 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:25:44,527 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:25:44,528 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:25:44,530 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:25:44,531 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:25:44,586 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:25:44,718 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:25:44,719 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:25:44,763 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 12:25:44,779 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 356, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 132, in predict
+    outputs = self._run_task(processed_data, task)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 178, in _run_task
+    embeddings = self.model(data.x, data.edge_index)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:25:44,825 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:25:44,832 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:26:02,742 - energy_gnn - INFO - ==================================================
+2025-08-15 12:26:02,743 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:26:02,744 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:26:02,757 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:26:02,758 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:26:04,847 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:26:04,847 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:26:04,850 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:26:04,851 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:26:04,990 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:26:05,155 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:26:05,156 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:26:05,221 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 356, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 132, in predict
+    outputs = self._run_task(processed_data, task)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 178, in _run_task
+    embeddings = self.model(data.x, data.edge_index)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:26:05,230 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:26:05,252 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:34:21,383 - energy_gnn - INFO - ==================================================
+2025-08-15 12:34:21,385 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:34:21,385 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:34:21,393 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:34:21,393 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:34:23,479 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:34:23,479 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:34:23,480 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:34:23,547 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 12:34:23,547 - energy_gnn - INFO - Starting model training...
+2025-08-15 12:34:23,548 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 12:34:23,808 - energy_gnn - INFO - Training model...
+2025-08-15 12:34:23,858 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 625, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 283, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 229, in _train_epoch
+    outputs = self.model(batch.x, batch.edge_index)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:34:23,863 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:34:23,873 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:36:20,878 - energy_gnn - INFO - ==================================================
+2025-08-15 12:36:20,879 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:36:20,879 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:36:20,881 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:36:20,882 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:36:23,005 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:36:23,006 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:36:23,006 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:36:23,009 - energy_gnn - INFO - Starting model training...
+2025-08-15 12:36:23,010 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 12:36:23,168 - energy_gnn - INFO - Training model...
+2025-08-15 12:36:23,967 - energy_gnn - ERROR - System error: [Errno 22] Invalid argument
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 625, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 283, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 265, in _train_epoch
+    pbar.set_postfix({
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1431, in set_postfix
+    self.refresh()
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1347, in refresh
+    self.display()
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 459, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 452, in fp_write
+    fp.write(str(s))
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\utils.py", line 196, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-08-15 12:36:24,001 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:36:24,008 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:36:42,454 - energy_gnn - INFO - ==================================================
+2025-08-15 12:36:42,454 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:36:42,455 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:36:42,457 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:36:42,457 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:36:44,578 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:36:44,579 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:36:44,580 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:36:44,589 - energy_gnn - INFO - Starting model training...
+2025-08-15 12:36:44,591 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 12:36:44,775 - energy_gnn - INFO - Training model...
+2025-08-15 12:36:49,752 - energy_gnn - INFO - Training completed
+2025-08-15 12:36:49,753 - energy_gnn - INFO - Final validation loss: 0.0012
+2025-08-15 12:36:49,753 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:36:49,768 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:37:10,699 - energy_gnn - INFO - ==================================================
+2025-08-15 12:37:10,699 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:37:10,700 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:37:10,703 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:37:10,704 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:37:13,026 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:37:13,027 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 12:37:13,032 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 12:37:13,032 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 12:37:13,103 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 12:37:13,203 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:37:13,203 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 12:37:13,321 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 12:37:13,437 - energy_gnn - INFO - Completed solar_optimization task
+2025-08-15 12:37:13,438 - energy_gnn - INFO - Updating Knowledge Graph...
+2025-08-15 12:37:13,438 - energy_gnn - INFO - KG updated: {'nodes_created': 0, 'nodes_updated': 0, 'relationships_created': 0, 'relationships_updated': 0, 'properties_updated': 0}
+2025-08-15 12:37:13,439 - energy_gnn - INFO - Creating visualizations...
+2025-08-15 12:37:13,881 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+2025-08-15 12:37:13,991 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:37:14,014 - energy_gnn - INFO - Shutdown complete
+2025-08-15 12:50:44,783 - energy_gnn - INFO - ==================================================
+2025-08-15 12:50:44,783 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 12:50:44,784 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 12:50:44,786 - energy_gnn - INFO - System initialization complete
+2025-08-15 12:50:44,786 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 12:50:47,147 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 12:50:47,147 - energy_gnn - INFO - Preparing data...
+2025-08-15 12:50:47,148 - energy_gnn - INFO - Fetching data from Knowledge Graph...
+2025-08-15 12:50:47,199 - energy_gnn - INFO - Saved graph data to processed_data\graph_data.pt
+2025-08-15 12:50:47,200 - energy_gnn - INFO - Starting model training...
+2025-08-15 12:50:47,201 - energy_gnn - INFO - Creating model architecture...
+2025-08-15 12:50:47,349 - energy_gnn - INFO - Training model...
+2025-08-15 12:50:50,756 - energy_gnn - INFO - Training completed
+2025-08-15 12:50:50,756 - energy_gnn - INFO - Final validation loss: 0.0011
+2025-08-15 12:50:50,756 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 12:50:50,768 - energy_gnn - INFO - Shutdown complete
+2025-08-15 14:03:49,087 - energy_gnn - INFO - ==================================================
+2025-08-15 14:03:49,089 - energy_gnn - INFO - Energy GNN System Initialized
+2025-08-15 14:03:49,089 - energy_gnn - INFO - Configuration loaded from config/config.yaml
+2025-08-15 14:03:49,099 - energy_gnn - INFO - System initialization complete
+2025-08-15 14:03:49,099 - energy_gnn - INFO - Connecting to Neo4j Knowledge Graph...
+2025-08-15 14:03:51,793 - energy_gnn - INFO - Connected to KG with 148 nodes
+2025-08-15 14:03:51,794 - energy_gnn - INFO - Processing query: What buildings need solar panels?
+2025-08-15 14:03:51,797 - energy_gnn - INFO - Detected task: solar_optimization (confidence: 0.12)
+2025-08-15 14:03:51,797 - energy_gnn - INFO - Loading model from checkpoints\best_model.pth
+2025-08-15 14:03:51,915 - energy_gnn - INFO - Model loaded successfully
+2025-08-15 14:03:52,067 - energy_gnn - INFO - Preparing data...
+2025-08-15 14:03:52,068 - energy_gnn - INFO - Loading existing graph data...
+2025-08-15 14:03:52,537 - energy_gnn - INFO - Starting solar_optimization task
+2025-08-15 14:03:52,617 - energy_gnn - INFO - Completed solar_optimization task
+2025-08-15 14:03:52,617 - energy_gnn - INFO - Updating Knowledge Graph...
+2025-08-15 14:03:52,618 - energy_gnn - INFO - KG updated: {'nodes_created': 0, 'nodes_updated': 0, 'relationships_created': 0, 'relationships_updated': 0, 'properties_updated': 0}
+2025-08-15 14:03:52,619 - energy_gnn - INFO - Creating visualizations...
+2025-08-15 14:03:52,760 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+2025-08-15 14:03:52,827 - energy_gnn - INFO - Shutting down Energy GNN System...
+2025-08-15 14:03:52,842 - energy_gnn - INFO - Shutdown complete

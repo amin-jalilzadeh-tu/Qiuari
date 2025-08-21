@@ -1,0 +1,668 @@
+2025-08-15 00:38:42,173 - energy_gnn - ERROR - Failed to connect to KG: KGConnector.__init__() got an unexpected keyword argument 'uri'
+None
+2025-08-15 00:38:42,174 - energy_gnn - ERROR - System error: 'EnergyDataLoader' object has no attribute 'load_all_data'
+(<class 'AttributeError'>, AttributeError("'EnergyDataLoader' object has no attribute 'load_all_data'"), <traceback object at 0x000001FD45684B80>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 175, in prepare_data
+    graph_data = self.data_loader.load_all_data()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnergyDataLoader' object has no attribute 'load_all_data'
+2025-08-15 00:44:12,840 - energy_gnn - ERROR - Failed to connect to KG: KGConnector.__init__() got an unexpected keyword argument 'uri'
+None
+2025-08-15 00:44:12,842 - energy_gnn - ERROR - System error: 'EnergyDataLoader' object has no attribute 'load_all_data'
+(<class 'AttributeError'>, AttributeError("'EnergyDataLoader' object has no attribute 'load_all_data'"), <traceback object at 0x0000010FE4973480>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 175, in prepare_data
+    graph_data = self.data_loader.load_all_data()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnergyDataLoader' object has no attribute 'load_all_data'
+2025-08-15 00:48:12,935 - energy_gnn - ERROR - Failed to connect to KG: 'KGConnector' object has no attribute 'get_statistics'
+None
+2025-08-15 00:48:13,357 - energy_gnn - ERROR - System error: Parent directory processed_data does not exist.
+(<class 'RuntimeError'>, RuntimeError('Parent directory processed_data does not exist.'), <traceback object at 0x000002164BB6C040>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 178, in prepare_data
+    torch.save(graph_data, graph_file)
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 849, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 716, in _open_zipfile_writer
+    return container(name_or_buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\serialization.py", line 687, in __init__
+    super().__init__(torch._C.PyTorchFileWriter(self.name))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Parent directory processed_data does not exist.
+2025-08-15 00:50:05,357 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:50:05,436 - energy_gnn - ERROR - System error: 'nodes'
+(<class 'KeyError'>, KeyError('nodes'), <traceback object at 0x000001FAC533B480>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 184, in prepare_data
+    graph_data.num_nodes if hasattr(graph_data, 'num_nodes') else len(graph_data['nodes'])
+                                                                      ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 00:52:16,800 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:52:16,860 - energy_gnn - ERROR - System error: 'nodes'
+(<class 'KeyError'>, KeyError('nodes'), <traceback object at 0x0000018250795A40>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 596, in main
+    graph_data=system.prepare_data(force_rebuild=args.force_rebuild)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 184, in prepare_data
+    graph_data.num_nodes if hasattr(graph_data, 'num_nodes') else len(graph_data['nodes'])
+                                                                      ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 00:53:01,022 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:53:01,134 - energy_gnn - ERROR - System error: 'type'
+(<class 'KeyError'>, KeyError('type'), <traceback object at 0x00000214C7EBF5C0>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 221, in train_model
+    model_type=self.config['model']['type'],
+               ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'type'
+2025-08-15 00:53:26,599 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:53:26,684 - energy_gnn - ERROR - System error: Unknown model type: heterogeneous
+(<class 'ValueError'>, ValueError('Unknown model type: heterogeneous'), <traceback object at 0x000001EECA0222C0>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 220, in train_model
+    self.model = create_gnn_model(
+                 ^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 473, in create_gnn_model
+    raise ValueError(f"Unknown model type: {model_type}")
+ValueError: Unknown model type: heterogeneous
+2025-08-15 00:53:56,327 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:53:56,357 - energy_gnn - ERROR - System error: 'input_dim'
+(<class 'KeyError'>, KeyError('input_dim'), <traceback object at 0x0000022259694B40>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 220, in train_model
+    self.model = create_gnn_model(
+                 ^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 450, in create_gnn_model
+    input_dim=config['input_dim'],
+              ~~~~~~^^^^^^^^^^^^^
+KeyError: 'input_dim'
+2025-08-15 00:54:38,317 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:54:38,655 - energy_gnn - ERROR - System error: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+(<class 'TypeError'>, TypeError("HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'"), <traceback object at 0x000002694DFE9B40>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 227, in _train_epoch
+    outputs = self.model(batch)
+              ^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+2025-08-15 00:55:13,818 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:55:13,980 - energy_gnn - ERROR - System error: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+(<class 'TypeError'>, TypeError("HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'"), <traceback object at 0x000001AA6BBD0900>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 227, in _train_epoch
+    outputs = self.model(batch)
+              ^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: HomogeneousEnergyGNN.forward() missing 1 required positional argument: 'edge_index'
+2025-08-15 00:57:14,471 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:57:15,011 - energy_gnn - ERROR - System error: Tensor.__contains__ only supports Tensor or scalar, but you passed in a <class 'str'>.
+(<class 'RuntimeError'>, RuntimeError("Tensor.__contains__ only supports Tensor or scalar, but you passed in a <class 'str'>."), <traceback object at 0x000001CAEBDC7780>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 234, in _train_epoch
+    losses = self.loss_fn(outputs, batch, self.task_weights)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 85, in forward
+    physics_loss = self.physics_loss(outputs, batch)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 428, in forward
+    if 'power_predictions' in outputs:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\_tensor.py", line 1180, in __contains__
+    raise RuntimeError(
+RuntimeError: Tensor.__contains__ only supports Tensor or scalar, but you passed in a <class 'str'>.
+2025-08-15 00:59:03,239 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:59:03,531 - energy_gnn - ERROR - System error: 'float' object has no attribute 'backward'
+(<class 'AttributeError'>, AttributeError("'float' object has no attribute 'backward'"), <traceback object at 0x00000197C7D10380>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 244, in _train_epoch
+    total_batch_loss.backward()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'float' object has no attribute 'backward'
+2025-08-15 00:59:34,080 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:59:34,506 - energy_gnn - ERROR - System error: a leaf Variable that requires grad is being used in an in-place operation.
+(<class 'RuntimeError'>, RuntimeError('a leaf Variable that requires grad is being used in an in-place operation.'), <traceback object at 0x000001D25EAE4A80>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 238, in _train_epoch
+    losses = self.loss_fn(outputs, batch, self.task_weights)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\loss_functions.py", line 87, in forward
+    total_loss += physics_loss * 0.1  # Lower weight for physics constraints
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: a leaf Variable that requires grad is being used in an in-place operation.
+2025-08-15 00:59:55,896 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 00:59:56,181 - energy_gnn - ERROR - System error: element 0 of tensors does not require grad and does not have a grad_fn
+(<class 'RuntimeError'>, RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn'), <traceback object at 0x000002C0FA15FA80>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 594, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 254, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 244, in _train_epoch
+    total_batch_loss.backward()
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\autograd\graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn
+2025-08-15 01:00:27,752 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 01:05:14,877 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 01:08:03,399 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 01:12:44,058 - energy_gnn - ERROR - Failed to connect to KG: 'total_nodes'
+None
+2025-08-15 01:27:58,393 - energy_gnn - ERROR - System error: 'InferenceEngine' object has no attribute 'model_path'
+(<class 'AttributeError'>, AttributeError("'InferenceEngine' object has no attribute 'model_path'"), <traceback object at 0x000001BCD405C440>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 327, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 143, in predict
+    results['model_path'] = str(self.model_path)
+                                ^^^^^^^^^^^^^^^
+AttributeError: 'InferenceEngine' object has no attribute 'model_path'
+2025-08-15 01:29:32,354 - energy_gnn - ERROR - Failed unknown task
+None
+2025-08-15 01:29:32,355 - energy_gnn - ERROR - Task unknown failed: 'penetration'
+None
+2025-08-15 01:29:32,356 - energy_gnn - ERROR - System error: 'penetration'
+(<class 'KeyError'>, KeyError('penetration'), <traceback object at 0x000002A0DE54DC40>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 398, in run_task
+    validation = validator.validate(results, model_outputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 502, in validate
+    'physics': self.physics_validator.validate(predictions, graph_data),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 89, in validate
+    if renewable_results['penetration'] > 0.5:
+       ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'penetration'
+2025-08-15 01:29:51,500 - energy_gnn - ERROR - System error: 'NoneType' object has no attribute 'predict'
+(<class 'AttributeError'>, AttributeError("'NoneType' object has no attribute 'predict'"), <traceback object at 0x0000017657D6EDC0>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 639, in main
+    outputs = system.inference_engine.predict(test_data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'predict'
+2025-08-15 11:58:36,323 - energy_gnn - ERROR - Failed solar_optimization task
+None
+2025-08-15 11:58:36,324 - energy_gnn - ERROR - Task solar_optimization failed: 'nodes'
+None
+2025-08-15 11:58:36,324 - energy_gnn - ERROR - System error: 'nodes'
+(<class 'KeyError'>, KeyError('nodes'), <traceback object at 0x0000018B142A21C0>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 384, in run_task
+    results = task.run(model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 60, in run
+    x = self._prepare_features(graph_data)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 96, in _prepare_features
+    buildings = graph_data['nodes']['buildings']
+                ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 12:02:38,105 - energy_gnn - ERROR - Failed solar_optimization task
+None
+2025-08-15 12:02:38,106 - energy_gnn - ERROR - Task solar_optimization failed: 'nodes'
+None
+2025-08-15 12:02:38,107 - energy_gnn - ERROR - System error: 'nodes'
+(<class 'KeyError'>, KeyError('nodes'), <traceback object at 0x000001C39420D480>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 603, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 384, in run_task
+    results = task.run(model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 83, in run
+    solar_analysis = self._analyze_solar_potential(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 163, in _analyze_solar_potential
+    buildings = graph_data['nodes']['buildings'].copy()
+                ~~~~~~~~~~^^^^^^^^^
+KeyError: 'nodes'
+2025-08-15 12:03:33,686 - energy_gnn - ERROR - Failed solar_optimization task
+None
+2025-08-15 12:03:33,687 - energy_gnn - ERROR - Task solar_optimization failed: Cannot mask with non-boolean array containing NA / NaN values
+None
+2025-08-15 12:03:33,688 - energy_gnn - ERROR - System error: Cannot mask with non-boolean array containing NA / NaN values
+(<class 'ValueError'>, ValueError('Cannot mask with non-boolean array containing NA / NaN values'), <traceback object at 0x000002774A01EA40>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 605, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 386, in run_task
+    results = task.run(graph_data if graph_data is not None else model_outputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 96, in run
+    recommendations = self._generate_recommendations(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\tasks\solar_optimization.py", line 325, in _generate_recommendations
+    constrained = feasible_installations[feasible_installations.get('grid_constraint_applied', False)]
+                  ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4092, in __getitem__
+    if com.is_bool_indexer(key):
+       ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\common.py", line 136, in is_bool_indexer
+    raise ValueError(na_msg)
+ValueError: Cannot mask with non-boolean array containing NA / NaN values
+2025-08-15 12:03:59,967 - energy_gnn - ERROR - Failed solar_optimization task
+None
+2025-08-15 12:03:59,968 - energy_gnn - ERROR - Task solar_optimization failed: 'penetration'
+None
+2025-08-15 12:03:59,968 - energy_gnn - ERROR - System error: 'penetration'
+(<class 'KeyError'>, KeyError('penetration'), <traceback object at 0x0000025283A69040>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 605, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 333, in run_inference
+    task_results = self.run_task(
+                   ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 400, in run_task
+    validation = validator.validate(results, model_outputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 502, in validate
+    'physics': self.physics_validator.validate(predictions, graph_data),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\validation.py", line 89, in validate
+    if renewable_results['penetration'] > 0.5:
+       ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'penetration'
+2025-08-15 12:05:04,944 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+None
+2025-08-15 12:06:31,471 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+None
+2025-08-15 12:17:22,336 - energy_gnn - ERROR - System error: "None of [Index(['area', 'height', 'roof_area', 'suitable_roof', 'peak_demand',\n       'avg_demand', 'load_factor', 'variability', 'x', 'y'],\n      dtype='object')] are in the [columns]"
+(<class 'KeyError'>, KeyError("None of [Index(['area', 'height', 'roof_area', 'suitable_roof', 'peak_demand',\n       'avg_demand', 'load_factor', 'variability', 'x', 'y'],\n      dtype='object')] are in the [columns]"), <traceback object at 0x000001D08C1A5C00>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 628, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 346, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 190, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 146, in _process_building_nodes
+    num_data = buildings[numerical_features].fillna(0).values
+               ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6249, in _raise_if_missing
+    raise KeyError(f"None of [{key}] are in the [{axis_name}]")
+KeyError: "None of [Index(['area', 'height', 'roof_area', 'suitable_roof', 'peak_demand',\n       'avg_demand', 'load_factor', 'variability', 'x', 'y'],\n      dtype='object')] are in the [columns]"
+2025-08-15 12:23:23,854 - energy_gnn - ERROR - System error: 'id'
+(<class 'KeyError'>, KeyError('id'), <traceback object at 0x000001968003FDC0>)
+Traceback (most recent call last):
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 628, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 346, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 190, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 123, in _process_building_nodes
+    node_mapping = {row['id']: idx for idx, row in buildings.iterrows()}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 123, in <dictcomp>
+    node_mapping = {row['id']: idx for idx, row in buildings.iterrows()}
+                    ~~~^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\series.py", line 1121, in __getitem__
+    return self._get_value(key)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\series.py", line 1237, in _get_value
+    loc = self.index.get_loc(label)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'id'
+2025-08-15 12:23:56,391 - energy_gnn - ERROR - System error: "['has_battery', 'has_heat_pump'] not in index"
+(<class 'KeyError'>, KeyError("['has_battery', 'has_heat_pump'] not in index"), <traceback object at 0x000001F2496A3580>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 632, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 350, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 194, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 89, in build_homogeneous_graph
+    building_features, building_mapping = self._process_building_nodes()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 165, in _process_building_nodes
+    bin_data = buildings[binary_features].fillna(0).astype(float).values
+               ~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "D:\Matlab\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6252, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['has_battery', 'has_heat_pump'] not in index"
+2025-08-15 12:24:42,647 - energy_gnn - ERROR - System error: 'building'
+(<class 'KeyError'>, KeyError('building'), <traceback object at 0x000002DCC9472000>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 352, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 196, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 92, in build_homogeneous_graph
+    edge_index = self._build_combined_edge_index()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 346, in _build_combined_edge_index
+    n = len(self.node_mappings['building'])
+            ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'building'
+2025-08-15 12:25:21,035 - energy_gnn - ERROR - System error: 'temporal'
+(<class 'KeyError'>, KeyError('temporal'), <traceback object at 0x000001326980F880>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 352, in run_inference
+    graph_data = self.prepare_data()
+                 ^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 196, in prepare_data
+    graph_data = graph_builder.build_homogeneous_graph()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\data\graph_builder.py", line 109, in build_homogeneous_graph
+    if 'energy_profiles' in self.data['temporal']:
+                            ~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'temporal'
+2025-08-15 12:25:44,779 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+(<class 'RuntimeError'>, RuntimeError('mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)'), <traceback object at 0x000002CA4997E280>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 356, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 132, in predict
+    outputs = self._run_task(processed_data, task)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 178, in _run_task
+    embeddings = self.model(data.x, data.edge_index)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:26:05,221 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+(<class 'RuntimeError'>, RuntimeError('mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)'), <traceback object at 0x00000277B4B18D00>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 634, in main
+    results = system.run_inference(args.query)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\main.py", line 356, in run_inference
+    results = self.inference_engine.predict(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 132, in predict
+    outputs = self._run_task(processed_data, task)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\inference\inference_engine.py", line 178, in _run_task
+    embeddings = self.model(data.x, data.edge_index)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:34:23,858 - energy_gnn - ERROR - System error: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+(<class 'RuntimeError'>, RuntimeError('mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)'), <traceback object at 0x000002017D510780>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 625, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 283, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 229, in _train_epoch
+    outputs = self.model(batch.x, batch.edge_index)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\models\base_gnn.py", line 218, in forward
+    h = self.input_proj(x)
+        ^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Matlab\anaconda3\Lib\site-packages\torch\nn\modules\linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (142x14 and 10x128)
+2025-08-15 12:36:23,967 - energy_gnn - ERROR - System error: [Errno 22] Invalid argument
+(<class 'OSError'>, OSError(22, 'Invalid argument'), <traceback object at 0x000002BB8A0039C0>)
+Traceback (most recent call last):
+  File "D:\Documents\daily\Qiuari\main.py", line 625, in main
+    system.train_model(
+  File "D:\Documents\daily\Qiuari\main.py", line 283, in train_model
+    history = trainer.train(
+              ^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 151, in train
+    train_loss, train_task_losses = self._train_epoch(train_loader, epoch)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Documents\daily\Qiuari\training\multi_task_trainer.py", line 265, in _train_epoch
+    pbar.set_postfix({
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1431, in set_postfix
+    self.refresh()
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1347, in refresh
+    self.display()
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 459, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\std.py", line 452, in fp_write
+    fp.write(str(s))
+  File "D:\Matlab\anaconda3\Lib\site-packages\tqdm\utils.py", line 196, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument
+2025-08-15 12:37:13,881 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+None
+2025-08-15 14:03:52,760 - energy_gnn - ERROR - Visualization failed: 'visualizations'
+None
