@@ -1,9 +1,0 @@
-2025-08-17 02:44:51,971 - grid_analysis - INFO - ============================================================
-2025-08-17 02:44:51,971 - grid_analysis - INFO - STARTING GRID ANALYSIS WORKFLOW
-2025-08-17 02:44:51,972 - grid_analysis - INFO - Prefix: Amsterdam_
-2025-08-17 02:44:52,053 - grid_analysis - INFO - ============================================================
-2025-08-17 02:44:52,053 - grid_analysis - INFO - Validating building IDs: 5267126, 4568136
-2025-08-17 02:44:52,130 - db_config - ERROR - Failed to connect to database: connection to server at "localhost" (::1), port 5433 failed: server closed the connection unexpectedly
-	This probably means the server terminated abnormally
-	before or while processing the request.
-
