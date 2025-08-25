@@ -1,0 +1,641 @@
+---
+title: "SQL Table Creation Pipeline - Technical Documentation"
+subtitle: "Complete Table Lineage and Processing Operations"
+author: "Technical Documentation"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    theme: cosmo
+    code-fold: true
+    number-sections: true
+    highlight-style: github
+execute:
+  echo: false
+  warning: false
+---
+
+# Overview of Table Creation Pipeline
+
+The SQL pipeline creates **15 permanent tables** and **multiple temporary tables** through a series of steps that process electrical grid infrastructure data.
+
+## Pipeline Execution Order
+
+```{mermaid}
+%%{init: {'theme':'dark'}}%%
+flowchart LR
+    S1[STEP 1.sql<br/>4 tables]
+    S23[STEPS 2-3.sql<br/>3 tables]
+    S48[STEPS 4-8.sql<br/>4 tables]
+    MVA[MV-LV Analysis.sql<br/>3 temp tables]
+    HS[Hierarchy Summary.sql<br/>1 temp table]
+    
+    S1 --> S23
+    S23 --> S48
+    S48 --> MVA
+    S48 --> HS
+    
+    style S1 fill:#4CAF50
+    style S23 fill:#2196F3
+    style S48 fill:#FF9800
+    style MVA fill:#9C27B0
+    style HS fill:#795548
+```
+
+# STEP 1: Cable Segmentation Tables
+
+## Table: tlip_cable_segments
+
+### Purpose
+Stores individual cable segments after splitting complex geometries into simple linestrings.
+
+### Input Sources
+
+| Source Table | Schema | Data Extracted |
+|--------------|--------|----------------|
+| `tlip_laagspanningskabels` | amin_grid | LV cable geometries (clipped_geom) |
+| `tlip_middenspanningskabels` | amin_grid | MV cable geometries (clipped_geom) |
+| `tlip_hoogspanningskabels` | amin_grid | HV cable geometries (clipped_geom) |
+
+### Processing Operations
+
+| Operation | SQL Function Used | Purpose |
+|-----------|-------------------|---------|
+| **Geometry Dumping** | `ST_Dump()` with LATERAL join | Splits multi-line geometries into individual linestrings |
+| **Endpoint Extraction** | `ST_StartPoint()`, `ST_EndPoint()` | Captures segment endpoints for connectivity |
+| **Length Calculation** | `ST_Length()` | Calculates segment length in meters |
+| **Geometry Validation** | `ST_IsValid()`, `ST_GeometryType()` | Ensures valid linestring geometries |
+| **Filtering** | `WHERE ST_Length() > 0.01` | Removes zero-length segments |
+
+### Table Structure
+
+| Column | Type | Description | Processing |
+|--------|------|-------------|------------|
+| segment_id | BIGSERIAL | Primary key | Auto-generated |
+| original_fid | BIGINT | Reference to source cable | Preserved from input |
+| voltage_level | VARCHAR(10) | LV/MV/HV | Hardcoded per source |
+| segment_geom | GEOMETRY(LINESTRING) | Cable segment | Result of ST_Dump |
+| start_point | GEOMETRY(POINT) | Segment start | ST_StartPoint(segment) |
+| end_point | GEOMETRY(POINT) | Segment end | ST_EndPoint(segment) |
+| length_m | NUMERIC | Length in meters | ST_Length(segment) |
+| group_id | VARCHAR(50) | Connected group ID | Updated in Step 1.3 |
+
+### Indexes Created
+- Spatial: `idx_tlip_segments_geom`, `idx_tlip_segments_start`, `idx_tlip_segments_end`
+- Standard: `idx_tlip_segments_voltage`, `idx_tlip_segments_group`
+
+---
+
+## Table: tlip_segment_endpoints
+
+### Purpose
+Stores all segment endpoints to facilitate connectivity analysis.
+
+### Input Sources
+
+| Source Table | Operation |
+|--------------|-----------|
+| `tlip_cable_segments` | Extract both start and end points via UNION ALL |
+
+### Processing Operations
+
+| Operation | Implementation |
+|-----------|----------------|
+| **Point Extraction** | Separate INSERT for start_point and end_point |
+| **Type Assignment** | Labels as 'START' or 'END' |
+| **Tolerance Setting** | Default 0.5m snap tolerance |
+
+### Table Structure
+
+| Column | Type | Source/Calculation |
+|--------|------|-------------------|
+| endpoint_id | BIGSERIAL | Auto-generated |
+| segment_id | BIGINT | From tlip_cable_segments |
+| voltage_level | VARCHAR(10) | From tlip_cable_segments |
+| point_geom | GEOMETRY(POINT) | start_point or end_point |
+| point_type | VARCHAR(10) | 'START' or 'END' |
+| snap_tolerance | NUMERIC | Default 0.5 |
+
+---
+
+## Table: tlip_connected_groups
+
+### Purpose
+Aggregates connected cable segments into network groups.
+
+### Input Sources
+
+| Source Table | Processing Stage |
+|--------------|------------------|
+| `tlip_cable_segments` | After group_id assignment |
+| `segment_adjacency` (temp) | For connectivity detection |
+
+### Processing Operations
+
+| Operation | SQL Implementation | Description |
+|-----------|-------------------|-------------|
+| **Adjacency Detection** | `ST_DWithin(e1.point, e2.point, 0.5)` | Find segments within 0.5m |
+| **Recursive Grouping** | Recursive CTE in DO block | Traverse connected components |
+| **Group ID Assignment** | `voltage || '_GROUP_' || LPAD(id, 4, '0')` | Format: LV_GROUP_0001 |
+| **Geometry Union** | `ST_Union(segment_geom)` | Merge all group segments |
+| **Envelope Creation** | `ST_Envelope()` with polygon check | Create bounding box |
+| **Centroid Calculation** | `ST_Centroid()` | Find group center |
+
+### Table Structure
+
+| Column | Type | Calculation Method |
+|--------|------|-------------------|
+| group_id | VARCHAR(50) | Generated pattern |
+| voltage_level | VARCHAR(10) | From segments |
+| segment_count | INTEGER | COUNT(*) of segments |
+| total_length_m | NUMERIC | SUM(length_m) |
+| merged_geom | GEOMETRY | ST_Union of segments |
+| bbox | GEOMETRY | Safe envelope creation |
+| centroid | GEOMETRY(POINT) | ST_Centroid of union |
+
+---
+
+## Table: tlip_group_segments
+
+### Purpose
+Maps individual segments to their assigned groups.
+
+### Input Sources
+
+| Source Table | Filter |
+|--------------|--------|
+| `tlip_cable_segments` | WHERE group_id IS NOT NULL |
+
+### Processing Operations
+
+| Operation | Implementation |
+|-----------|----------------|
+| **Ordering** | ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY segment_id) |
+| **Mapping** | Direct INSERT SELECT |
+
+### Table Structure
+
+| Column | Type | Purpose |
+|--------|------|---------|
+| id | BIGSERIAL | Primary key |
+| group_id | VARCHAR(50) | Foreign key to groups |
+| segment_id | BIGINT | Foreign key to segments |
+| segment_order | INTEGER | Order within group |
+
+# STEPS 2-3: Hierarchy Tables
+
+## Table: tlip_group_stations
+
+### Purpose
+Connects cable groups to electrical infrastructure (transformers, substations, cabinets).
+
+### Input Sources
+
+| Source Tables | Join Method | Distance Limit |
+|---------------|------------|----------------|
+| `tlip_connected_groups` | Base table | - |
+| `tlip_laagspanningsverdeelkasten` | LATERAL with ST_DWithin | 100m for LV |
+| `tlip_middenspanningsinstallaties` | LATERAL with ST_DWithin | 300m for LV, 200m for MV |
+| `tlip_onderstations` | LATERAL with ST_DWithin | 1000m for MV, 2000m for HV |
+
+### Processing Operations
+
+| Operation | SQL Implementation | Logic |
+|-----------|-------------------|-------|
+| **Nearest Neighbor** | `ORDER BY ST_Distance() LIMIT N` | Find N closest stations |
+| **Connection Classification** | CASE based on ST_DWithin | DIRECT (<2m) or PROXIMITY |
+| **Confidence Scoring** | Distance-based CASE | 0.99 for <2m, decreasing with distance |
+| **Multiple Connections** | LIMIT 3 for cabinets, 5 for transformers | Allow multiple potential connections |
+
+### Table Structure
+
+| Column | Type | Calculation |
+|--------|------|-------------|
+| connection_id | BIGSERIAL | Auto-generated |
+| group_id | VARCHAR(50) | From connected_groups |
+| voltage_level | VARCHAR(10) | From connected_groups |
+| station_type | VARCHAR(50) | 'TRANSFORMER', 'SUBSTATION', 'LV_CABINET' |
+| station_fid | BIGINT | From station table |
+| station_geom | GEOMETRY | From station table |
+| connection_type | VARCHAR(20) | 'DIRECT' or 'PROXIMITY' |
+| distance_m | NUMERIC | ST_Distance result |
+| confidence_score | NUMERIC | Distance-based calculation |
+
+---
+
+## Table: tlip_group_hierarchy
+
+### Purpose
+Establishes parent-child relationships between voltage levels.
+
+### Input Sources
+
+| Source | Join Logic |
+|--------|------------|
+| `tlip_group_stations` (LV) | Self-join on transformer FID |
+| `tlip_group_stations` (MV) | Self-join on transformer/substation FID |
+| `tlip_group_stations` (HV) | Self-join on substation FID |
+
+### Processing Operations
+
+| Operation | Implementation | Purpose |
+|-----------|----------------|---------|
+| **Voltage Bridging** | Join LV and MV via shared transformer | LV→MV connection |
+| **Substation Bridging** | Join MV and HV via shared substation | MV→HV connection |
+| **Best Match Selection** | DISTINCT ON with ORDER BY confidence | One parent per child |
+| **Path Building** | String concatenation in UPDATE | Create hierarchy paths |
+
+### Table Structure
+
+| Column | Type | Content |
+|--------|------|---------|
+| hierarchy_id | BIGSERIAL | Primary key |
+| child_group_id | VARCHAR(50) | Lower voltage group |
+| child_voltage | VARCHAR(10) | LV or MV |
+| parent_group_id | VARCHAR(50) | Higher voltage group |
+| parent_voltage | VARCHAR(10) | MV or HV |
+| connection_via | VARCHAR(50) | 'TRANSFORMER' or 'SUBSTATION' |
+| via_station_fid | BIGINT | Station facilitating connection |
+| distance_m | NUMERIC | Combined distance |
+| confidence_score | NUMERIC | Average confidence |
+| hierarchy_path | TEXT | Full path string |
+
+---
+
+## Table: tlip_voltage_transitions
+
+### Purpose
+Records all voltage transition points in the network.
+
+### Input Sources
+
+| Source Tables | Aggregation |
+|---------------|-------------|
+| `tlip_middenspanningsinstallaties` | Transformers |
+| `tlip_onderstations` | Substations |
+| `tlip_group_stations` | Connected groups |
+
+### Processing Operations
+
+| Operation | SQL Function | Result |
+|-----------|--------------|--------|
+| **Group Aggregation** | `array_agg(DISTINCT group_id)` | Arrays of connected groups |
+| **Null Filtering** | `FILTER (WHERE group_id IS NOT NULL)` | Clean arrays |
+| **Station Grouping** | GROUP BY station_fid | One row per station |
+
+### Table Structure
+
+| Column | Type | Content |
+|--------|------|---------|
+| transition_id | BIGSERIAL | Primary key |
+| from_voltage | VARCHAR(10) | Lower voltage |
+| to_voltage | VARCHAR(10) | Higher voltage |
+| transition_type | VARCHAR(50) | Station type |
+| station_fid | BIGINT | Station ID |
+| station_geom | GEOMETRY | Station location |
+| from_groups | TEXT[] | Array of lower voltage groups |
+| to_groups | TEXT[] | Array of higher voltage groups |
+
+# STEPS 4-8: Building Connection Tables
+
+## Table: tlip_building_connections
+
+### Purpose
+Maps every building to its electrical grid connection point.
+
+### Input Sources
+
+| Source Table | Data Used | Filters |
+|--------------|-----------|---------|
+| `tlip_buildings_1_deducted` | Building properties, geometry | area > 10, valid geometry |
+| `tlip_cable_segments` | LV and MV segments | ST_DWithin 500m for LV, 100m for MV |
+
+### Processing Operations
+
+| Operation | Implementation | Description |
+|-----------|----------------|-------------|
+| **MV Capability Assessment** | `CASE WHEN non_residential AND area > 3000` | Identify large consumers |
+| **Nearest LV Finding** | LATERAL join with ORDER BY distance LIMIT 1 | Closest LV segment |
+| **Connection Type Detection** | Complex CASE statement | 5 connection types |
+| **Problem Detection** | Distance > 150m | Flag problematic connections |
+| **MV Proximity Check** | Separate LATERAL for MV-capable buildings | Check MV availability |
+
+### Connection Type Logic
+
+| Type | SQL Condition | Meaning |
+|------|---------------|---------|
+| ENDED | `ST_Within(endpoint, building)` | Cable terminates at building |
+| ENTERED | `ST_Intersects() AND NOT ST_Crosses()` | Cable enters building |
+| CROSSED | `ST_Crosses()` | Cable passes through |
+| BY_DISTANCE | `distance <= 150m` | Proximity connection |
+| TOO_FAR | `distance > 150m` | Problematic distance |
+
+### Table Structure
+
+| Column | Type | Calculation/Source |
+|--------|------|-------------------|
+| building_id | BIGINT | From buildings table |
+| building_area | NUMERIC | From buildings table |
+| building_height | NUMERIC | COALESCE(height, gem_hoogte, 3.0) |
+| building_function | VARCHAR(50) | From buildings table |
+| building_type | VARCHAR(100) | COALESCE(non_residential_type, residential_type) |
+| building_geom | GEOMETRY | pand_geom from buildings |
+| building_centroid | GEOMETRY(POINT) | ST_Centroid(pand_geom) |
+| connected_voltage | VARCHAR(10) | Always 'LV' |
+| connected_group_id | VARCHAR(50) | From closest segment |
+| connected_segment_id | BIGINT | Closest segment ID |
+| connection_distance_m | NUMERIC | ST_Distance result |
+| connection_type | VARCHAR(20) | Calculated type |
+| is_mv_capable | BOOLEAN | Size/function based |
+| has_mv_nearby | BOOLEAN | MV within 100m |
+| nearest_mv_distance_m | NUMERIC | Distance to MV |
+| is_problematic | BOOLEAN | Distance > 150m |
+| connection_reason | TEXT | Descriptive text |
+
+---
+
+## Table: tlip_building_connection_points
+
+### Purpose
+Stores precise geometric connection points on cable segments.
+
+### Input Sources
+
+| Source Tables | Join Type |
+|---------------|-----------|
+| `tlip_building_connections` | Base table |
+| `tlip_cable_segments` | JOIN on segment_id |
+
+### Processing Operations
+
+| Operation | SQL Function | Purpose |
+|-----------|--------------|---------|
+| **Closest Point** | `ST_ClosestPoint(line, point)` | Find connection point on cable |
+| **Connection Line** | `ST_MakeLine(building, point)` | Create connection geometry |
+| **Linear Referencing** | `ST_LineLocatePoint()` | Position along segment (0-1) |
+| **Distance Along** | `fraction * ST_Length()` | Absolute distance on segment |
+
+### Table Structure
+
+| Column | Type | Calculation |
+|--------|------|-------------|
+| connection_point_id | BIGSERIAL | Auto-generated |
+| building_id | BIGINT | From building_connections |
+| segment_id | BIGINT | From building_connections |
+| group_id | VARCHAR(50) | From building_connections |
+| voltage_level | VARCHAR(10) | From building_connections |
+| connection_type | VARCHAR(20) | From building_connections |
+| point_on_line | GEOMETRY(POINT) | ST_ClosestPoint result |
+| connection_line | GEOMETRY(LINESTRING) | ST_MakeLine result |
+| distance_along_segment | NUMERIC | Linear position in meters |
+| segment_fraction | NUMERIC | Position as fraction (0-1) |
+| connection_distance_m | NUMERIC | From building_connections |
+| is_direct_connection | BOOLEAN | TRUE if ENDED/ENTERED/CROSSED |
+
+---
+
+## Table: tlip_segment_connections
+
+### Purpose
+Aggregates building connection statistics per cable segment.
+
+### Input Sources
+
+| Source Tables | Aggregation Level |
+|---------------|-------------------|
+| `tlip_cable_segments` | GROUP BY segment_id |
+| `tlip_building_connections` | LEFT JOIN aggregation |
+
+### Processing Operations
+
+| Operation | SQL Implementation |
+|-----------|-------------------|
+| **Count Aggregation** | Multiple COUNT(DISTINCT) with CASE |
+| **Statistical Calculations** | AVG(), MAX(), MIN() on distances |
+| **Boolean Aggregation** | BOOL_OR() for problem detection |
+
+### Table Structure
+
+| Column | Type | Calculation |
+|--------|------|-------------|
+| segment_id | BIGINT | Primary key |
+| group_id | VARCHAR(50) | From segments |
+| voltage_level | VARCHAR(10) | From segments |
+| total_buildings | INTEGER | COUNT(DISTINCT building_id) |
+| residential_count | INTEGER | Conditional count |
+| non_residential_count | INTEGER | Conditional count |
+| mv_capable_count | INTEGER | Conditional count |
+| ended_count | INTEGER | Type-specific count |
+| entered_count | INTEGER | Type-specific count |
+| crossed_count | INTEGER | Type-specific count |
+| by_distance_count | INTEGER | Type-specific count |
+| too_far_count | INTEGER | Type-specific count |
+| avg_connection_distance_m | NUMERIC | AVG(distance) |
+| max_connection_distance_m | NUMERIC | MAX(distance) |
+| min_connection_distance_m | NUMERIC | MIN(distance) |
+| has_problematic_connections | BOOLEAN | BOOL_OR(is_problematic) |
+
+---
+
+## Table: tlip_grid_summary
+
+### Purpose
+Stores key metrics and statistics about the grid.
+
+### Input Sources
+
+| Metric Type | Source Query |
+|-------------|--------------|
+| Building counts | SELECT COUNT(*) FROM tlip_building_connections |
+| Connection types | COUNT with WHERE filters |
+| Distance stats | AVG/MAX calculations |
+
+### Processing Operations
+
+Simple INSERT VALUES with subqueries for each metric.
+
+### Table Structure
+
+| Column | Type | Content |
+|--------|------|---------|
+| summary_id | SERIAL | Primary key |
+| summary_type | VARCHAR(50) | Category of metric |
+| metric_name | VARCHAR(100) | Specific metric |
+| metric_value | NUMERIC | Calculated value |
+| metric_text | TEXT | Optional description |
+
+# Analysis Tables (Temporary)
+
+## MV-LV District Analysis Tables
+
+### Table: temp_mv_lv_district_analysis
+
+**Purpose**: Base data combining MV/LV hierarchy with building details.
+
+**Key Processing**:
+- Joins MV-LV mapping with enriched building data
+- Simplifies energy labels (A+++ → A)
+- Adds district/neighborhood information
+
+### Table: temp_mv_district_metrics
+
+**Purpose**: District-level metrics aggregated by MV station.
+
+**Key Calculations**:
+- Diversity scores (type, size, mix balance, temporal)
+- Intervention need scores (energy, age-based)
+- Building type counts for complementarity analysis
+
+### Table: temp_lv_district_metrics
+
+**Purpose**: LV group level metrics within districts.
+
+**Key Features**:
+- Smaller aggregation unit than MV
+- Simplified diversity scoring
+- Direct building counts and characteristics
+
+## Hierarchical Summary Table
+
+### Table: temp_grid_hierarchy
+
+**Purpose**: Complete hierarchy from MV stations to individual buildings.
+
+**Processing**:
+- Combines MV-LV mapping with building data
+- Preserves all relationship levels
+- Includes building characteristics for analysis
+
+# Data Flow Summary
+
+```{mermaid}
+%%{init: {'theme':'dark'}}%%
+graph TD
+    subgraph "Raw Input Tables"
+        I1[Cable Tables<br/>3 voltage levels]
+        I2[Building Table<br/>with properties]
+        I3[Station Tables<br/>transformers, substations]
+    end
+    
+    subgraph "Processing Stages"
+        P1[Segmentation<br/>ST_Dump, validation]
+        P2[Connectivity<br/>Recursive CTEs]
+        P3[Hierarchy<br/>Station joining]
+        P4[Building Mapping<br/>Nearest neighbor]
+    end
+    
+    subgraph "Output Tables"
+        O1[15 Permanent Tables]
+        O2[4+ Temporary Tables]
+        O3[5 Views]
+    end
+    
+    I1 --> P1
+    P1 --> P2
+    I3 --> P3
+    P2 --> P3
+    I2 --> P4
+    P3 --> P4
+    P4 --> O1
+    O1 --> O2
+    O1 --> O3
+    
+    style I1 fill:#FF6B6B
+    style I2 fill:#4ECDC4
+    style I3 fill:#45B7D1
+    style P1 fill:#96CEB4
+    style P2 fill:#FFEAA7
+    style P3 fill:#DDA0DD
+    style P4 fill:#98D8C8
+```
+
+# Key Processing Techniques
+
+## Spatial Operations Used
+
+| Operation | Purpose | Tables Using |
+|-----------|---------|--------------|
+| `ST_Dump()` | Split multi-geometries | tlip_cable_segments |
+| `ST_DWithin()` | Proximity searches | All connection tables |
+| `ST_Distance()` | Distance calculations | All connection tables |
+| `ST_Union()` | Merge geometries | tlip_connected_groups |
+| `ST_ClosestPoint()` | Find connection points | tlip_building_connection_points |
+| `ST_LineLocatePoint()` | Linear referencing | tlip_building_connection_points |
+| `ST_Intersects()` | Overlap detection | tlip_building_connections |
+| `ST_Within()` | Containment checks | tlip_building_connections |
+| `ST_Crosses()` | Crossing detection | tlip_building_connections |
+
+## Advanced SQL Techniques
+
+| Technique | Purpose | Implementation |
+|-----------|---------|----------------|
+| **LATERAL Joins** | Efficient nearest-neighbor | Avoids Cartesian products |
+| **Recursive CTEs** | Graph traversal | Connected component detection |
+| **DISTINCT ON** | Best match selection | One-to-one relationships |
+| **Window Functions** | Ordering and ranking | ROW_NUMBER() for sequencing |
+| **Array Aggregation** | Group collections | array_agg() for station groups |
+| **CASE Expressions** | Complex logic | Connection type classification |
+
+# Performance Considerations
+
+## Indexing Strategy
+
+Each table includes appropriate indexes:
+
+| Index Type | Count | Purpose |
+|------------|-------|---------|
+| Spatial (GIST) | 15+ | Geometric queries |
+| B-Tree | 20+ | Foreign keys and lookups |
+| Composite | Several | Multi-column searches |
+
+## Query Optimization
+
+| Optimization | Implementation |
+|--------------|----------------|
+| **Spatial Filtering** | ST_DWithin before ST_Distance |
+| **Batch Processing** | Process voltage levels separately |
+| **Temporary Tables** | For complex intermediate results |
+| **LATERAL Limits** | Restrict nearest neighbor searches |
+
+# Data Validation Points
+
+## Geometry Validation
+
+| Check | SQL Function | Action on Failure |
+|-------|--------------|-------------------|
+| Valid geometry | `ST_IsValid()` | Skip record |
+| Correct type | `ST_GeometryType()` | Skip record |
+| Minimum size | `ST_Length() > 0.01` | Filter out |
+| Building area | `area > 10` | Exclude building |
+
+## Relationship Validation
+
+| Validation | Method | Threshold |
+|------------|--------|-----------|
+| Connection distance | Distance calculation | Max 1000m for buildings |
+| Snap tolerance | ST_DWithin | 0.5m for endpoints |
+| Confidence scoring | Distance-based | 0.2-0.99 scale |
+
+# Summary Statistics
+
+## Table Sizes and Relationships
+
+| Table | Typical Row Count | Relationships |
+|-------|-------------------|---------------|
+| tlip_cable_segments | 10,000-50,000 | 1:N with endpoints |
+| tlip_connected_groups | 100-500 | 1:N with segments |
+| tlip_group_stations | 500-2,000 | N:M groups-stations |
+| tlip_group_hierarchy | 100-400 | 1:1 parent-child |
+| tlip_building_connections | 50,000-200,000 | 1:1 with buildings |
+| tlip_building_connection_points | 50,000-200,000 | 1:1 with connections |
+| tlip_segment_connections | 10,000-50,000 | 1:1 with segments |
+
+## Processing Metrics
+
+| Metric | Value | Impact |
+|--------|-------|--------|
+| Spatial operations | 100+ per building | High CPU usage |
+| Join complexity | Up to 5-way joins | Memory intensive |
+| Recursive depth | Variable (connectivity) | Stack usage |
+| Index usage | Critical for performance | 10-100x speedup |

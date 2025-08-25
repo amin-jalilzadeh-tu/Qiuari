@@ -1,0 +1,81 @@
+{
+  "timestamp": "20250824_201436",
+  "n_methods": 7,
+  "n_clusters": 10,
+  "best_method": "GNN (Our Method)",
+  "best_ssr": 0.65,
+  "methods": [
+    {
+      "Method": "GNN (Our Method)",
+      "Tier": "GNN",
+      "Self-Sufficiency": 0.65,
+      "Peak Reduction": 0.35,
+      "Violations": 0,
+      "Computation Time": 5.0,
+      "N Clusters": 10
+    },
+    {
+      "Method": "K-means Clustering",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.129718853754952,
+      "Peak Reduction": 0.8220612471305131,
+      "Violations": 10,
+      "Computation Time": 0.9117190837860107,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Spectral Clustering",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.12227975511035111,
+      "Peak Reduction": 0.8906841800672578,
+      "Violations": 10,
+      "Computation Time": 0.11687278747558594,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Information-Theoretic Synergy",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.12016010143345306,
+      "Peak Reduction": 0.8982852825817206,
+      "Violations": 10,
+      "Computation Time": 74.85294914245605,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Node2vec + Clustering",
+      "Tier": "tier3",
+      "Self-Sufficiency": 0.11806412669581398,
+      "Peak Reduction": 0.8906135524686029,
+      "Violations": 10,
+      "Computation Time": 4.516937255859375,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Louvain Algorithm",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.11757582622617782,
+      "Peak Reduction": 0.8767069610041774,
+      "Violations": 7,
+      "Computation Time": 0.042909860610961914,
+      "N Clusters": 8
+    },
+    {
+      "Method": "Correlation-Based Clustering (Anti-correlation)",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.11660134542465571,
+      "Peak Reduction": 0.35483886488701827,
+      "Violations": 5,
+      "Computation Time": 0.007154941558837891,
+      "N Clusters": 7
+    },
+    {
+      "Method": "Stable Matching with Complementarity",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.11017651199029828,
+      "Peak Reduction": 0.877286746794002,
+      "Violations": 10,
+      "Computation Time": 0.1041109561920166,
+      "N Clusters": 35
+    }
+  ]
+}

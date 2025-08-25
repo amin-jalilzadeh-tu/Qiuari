@@ -1,0 +1,4 @@
+2025-08-23 03:27:14,441 - __main__ - INFO - Energy GNN Pipeline initialized
+2025-08-23 03:27:14,441 - __main__ - INFO - Connecting to Neo4j...
+2025-08-23 03:27:14,442 - data.kg_connector - INFO - Connected to Neo4j at bolt://localhost:7687
+2025-08-23 03:27:14,442 - __main__ - ERROR - Failed to connect to Neo4j: 'KGConnector' object has no attribute 'get_statistics'

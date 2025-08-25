@@ -1,0 +1,1450 @@
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_001',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_001'
+        });
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_002',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_001'
+        });
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_003',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_001'
+        });
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_004',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_002'
+        });
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_005',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_002'
+        });
+CREATE (n:LV_Network {
+            id: 'LV_LV_NET_006',
+            capacity_kva: 250,
+            mv_transformer: 'MV_TRANS_002'
+        });
+CREATE (n:Building {
+            id: 'B_1',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_2',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_3',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_4',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_5',
+            function: 'residential',
+            type: 'Detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_6',
+            function: 'residential',
+            type: 'Apartment',
+            area: 120,
+            roof_area: 36.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_7',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_8',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_9',
+            function: 'residential',
+            type: 'Terrace',
+            area: 100,
+            roof_area: 60.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_10',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_11',
+            function: 'residential',
+            type: 'Terrace',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_12',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_13',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_14',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_15',
+            function: 'residential',
+            type: 'Detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_16',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_17',
+            function: 'residential',
+            type: 'Detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_18',
+            function: 'residential',
+            type: 'Terrace',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_19',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_20',
+            function: 'residential',
+            type: 'Terrace',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_21',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_22',
+            function: 'non_residential',
+            type: 'nan',
+            area: 200,
+            roof_area: 80.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_23',
+            function: 'non_residential',
+            type: 'nan',
+            area: 750,
+            roof_area: 375.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_24',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_25',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_26',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 350.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_27',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_28',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_29',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_30',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_31',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_32',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_33',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_34',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_35',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_36',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_37',
+            function: 'non_residential',
+            type: 'nan',
+            area: 200,
+            roof_area: 80.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_38',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_39',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_40',
+            function: 'non_residential',
+            type: 'nan',
+            area: 400,
+            roof_area: 160.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_41',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_42',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_43',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_44',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_45',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_46',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_47',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_48',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_49',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 350.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_50',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1500,
+            roof_area: 1050.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_51',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_52',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_53',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_54',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_55',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_56',
+            function: 'non_residential',
+            type: 'nan',
+            area: 200,
+            roof_area: 80.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_57',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_58',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_59',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_60',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_61',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_62',
+            function: 'non_residential',
+            type: 'nan',
+            area: 200,
+            roof_area: 80.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_63',
+            function: 'non_residential',
+            type: 'nan',
+            area: 400,
+            roof_area: 160.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_64',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 400.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_65',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_66',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_67',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_68',
+            function: 'non_residential',
+            type: 'nan',
+            area: 750,
+            roof_area: 375.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_69',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_70',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_71',
+            function: 'non_residential',
+            type: 'nan',
+            area: 150,
+            roof_area: 75.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_72',
+            function: 'non_residential',
+            type: 'nan',
+            area: 750,
+            roof_area: 375.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_73',
+            function: 'non_residential',
+            type: 'nan',
+            area: 150,
+            roof_area: 75.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_74',
+            function: 'non_residential',
+            type: 'nan',
+            area: 2000,
+            roof_area: 1400.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_75',
+            function: 'non_residential',
+            type: 'nan',
+            area: 2000,
+            roof_area: 1400.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_76',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_77',
+            function: 'residential',
+            type: 'Terrace',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_78',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_79',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_80',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_81',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_82',
+            function: 'residential',
+            type: 'Apartment',
+            area: 120,
+            roof_area: 36.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_83',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_84',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_85',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_86',
+            function: 'residential',
+            type: 'Terrace',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_87',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_88',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_89',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 100,
+            roof_area: 60.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_90',
+            function: 'residential',
+            type: 'Terrace',
+            area: 100,
+            roof_area: 60.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_91',
+            function: 'residential',
+            type: 'Terrace',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_92',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_93',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_94',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_95',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_96',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_97',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_98',
+            function: 'residential',
+            type: 'Apartment',
+            area: 120,
+            roof_area: 36.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_99',
+            function: 'residential',
+            type: 'Terrace',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_100',
+            function: 'residential',
+            type: 'Apartment',
+            area: 80,
+            roof_area: 24.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_101',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_102',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_103',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_104',
+            function: 'residential',
+            type: 'Detached',
+            area: 100,
+            roof_area: 60.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_105',
+            function: 'residential',
+            type: 'Detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_106',
+            function: 'residential',
+            type: 'Terrace',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_107',
+            function: 'residential',
+            type: 'Detached',
+            area: 100,
+            roof_area: 60.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_108',
+            function: 'residential',
+            type: 'Detached',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_109',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_110',
+            function: 'residential',
+            type: 'Detached',
+            area: 80,
+            roof_area: 48.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_111',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_112',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_113',
+            function: 'non_residential',
+            type: 'nan',
+            area: 200,
+            roof_area: 80.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_114',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_115',
+            function: 'non_residential',
+            type: 'nan',
+            area: 600,
+            roof_area: 240.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_116',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_117',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_118',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1500,
+            roof_area: 1050.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_119',
+            function: 'non_residential',
+            type: 'nan',
+            area: 2000,
+            roof_area: 1400.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_120',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 350.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_121',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1000,
+            roof_area: 700.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_122',
+            function: 'non_residential',
+            type: 'nan',
+            area: 1500,
+            roof_area: 1050.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_123',
+            function: 'non_residential',
+            type: 'nan',
+            area: 2000,
+            roof_area: 1400.0,
+            orientation: 'Flat'
+        });
+CREATE (n:Building {
+            id: 'B_124',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_125',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_126',
+            function: 'residential',
+            type: 'Apartment',
+            area: 200,
+            roof_area: 60.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_127',
+            function: 'residential',
+            type: 'Apartment',
+            area: 150,
+            roof_area: 45.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_128',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'SE'
+        });
+CREATE (n:Building {
+            id: 'B_129',
+            function: 'residential',
+            type: 'Detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'N'
+        });
+CREATE (n:Building {
+            id: 'B_130',
+            function: 'residential',
+            type: 'Apartment',
+            area: 120,
+            roof_area: 36.0,
+            orientation: 'NE'
+        });
+CREATE (n:Building {
+            id: 'B_131',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_132',
+            function: 'residential',
+            type: 'Semi-detached',
+            area: 150,
+            roof_area: 90.0,
+            orientation: 'NW'
+        });
+CREATE (n:Building {
+            id: 'B_133',
+            function: 'residential',
+            type: 'Detached',
+            area: 200,
+            roof_area: 120.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_134',
+            function: 'residential',
+            type: 'Terrace',
+            area: 120,
+            roof_area: 72.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_135',
+            function: 'residential',
+            type: 'Apartment',
+            area: 100,
+            roof_area: 30.0,
+            orientation: 'SW'
+        });
+CREATE (n:Building {
+            id: 'B_136',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_137',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'S'
+        });
+CREATE (n:Building {
+            id: 'B_138',
+            function: 'non_residential',
+            type: 'nan',
+            area: 800,
+            roof_area: 320.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_139',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_140',
+            function: 'non_residential',
+            type: 'nan',
+            area: 300,
+            roof_area: 150.0,
+            orientation: 'E'
+        });
+CREATE (n:Building {
+            id: 'B_141',
+            function: 'non_residential',
+            type: 'nan',
+            area: 500,
+            roof_area: 250.0,
+            orientation: 'W'
+        });
+CREATE (n:Building {
+            id: 'B_142',
+            function: 'non_residential',
+            type: 'nan',
+            area: 2000,
+            roof_area: 1400.0,
+            orientation: 'Flat'
+        });
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_1'})
+        CREATE (a)-[:CONNECTED_TO {distance: 70.83}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_2'})
+        CREATE (a)-[:CONNECTED_TO {distance: 88.97}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_3'})
+        CREATE (a)-[:CONNECTED_TO {distance: 87.80}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_4'})
+        CREATE (a)-[:CONNECTED_TO {distance: 82.36}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_5'})
+        CREATE (a)-[:CONNECTED_TO {distance: 31.76}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_6'})
+        CREATE (a)-[:CONNECTED_TO {distance: 97.71}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_7'})
+        CREATE (a)-[:CONNECTED_TO {distance: 74.68}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_8'})
+        CREATE (a)-[:CONNECTED_TO {distance: 72.56}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_9'})
+        CREATE (a)-[:CONNECTED_TO {distance: 92.70}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_10'})
+        CREATE (a)-[:CONNECTED_TO {distance: 40.94}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_11'})
+        CREATE (a)-[:CONNECTED_TO {distance: 50.46}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_12'})
+        CREATE (a)-[:CONNECTED_TO {distance: 49.20}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_13'})
+        CREATE (a)-[:CONNECTED_TO {distance: 20.47}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_14'})
+        CREATE (a)-[:CONNECTED_TO {distance: 35.97}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_15'})
+        CREATE (a)-[:CONNECTED_TO {distance: 73.34}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_16'})
+        CREATE (a)-[:CONNECTED_TO {distance: 13.54}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_17'})
+        CREATE (a)-[:CONNECTED_TO {distance: 51.60}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_18'})
+        CREATE (a)-[:CONNECTED_TO {distance: 75.14}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_19'})
+        CREATE (a)-[:CONNECTED_TO {distance: 76.21}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_20'})
+        CREATE (a)-[:CONNECTED_TO {distance: 92.40}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_21'})
+        CREATE (a)-[:CONNECTED_TO {distance: 60.43}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_22'})
+        CREATE (a)-[:CONNECTED_TO {distance: 28.67}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_23'})
+        CREATE (a)-[:CONNECTED_TO {distance: 79.38}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_24'})
+        CREATE (a)-[:CONNECTED_TO {distance: 55.52}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_25'})
+        CREATE (a)-[:CONNECTED_TO {distance: 83.27}]->(b);
+MATCH (a {id: 'LV_LV_NET_001'}), (b {id: 'B_26'})
+        CREATE (a)-[:CONNECTED_TO {distance: 29.85}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_27'})
+        CREATE (a)-[:CONNECTED_TO {distance: 10.65}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_28'})
+        CREATE (a)-[:CONNECTED_TO {distance: 35.26}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_29'})
+        CREATE (a)-[:CONNECTED_TO {distance: 26.46}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_30'})
+        CREATE (a)-[:CONNECTED_TO {distance: 74.57}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_31'})
+        CREATE (a)-[:CONNECTED_TO {distance: 55.17}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_32'})
+        CREATE (a)-[:CONNECTED_TO {distance: 43.64}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_33'})
+        CREATE (a)-[:CONNECTED_TO {distance: 16.93}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_34'})
+        CREATE (a)-[:CONNECTED_TO {distance: 29.21}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_35'})
+        CREATE (a)-[:CONNECTED_TO {distance: 93.55}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_36'})
+        CREATE (a)-[:CONNECTED_TO {distance: 28.55}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_37'})
+        CREATE (a)-[:CONNECTED_TO {distance: 62.19}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_38'})
+        CREATE (a)-[:CONNECTED_TO {distance: 83.89}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_39'})
+        CREATE (a)-[:CONNECTED_TO {distance: 36.19}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_40'})
+        CREATE (a)-[:CONNECTED_TO {distance: 82.16}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_41'})
+        CREATE (a)-[:CONNECTED_TO {distance: 39.15}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_42'})
+        CREATE (a)-[:CONNECTED_TO {distance: 61.78}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_43'})
+        CREATE (a)-[:CONNECTED_TO {distance: 35.36}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_44'})
+        CREATE (a)-[:CONNECTED_TO {distance: 61.85}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_45'})
+        CREATE (a)-[:CONNECTED_TO {distance: 28.98}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_46'})
+        CREATE (a)-[:CONNECTED_TO {distance: 82.78}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_47'})
+        CREATE (a)-[:CONNECTED_TO {distance: 53.26}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_48'})
+        CREATE (a)-[:CONNECTED_TO {distance: 92.55}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_49'})
+        CREATE (a)-[:CONNECTED_TO {distance: 66.69}]->(b);
+MATCH (a {id: 'LV_LV_NET_002'}), (b {id: 'B_50'})
+        CREATE (a)-[:CONNECTED_TO {distance: 84.51}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_51'})
+        CREATE (a)-[:CONNECTED_TO {distance: 86.52}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_52'})
+        CREATE (a)-[:CONNECTED_TO {distance: 57.37}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_53'})
+        CREATE (a)-[:CONNECTED_TO {distance: 74.47}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_54'})
+        CREATE (a)-[:CONNECTED_TO {distance: 60.01}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_55'})
+        CREATE (a)-[:CONNECTED_TO {distance: 12.04}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_56'})
+        CREATE (a)-[:CONNECTED_TO {distance: 74.64}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_57'})
+        CREATE (a)-[:CONNECTED_TO {distance: 99.42}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_58'})
+        CREATE (a)-[:CONNECTED_TO {distance: 88.30}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_59'})
+        CREATE (a)-[:CONNECTED_TO {distance: 14.74}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_60'})
+        CREATE (a)-[:CONNECTED_TO {distance: 94.09}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_61'})
+        CREATE (a)-[:CONNECTED_TO {distance: 28.08}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_62'})
+        CREATE (a)-[:CONNECTED_TO {distance: 14.91}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_63'})
+        CREATE (a)-[:CONNECTED_TO {distance: 11.05}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_64'})
+        CREATE (a)-[:CONNECTED_TO {distance: 48.06}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_65'})
+        CREATE (a)-[:CONNECTED_TO {distance: 37.07}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_66'})
+        CREATE (a)-[:CONNECTED_TO {distance: 26.07}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_67'})
+        CREATE (a)-[:CONNECTED_TO {distance: 17.78}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_68'})
+        CREATE (a)-[:CONNECTED_TO {distance: 42.15}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_69'})
+        CREATE (a)-[:CONNECTED_TO {distance: 30.58}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_70'})
+        CREATE (a)-[:CONNECTED_TO {distance: 67.42}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_71'})
+        CREATE (a)-[:CONNECTED_TO {distance: 43.91}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_72'})
+        CREATE (a)-[:CONNECTED_TO {distance: 50.50}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_73'})
+        CREATE (a)-[:CONNECTED_TO {distance: 78.99}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_74'})
+        CREATE (a)-[:CONNECTED_TO {distance: 41.40}]->(b);
+MATCH (a {id: 'LV_LV_NET_003'}), (b {id: 'B_75'})
+        CREATE (a)-[:CONNECTED_TO {distance: 24.90}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_76'})
+        CREATE (a)-[:CONNECTED_TO {distance: 36.53}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_77'})
+        CREATE (a)-[:CONNECTED_TO {distance: 71.15}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_78'})
+        CREATE (a)-[:CONNECTED_TO {distance: 20.63}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_79'})
+        CREATE (a)-[:CONNECTED_TO {distance: 68.96}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_80'})
+        CREATE (a)-[:CONNECTED_TO {distance: 75.40}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_81'})
+        CREATE (a)-[:CONNECTED_TO {distance: 67.96}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_82'})
+        CREATE (a)-[:CONNECTED_TO {distance: 42.70}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_83'})
+        CREATE (a)-[:CONNECTED_TO {distance: 68.82}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_84'})
+        CREATE (a)-[:CONNECTED_TO {distance: 84.81}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_85'})
+        CREATE (a)-[:CONNECTED_TO {distance: 38.39}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_86'})
+        CREATE (a)-[:CONNECTED_TO {distance: 34.19}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_87'})
+        CREATE (a)-[:CONNECTED_TO {distance: 96.14}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_88'})
+        CREATE (a)-[:CONNECTED_TO {distance: 90.21}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_89'})
+        CREATE (a)-[:CONNECTED_TO {distance: 34.29}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_90'})
+        CREATE (a)-[:CONNECTED_TO {distance: 25.37}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_91'})
+        CREATE (a)-[:CONNECTED_TO {distance: 48.09}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_92'})
+        CREATE (a)-[:CONNECTED_TO {distance: 55.49}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_93'})
+        CREATE (a)-[:CONNECTED_TO {distance: 25.15}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_94'})
+        CREATE (a)-[:CONNECTED_TO {distance: 12.21}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_95'})
+        CREATE (a)-[:CONNECTED_TO {distance: 83.66}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_96'})
+        CREATE (a)-[:CONNECTED_TO {distance: 93.22}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_97'})
+        CREATE (a)-[:CONNECTED_TO {distance: 16.21}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_98'})
+        CREATE (a)-[:CONNECTED_TO {distance: 85.65}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_99'})
+        CREATE (a)-[:CONNECTED_TO {distance: 49.81}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_100'})
+        CREATE (a)-[:CONNECTED_TO {distance: 26.04}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_101'})
+        CREATE (a)-[:CONNECTED_TO {distance: 44.76}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_102'})
+        CREATE (a)-[:CONNECTED_TO {distance: 87.93}]->(b);
+MATCH (a {id: 'LV_LV_NET_004'}), (b {id: 'B_103'})
+        CREATE (a)-[:CONNECTED_TO {distance: 20.99}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_104'})
+        CREATE (a)-[:CONNECTED_TO {distance: 18.87}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_105'})
+        CREATE (a)-[:CONNECTED_TO {distance: 96.92}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_106'})
+        CREATE (a)-[:CONNECTED_TO {distance: 36.42}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_107'})
+        CREATE (a)-[:CONNECTED_TO {distance: 87.52}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_108'})
+        CREATE (a)-[:CONNECTED_TO {distance: 60.54}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_109'})
+        CREATE (a)-[:CONNECTED_TO {distance: 31.64}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_110'})
+        CREATE (a)-[:CONNECTED_TO {distance: 36.55}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_111'})
+        CREATE (a)-[:CONNECTED_TO {distance: 47.08}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_112'})
+        CREATE (a)-[:CONNECTED_TO {distance: 23.46}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_113'})
+        CREATE (a)-[:CONNECTED_TO {distance: 73.90}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_114'})
+        CREATE (a)-[:CONNECTED_TO {distance: 47.59}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_115'})
+        CREATE (a)-[:CONNECTED_TO {distance: 90.03}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_116'})
+        CREATE (a)-[:CONNECTED_TO {distance: 92.41}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_117'})
+        CREATE (a)-[:CONNECTED_TO {distance: 92.23}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_118'})
+        CREATE (a)-[:CONNECTED_TO {distance: 68.44}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_119'})
+        CREATE (a)-[:CONNECTED_TO {distance: 52.85}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_120'})
+        CREATE (a)-[:CONNECTED_TO {distance: 17.59}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_121'})
+        CREATE (a)-[:CONNECTED_TO {distance: 78.00}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_122'})
+        CREATE (a)-[:CONNECTED_TO {distance: 18.02}]->(b);
+MATCH (a {id: 'LV_LV_NET_005'}), (b {id: 'B_123'})
+        CREATE (a)-[:CONNECTED_TO {distance: 26.42}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_124'})
+        CREATE (a)-[:CONNECTED_TO {distance: 85.85}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_125'})
+        CREATE (a)-[:CONNECTED_TO {distance: 86.83}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_126'})
+        CREATE (a)-[:CONNECTED_TO {distance: 49.12}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_127'})
+        CREATE (a)-[:CONNECTED_TO {distance: 74.80}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_128'})
+        CREATE (a)-[:CONNECTED_TO {distance: 29.81}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_129'})
+        CREATE (a)-[:CONNECTED_TO {distance: 90.70}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_130'})
+        CREATE (a)-[:CONNECTED_TO {distance: 68.86}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_131'})
+        CREATE (a)-[:CONNECTED_TO {distance: 87.19}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_132'})
+        CREATE (a)-[:CONNECTED_TO {distance: 45.27}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_133'})
+        CREATE (a)-[:CONNECTED_TO {distance: 13.60}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_134'})
+        CREATE (a)-[:CONNECTED_TO {distance: 99.38}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_135'})
+        CREATE (a)-[:CONNECTED_TO {distance: 78.59}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_136'})
+        CREATE (a)-[:CONNECTED_TO {distance: 24.98}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_137'})
+        CREATE (a)-[:CONNECTED_TO {distance: 67.61}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_138'})
+        CREATE (a)-[:CONNECTED_TO {distance: 95.11}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_139'})
+        CREATE (a)-[:CONNECTED_TO {distance: 90.84}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_140'})
+        CREATE (a)-[:CONNECTED_TO {distance: 94.60}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_141'})
+        CREATE (a)-[:CONNECTED_TO {distance: 19.89}]->(b);
+MATCH (a {id: 'LV_LV_NET_006'}), (b {id: 'B_142'})
+        CREATE (a)-[:CONNECTED_TO {distance: 86.87}]->(b);

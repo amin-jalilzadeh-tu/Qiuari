@@ -1,0 +1,219 @@
+# config/tasks_config.yaml
+# Task-specific configurations for multi-task learning
+
+# Task 1: Energy Community Clustering
+clustering:
+  enabled: true
+  min_cluster_size: 3
+  max_cluster_size: 20
+  num_clusters: "auto"  # or specific number
+  
+  # DMoN parameters
+  dmon:
+    collapse_regularization: 0.1
+    modularity_weight: 1.0
+    entropy_regularization: 0.5
+    
+  # Complementarity metrics
+  complementarity:
+    correlation_method: "pearson"  # pearson, spearman, or dtw
+    negative_correlation_bonus: 2.0
+    temporal_alignment_window: 4  # hours
+    
+  # Constraints
+  constraints:
+    respect_transformer_boundaries: true
+    max_electrical_distance: 3  # hops
+    min_diversity_index: 0.3
+    
+# Task 2: Solar Deployment
+solar_optimization:
+  enabled: true
+  
+  # Technical parameters
+  panel_efficiency: 0.20  # 20%
+  degradation_rate: 0.005  # 0.5% per year
+  system_losses: 0.14  # 14% total losses
+  
+  # Scoring weights
+  scoring:
+    generation_potential: 0.3
+    self_consumption: 0.3
+    grid_relief: 0.2
+    economic_viability: 0.2
+    
+  # Constraints
+  min_roof_area: 20  # m²
+  max_capacity_per_building: 100  # kWp
+  shading_threshold: 0.7  # minimum non-shaded ratio
+  
+# Task 3: Retrofit Targeting
+retrofit:
+  enabled: true
+  
+  # Building age categories
+  age_categories:
+    pre_1945: 1.5  # priority multiplier
+    1945_1975: 1.3
+    1975_1995: 1.1
+    1995_2010: 0.9
+    post_2010: 0.5
+    
+  # Energy performance thresholds
+  performance:
+    target_energy_label: "B"
+    max_heating_demand: 50  # kWh/m²/year
+    insulation_u_value_target: 0.3  # W/m²K
+    
+  # Cost-benefit parameters
+  economics:
+    investment_cap: 50000  # € per building
+    payback_period_max: 15  # years
+    energy_price_escalation: 0.03  # 3% per year
+    
+# Task 4: Thermal Sharing (Adjacency)
+thermal_sharing:
+  enabled: true
+  
+  # Heat transfer parameters
+  heat_transfer:
+    wall_u_value: 2.0  # W/m²K
+    temperature_difference_min: 5  # °C
+    sharing_efficiency: 0.85
+    
+  # Network types
+  network_types:
+    - district_heating
+    - heat_recovery
+    - thermal_storage_sharing
+    
+  # Feasibility criteria
+  feasibility:
+    min_shared_wall: 5  # meters
+    max_pipe_distance: 100  # meters
+    min_utilization_hours: 2000  # hours/year
+    
+# Task 5: Electrification Planning
+electrification:
+  enabled: true
+  
+  # Heat pump specifications
+  heat_pump:
+    cop_air_source: 3.0
+    cop_ground_source: 4.0
+    cop_degradation_temp: 0.02  # per °C below 7°C
+    
+  # Electrical requirements
+  electrical:
+    min_service_capacity: 100  # Amps
+    power_factor: 0.95
+    startup_current_multiplier: 3
+    
+  # Readiness scoring
+  readiness_criteria:
+    immediate: 0.9  # score threshold
+    conditional: 0.6
+    major_upgrade: 0.3
+    
+# Task 6: Battery Placement
+battery_placement:
+  enabled: true
+  
+  # Battery specifications
+  battery_specs:
+    efficiency_roundtrip: 0.90
+    depth_of_discharge: 0.85
+    cycles_lifetime: 6000
+    degradation_rate: 0.02  # per year
+    
+  # Use cases (weights)
+  use_cases:
+    peak_shaving: 0.3
+    solar_storage: 0.3
+    backup_power: 0.2
+    grid_services: 0.2
+    
+  # Sizing constraints
+  sizing:
+    min_capacity: 5  # kWh
+    max_capacity: 500  # kWh
+    c_rate_max: 1.0
+    hours_autonomy_min: 2
+    
+# Task 7: P2P Energy Trading
+p2p_trading:
+  enabled: true
+  
+  # Trading parameters
+  trading:
+    min_trade_volume: 1  # kWh
+    max_trade_distance: 3  # network hops
+    price_premium_local: 0.02  # €/kWh above feed-in
+    
+  # Matching criteria
+  matching:
+    correlation_threshold: -0.3  # negative for complementarity
+    min_overlap_hours: 4  # hours per day
+    reliability_score_min: 0.8
+    
+  # Settlement
+  settlement:
+    interval: 15  # minutes
+    blockchain_enabled: false
+    smart_contract_address: null
+    
+# Task 8: Grid Congestion Prediction
+congestion_prediction:
+  enabled: true
+  
+  # Prediction horizons
+  horizons:
+    short_term: 24  # hours
+    medium_term: 168  # 1 week
+    long_term: 8760  # 1 year
+    
+  # Growth scenarios
+  growth_rates:
+    base_load: 0.02  # 2% per year
+    ev_adoption: 0.15  # 15% per year
+    heat_pump_adoption: 0.10  # 10% per year
+    solar_adoption: 0.12  # 12% per year
+    
+  # Alert thresholds
+  alerts:
+    yellow: 0.80  # 80% of capacity
+    orange: 0.90  # 90% of capacity
+    red: 0.95  # 95% of capacity
+    
+  # Mitigation options
+  mitigation:
+    demand_response: true
+    dynamic_pricing: true
+    curtailment: false
+    grid_upgrade_threshold: 0.95
+
+# Global Task Settings
+global:
+  # Task scheduling
+  task_priority:
+    - congestion_prediction  # Run first for safety
+    - clustering  # Form communities
+    - solar_optimization  # Then interventions
+    - battery_placement
+    - electrification
+    - retrofit
+    - thermal_sharing
+    - p2p_trading
+    
+  # Validation settings
+  validation:
+    physics_checks: true
+    economic_viability: true
+    social_acceptance: false  # future work
+    
+  # Output formats
+  output:
+    save_embeddings: true
+    save_attention_weights: true
+    generate_explanations: true
+    visualization: true

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash($env:KMP_DUPLICATE_LIB_OK=\"TRUE\")",
+      "Bash(python:*)",
+      "Bash(set KMP_DUPLICATE_LIB_OK=TRUE)",
+      "Bash(pip install:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(cp:*)",
+      "Bash(grep:*)",
+      "Bash(dir:*)",
+      "Bash(quarto render:*)",
+      "Bash(timeout:*)",
+      "Bash(neo4j status:*)",
+      "Bash(cat:*)",
+      "Bash(findstr:*)",
+      "Bash(cmd /c:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "acceptEdits"
+  }
+}

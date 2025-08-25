@@ -1,0 +1,6 @@
+2025-08-23 03:48:52,853 - __main__ - INFO - Energy GNN Pipeline initialized
+2025-08-23 03:48:52,853 - __main__ - INFO - Connecting to Neo4j...
+2025-08-23 03:48:52,853 - data.kg_connector - INFO - Connected to Neo4j at neo4j://127.0.0.1:7687
+2025-08-23 03:48:56,408 - __main__ - INFO - Connected to Neo4j successfully!
+2025-08-23 03:48:56,408 - __main__ - INFO - Database statistics:
+2025-08-23 03:48:56,408 - __main__ - ERROR - Failed to connect to Neo4j: 'building_count'

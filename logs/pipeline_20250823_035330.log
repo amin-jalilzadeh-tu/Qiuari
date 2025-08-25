@@ -1,0 +1,21 @@
+2025-08-23 03:53:30,152 - __main__ - INFO - Energy GNN Pipeline initialized
+2025-08-23 03:53:30,152 - __main__ - INFO - Connecting to Neo4j...
+2025-08-23 03:53:30,153 - data.kg_connector - INFO - Connected to Neo4j at neo4j://127.0.0.1:7687
+2025-08-23 03:53:30,490 - __main__ - INFO - Connected to Neo4j successfully!
+2025-08-23 03:53:30,490 - __main__ - INFO - Database statistics:
+2025-08-23 03:53:30,490 - __main__ - INFO -   Buildings: 1517
+2025-08-23 03:53:30,490 - __main__ - INFO -   Cable Groups: 209
+2025-08-23 03:53:30,490 - __main__ - INFO -   Transformers: 49
+2025-08-23 03:53:30,490 - __main__ - INFO -   Total Relationships: 2194391
+2025-08-23 03:53:30,614 - __main__ - INFO - Extracting data from Neo4j...
+2025-08-23 03:53:30,864 - __main__ - WARNING - Incomplete data for LV group HV_GROUP_0001, skipping
+2025-08-23 03:53:30,880 - __main__ - WARNING - Incomplete data for LV group HV_GROUP_0002, skipping
+2025-08-23 03:53:30,894 - __main__ - WARNING - Incomplete data for LV group HV_GROUP_0003, skipping
+2025-08-23 03:53:30,894 - __main__ - INFO - Successfully extracted 0 LV groups
+2025-08-23 03:53:30,895 - __main__ - INFO - Saved extracted data to data\processed\extracted_data.json
+2025-08-23 03:53:30,895 - __main__ - INFO - Preparing datasets...
+2025-08-23 03:53:30,895 - __main__ - INFO - Dataset split: Train=0, Val=0, Test=0
+2025-08-23 03:53:30,897 - __main__ - INFO - Saved train dataset with 0 graphs to data\processed\train_dataset.pt
+2025-08-23 03:53:30,898 - __main__ - INFO - Saved val dataset with 0 graphs to data\processed\val_dataset.pt
+2025-08-23 03:53:30,898 - __main__ - INFO - Saved test dataset with 0 graphs to data\processed\test_dataset.pt
+2025-08-23 03:53:30,898 - __main__ - INFO - Starting model training...

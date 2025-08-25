@@ -1,0 +1,32 @@
+base_epochs: 50
+device: cuda
+experiment_dir: experiments
+intervention_rounds: 5
+interventions_per_round: 5
+loss:
+  cascade_weight: 1.5
+  complementarity_weight: 1.0
+  network_impact_weight: 2.0
+  quality_weight: 0.5
+model:
+  building_features: 17
+  hidden_dim: 128
+  max_cascade_hops: 3
+  num_clusters: 20
+  num_layers: 4
+num_buildings: 200
+num_lv_groups: 10
+selection:
+  diversity_bonus: 0.2
+  local_weight: 0.3
+  min_spacing: 2
+  network_weight: 0.7
+simulation:
+  grid_loss_per_hop: 0.02
+  p2p_efficiency: 0.95
+  solar_efficiency: 0.18
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+use_kg: false

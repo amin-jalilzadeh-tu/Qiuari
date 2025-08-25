@@ -1,0 +1,234 @@
+# Energy GNN System Configuration
+
+# Discovery Mode - Enable new unsupervised discovery approach
+use_discovery_mode: true
+
+# Neo4j Connection
+kg:
+  uri: "neo4j://127.0.0.1:7687"
+  user: "neo4j"
+  password: "aminasad"
+  database: "neo4j"  # optional, defaults to neo4j
+  
+# Graph Construction
+graph:
+  node_types: ["building", "lv_group", "transformer", "adjacency_cluster"]
+  edge_types: ["connected_to", "belongs_to", "supplies", "adjacent_to"]
+  max_distance: 500  # meters
+
+# Data Configuration
+data:
+  data_dir: "data/processed"
+  cache_dir: "data/cache"
+  
+# Data Loader Configuration
+data_loader:
+  batch_size: 32
+  num_workers: 0  # Set to 0 for Windows to avoid memory issues
+  shuffle: true
+  pin_memory: true
+  min_cluster_size: 3
+  
+# Feature Configuration
+features:
+  building_features:
+    - area                # Building floor area (m²)
+    - height             # Building height (m)
+    - age                # Building age (years)
+    - energy_label       # Energy efficiency rating (A-G encoded as 1-7)
+    - roof_area          # Available roof area for solar (m²)
+    - orientation        # Building orientation (degrees from north)
+    - occupancy          # Number of occupants
+    - building_type      # Residential/Commercial/Industrial (encoded)
+    - has_solar          # Binary: existing solar installation
+    - has_battery        # Binary: existing battery storage
+    - has_heat_pump      # Binary: existing heat pump
+    
+  temporal_features:
+    - hour               # Hour of day (0-23)
+    - day_of_week        # Day of week (0-6)
+    - month              # Month (1-12)
+    - is_weekend         # Binary: weekend flag
+    - season             # Season (0-3)
+    
+  edge_features:
+    - distance           # Physical distance between buildings (m)
+    - cable_capacity     # Electrical cable capacity (kW)
+    - resistance         # Cable resistance (Ohm)
+    
+  energy_features:
+    - consumption_profile   # 96 timesteps (15-min intervals)
+    - generation_profile    # 96 timesteps (if solar exists)
+    - peak_demand          # Maximum demand (kW)
+    - base_load            # Minimum demand (kW)
+    - load_factor          # Average/Peak ratio
+
+# Model Configuration
+model:
+  # Architecture
+  input_dim: 17            # Total input features per node
+  edge_dim: 3              # Total edge features
+  hidden_dim: 256          # Hidden layer dimension
+  num_layers: 3            # Number of GNN layers
+  num_clusters: 20         # Maximum clusters per LV group
+  task_hidden_dim: 128     # Task head hidden dimension
+  dropout: 0.1             # Dropout rate
+  
+  # Node feature dimensions
+  building_features: 17
+  cable_group_features: 12
+  transformer_features: 8
+  cluster_features: 11
+  
+  # GNN specific
+  heads: 8                 # Number of attention heads
+  negative_slope: 0.2      # LeakyReLU slope
+  concat: True             # Concatenate attention heads
+  
+  # Task-specific
+  num_interventions: 4     # solar, battery, retrofit, heat_pump
+  cascade_hops: 3          # Multi-hop cascade prediction
+  temporal_window: 24      # Hours to consider
+  
+  # Discovery mode specific
+  type: "hetero"           # Model type (hetero/homo)
+  max_clusters: 20         # Maximum number of clusters
+  min_cluster_size: 3      # Minimum buildings per cluster
+  max_cluster_size: 20     # Maximum buildings per cluster
+  use_discovery_mode: true # Enable discovery components
+
+# Training Configuration
+training:
+  # Basic settings
+  num_epochs: 5
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  
+  # Optimization
+  optimizer:
+    type: "AdamW"
+  grad_clip: 1.0
+  
+  # Scheduler
+  scheduler:
+    type: "CosineAnnealingWarmRestarts"
+    T0: 10
+    T_mult: 2
+    min_lr: 0.000001
+  
+  # Checkpointing
+  checkpoint_interval: 10
+  early_stopping_patience: 20
+  
+  # Validation
+  val_frequency: 1         # Validate every N epochs
+  
+# Loss Configuration
+loss:
+  # Loss weights
+  w_cluster: 1.0           # Clustering loss weight
+  w_placement: 1.0         # Placement loss weight
+  w_flow: 1.0              # Energy flow loss weight
+  w_physics: 10.0          # Physics constraint weight (high!)
+  
+  # Clustering specific
+  alpha_complementarity: 2.0
+  alpha_network: 1.0
+  alpha_temporal: 0.5
+  
+  # Placement specific
+  alpha_cascade: 2.0
+  alpha_balance: 1.0
+  
+  # Constraints
+  min_cluster_size: 3
+  max_cluster_size: 20
+  
+# Inference Configuration
+inference:
+  cache_timeout: 300       # Cache timeout in seconds
+  confidence_threshold: 0.7
+  
+  # What-if scenarios
+  intervention_sizes:
+    solar: [10, 20, 30, 50, 100]      # kW
+    battery: [10, 25, 50, 100]        # kWh
+    retrofit: [10, 20, 30]            # % reduction
+    heat_pump: [5, 10, 15]            # kW
+  
+  # Analysis parameters
+  temporal_hours: 24       # Hours to analyze
+  cascade_depth: 3         # Hops to track
+  
+# Evaluation Metrics
+metrics:
+  primary:
+    - self_sufficiency
+    - peak_reduction
+    - complementarity
+    - physics_violations
+    
+  secondary:
+    - line_losses
+    - transformer_loading
+    - voltage_stability
+    - carbon_reduction
+    
+  clustering:
+    - modularity
+    - conductance
+    - coverage
+    - stability
+    
+  placement:
+    - network_benefit
+    - cascade_reach
+    - phase_balance
+    - roi_estimate
+
+# System Configuration
+system:
+  random_seed: 42
+  num_workers: 0           # DataLoader workers (0 for Windows to avoid memory issues)
+  pin_memory: true         # Pin memory for GPU
+  device: "cuda"           # cuda or cpu
+  mixed_precision: false   # Use mixed precision training
+  
+# Logging Configuration
+logging:
+  level: "INFO"
+  log_dir: "logs"
+  tensorboard: true
+  wandb: false             # Weights & Biases logging
+  
+# Experiment Configuration
+experiment:
+  name: "energy_gnn_unified"
+  description: "Unified GNN for dynamic clustering and network-aware placement"
+  tags:
+    - "clustering"
+    - "placement"
+    - "multi-hop"
+    - "temporal"
+    - "physics-informed"
+    
+# Analysis Configuration
+analysis:
+  methods:
+    - "pattern_detection"
+    - "intervention_planning"
+    - "cascade_analysis"
+    
+# Validation Configuration  
+validation:
+  metrics:
+    - "accuracy"
+    - "f1_score"
+    - "self_sufficiency"
+    
+# Planning Configuration
+planning:
+  horizon: 10  # years
+  discount_rate: 0.05
+  intervention_budget: 1000000  # euros

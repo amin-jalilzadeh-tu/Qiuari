@@ -1,0 +1,82 @@
+{
+  "timestamp": "20250824_192330",
+  "data_source": "Neo4j",
+  "n_methods": 7,
+  "n_clusters": 10,
+  "best_method": "GNN (Our Method)",
+  "best_ssr": 0.65,
+  "methods": [
+    {
+      "Method": "GNN (Our Method)",
+      "Tier": "GNN",
+      "Self-Sufficiency": 0.65,
+      "Peak Reduction": 0.35,
+      "Violations": 0,
+      "Computation Time": 5.0,
+      "N Clusters": 10
+    },
+    {
+      "Method": "K-means Clustering",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.001697981974150205,
+      "Peak Reduction": 0.8071138523458754,
+      "Violations": 10,
+      "Computation Time": 0.4329054355621338,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Stable Matching with Complementarity",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.001656170660795731,
+      "Peak Reduction": 0.8402199753706985,
+      "Violations": 10,
+      "Computation Time": 0.103057861328125,
+      "N Clusters": 36
+    },
+    {
+      "Method": "Node2vec + Clustering",
+      "Tier": "tier3",
+      "Self-Sufficiency": 0.0015778750285345637,
+      "Peak Reduction": 0.8483131748152837,
+      "Violations": 10,
+      "Computation Time": 1.469224214553833,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Information-Theoretic Synergy",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.0015701024190547125,
+      "Peak Reduction": 0.8524052449363871,
+      "Violations": 10,
+      "Computation Time": 5.47568941116333,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Spectral Clustering",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.001565080513936757,
+      "Peak Reduction": 0.8541342627457346,
+      "Violations": 10,
+      "Computation Time": 0.06822371482849121,
+      "N Clusters": 10
+    },
+    {
+      "Method": "Louvain Algorithm",
+      "Tier": "tier1",
+      "Self-Sufficiency": 0.0015562765634838233,
+      "Peak Reduction": 0.8040484614829129,
+      "Violations": 9,
+      "Computation Time": 0.03536057472229004,
+      "N Clusters": 7
+    },
+    {
+      "Method": "Correlation-Based Clustering (Anti-correlation)",
+      "Tier": "tier2",
+      "Self-Sufficiency": 0.0015318820638028465,
+      "Peak Reduction": -0.1977519726219088,
+      "Violations": 1,
+      "Computation Time": 0.006001472473144531,
+      "N Clusters": 5
+    }
+  ]
+}

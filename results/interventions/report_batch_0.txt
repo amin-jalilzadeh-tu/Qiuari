@@ -1,0 +1,89 @@
+
+ENERGY INTERVENTION PLAN
+========================
+Plan ID: plan_20250825_164027
+Total Investment: $188,711
+
+EXPECTED BENEFITS
+-----------------
+Peak Reduction: 32.7 kW
+Carbon Reduction: 68.3 tons/year
+Self-Sufficiency: 15.0% increase
+Annual Savings: $3,422
+
+IMPLEMENTATION PHASES
+---------------------
+
+Phase 1: Quick Wins & Enablers
+Duration: 1-2 months
+Interventions: 0
+Budget: 15% of total
+
+Phase 2: Core Infrastructure
+Duration: 2-6 months
+Interventions: 5
+Budget: 45% of total
+
+Phase 3: Deep Retrofits & Grid Upgrades
+Duration: 6-12 months
+Interventions: 6
+Budget: 40% of total
+
+TOP PRIORITY INTERVENTIONS
+--------------------------
+
+retrofit_4
+  Type: building_retrofit
+  Location: 4
+  Size: 15.0
+  Cost: $50,000
+  Priority: 6316.2
+  Network Effect: 1.00x
+
+retrofit_7
+  Type: building_retrofit
+  Location: 7
+  Size: 15.0
+  Cost: $50,000
+  Priority: 6316.2
+  Network Effect: 1.00x
+
+battery_0_0
+  Type: battery_storage
+  Location: 0
+  Size: 55.6
+  Cost: $27,824
+  Priority: 1688.6
+  Network Effect: 1.00x
+
+solar_19_0
+  Type: solar_pv
+  Location: 19
+  Size: 15.7
+  Cost: $15,744
+  Priority: 317.7
+  Network Effect: 1.00x
+
+solar_1_0
+  Type: solar_pv
+  Location: 1
+  Size: 15.6
+  Cost: $15,567
+  Priority: 317.6
+  Network Effect: 1.00x
+
+solar_7_0
+  Type: solar_pv
+  Location: 7
+  Size: 14.9
+  Cost: $14,919
+  Priority: 317.2
+  Network Effect: 1.00x
+
+solar_21_0
+  Type: solar_pv
+  Location: 21
+  Size: 14.7
+  Cost: $14,657
+  Priority: 317.1
+  Network Effect: 1.00x

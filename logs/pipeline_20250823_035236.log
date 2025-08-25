@@ -1,0 +1,9 @@
+2025-08-23 03:52:36,412 - __main__ - INFO - Energy GNN Pipeline initialized
+2025-08-23 03:52:36,413 - __main__ - INFO - Connecting to Neo4j...
+2025-08-23 03:52:36,413 - data.kg_connector - INFO - Connected to Neo4j at neo4j://127.0.0.1:7687
+2025-08-23 03:52:37,610 - __main__ - INFO - Connected to Neo4j successfully!
+2025-08-23 03:52:37,611 - __main__ - INFO - Database statistics:
+2025-08-23 03:52:37,611 - __main__ - INFO -   Buildings: 1517
+2025-08-23 03:52:37,611 - __main__ - INFO -   Cable Groups: 209
+2025-08-23 03:52:37,611 - __main__ - INFO -   Transformers: 49
+2025-08-23 03:52:37,611 - __main__ - INFO -   Total Relationships: 2194391
