@@ -1,0 +1,3 @@
+@echo off
+set KMP_DUPLICATE_LIB_OK=TRUE
+python test_uncertainty_quantification.py

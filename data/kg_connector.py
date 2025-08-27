@@ -33,8 +33,12 @@ class KGConnector:
         """Test if connection is active."""
         try:
             with self.driver.session() as session:
-                result = session.run("RETURN 1 as test")
-                return result.single()["test"] == 1
+                try:
+                    result = session.run("RETURN 1 as test")
+                    return result.single()["test"] == 1
+                except Exception as e:
+                    logger.error(f'Query failed: {e}')
+                    return False
         except Exception as e:
             logger.error(f"Connection failed: {e}")
             return False
@@ -68,7 +72,11 @@ class KGConnector:
             RETURN s as substation, t_data as transformers
             """
             
-            result = session.run(query, district=district_name).data()
+            try:
+                result = session.run(query, district=district_name)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return []
             
             if not result:
                 logger.warning(f"No data found for district {district_name}")
@@ -93,22 +101,57 @@ class KGConnector:
             OPTIONAL MATCH (b)-[:IN_ADJACENCY_CLUSTER]->(ac:AdjacencyCluster)
             RETURN b.ogc_fid as id,
                    b.energy_label as energy_label,
+                   b.energy_label_simple as energy_label_simple,
                    b.area as area,
-                   b.building_function as function,
+                   b.building_function as building_function,
                    b.age_range as age_range,
                    b.building_year as year,
                    b.suitable_roof_area as roof_area,
+                   b.flat_roof_area as roof_flat,
+                   b.sloped_roof_area as roof_slanted,
                    b.height as height,
                    b.solar_potential as solar_potential,
                    b.electrification_feasibility as electrification,
                    b.has_solar as has_solar,
                    b.has_battery as has_battery,
                    b.has_heat_pump as has_heat_pump,
+                   b.x as x_coord,
+                   b.y as y_coord,
+                   b.housing_type as housing_type,
+                   b.woningtype as woningtype,
+                   b.district_name as district,
+                   b.neighborhood_name as neighborhood,
+                   b.residential_type as residential_type,
+                   b.non_residential_type as non_residential_type,
+                   b.building_orientation_cardinal as orientation,
+                   b.north_facade_length as north_facade,
+                   b.south_facade_length as south_facade,
+                   b.east_facade_length as east_facade,
+                   b.west_facade_length as west_facade,
+                   b.north_shared_length as north_shared,
+                   b.south_shared_length as south_shared,
+                   b.east_shared_length as east_shared,
+                   b.west_shared_length as west_shared,
+                   b.num_shared_walls as num_shared_walls,
+                   b.total_shared_length as total_shared_length,
+                   b.adjacency_type as adjacency_type,
+                   b.adjacency_count as adjacency_count,
+                   b.insulation_quality as insulation_quality,
+                   b.solar_capacity_kwp as solar_capacity_kwp,
+                   b.annual_electricity_kwh as annual_electricity,
+                   b.annual_heating_kwh as annual_heating,
+                   b.peak_electricity_demand_kw as peak_electricity,
+                   b.peak_heating_demand_kw as peak_heating,
+                   cg.group_id as lv_group,
                    ac.cluster_id as cluster_id
             """
             
-            result = session.run(query, group_id=group_id).data()
-            return result
+            try:
+                result = session.run(query, group_id=group_id)
+                return result.data()  # Convert to list of dicts
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return []
     
     def get_retrofit_candidates(self, district_name: str, 
                               energy_labels: List[str] = ['E', 'F', 'G'],
@@ -300,7 +343,11 @@ class KGConnector:
             
             # Convert building IDs to strings
             str_ids = [str(bid) for bid in building_ids]
-            result = session.run(query, ids=str_ids).data()
+            try:
+                result = session.run(query, ids=str_ids)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return []
             return pd.DataFrame(result) if result else pd.DataFrame()
     
     def aggregate_to_cable_group(self, group_id: str) -> Dict[str, Any]:
@@ -321,7 +368,12 @@ class KGConnector:
             RETURN count(b) as actual_count
             """
             
-            check_result = session.run(check_query, group_id=group_id).single()
+            try:
+                result = session.run(check_query, group_id=group_id)
+                check_result = result.single()
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return None
             
             if not check_result or check_result['actual_count'] == 0:
                 # No buildings connected to this cable group
@@ -351,7 +403,11 @@ class KGConnector:
                 sum(CASE WHEN b.has_heat_pump = true THEN 1 ELSE 0 END) as hp_count
             """
             
-            result = session.run(query, group_id=group_id).single()
+            try:
+                result = session.run(query, group_id=group_id)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return None.single()
             return dict(result) if result else {'group_id': group_id, 'building_count': 0}
 
     
@@ -382,7 +438,11 @@ class KGConnector:
                 avg(hp.heating_capacity_kw) as avg_hp_capacity
             """
             
-            result = session.run(query, district=district_name).single()
+            try:
+                result = session.run(query, district=district_name)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return None.single()
             return dict(result) if result else {}
     
     
@@ -625,7 +685,11 @@ class KGConnector:
                 count(r) as relationship_count
             """
             
-            result = session.run(query).single()
+            try:
+                result = session.run(query)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return None.single()
             
             if result:
                 return {
@@ -669,7 +733,11 @@ class KGConnector:
             ORDER BY group_id
             """
             
-            result = session.run(query).data()
+            try:
+                result = session.run(query)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return []
             return [r['group_id'] for r in result if r['group_id']]
     
     def get_lv_group_data(self, lv_group_id: str) -> Dict[str, Any]:
@@ -683,7 +751,9 @@ class KGConnector:
             Dictionary with buildings, edges, transformers, and energy profiles
         """
         # Get buildings in this cable group
-        buildings = self.get_buildings_by_cable_group(lv_group_id)
+        buildings_result = self.get_buildings_by_cable_group(lv_group_id)
+        # Convert Neo4j result to list immediately
+        buildings = list(buildings_result) if buildings_result else []
         
         # Get transformer info
         with self.driver.session() as session:
@@ -691,7 +761,12 @@ class KGConnector:
             MATCH (cg:CableGroup {group_id: $group_id})-[:CONNECTS_TO]->(t:Transformer)
             RETURN t.id as id, t.capacity as capacity
             """
-            transformer_result = session.run(transformer_query, group_id=lv_group_id).data()
+            try:
+                result = session.run(transformer_query, group_id=lv_group_id)
+                transformer_data = result.data()
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                transformer_data = []
             
         # Create edge data (simplified for now)
         edges = []
@@ -709,7 +784,7 @@ class KGConnector:
         return {
             'buildings': buildings,
             'edges': edges,
-            'transformers': transformer_result,
+            'transformers': transformer_data,
             'energy_profiles': {}  # Placeholder for energy profiles
         }
     
@@ -730,7 +805,11 @@ class KGConnector:
             ORDER BY group_id
             """
             
-            result = session.run(query, district=district_id).data()
+            try:
+                result = session.run(query, district=district_id)
+            except Exception as e:
+                logger.error(f'Query failed: {e}')
+                return []
             return [r['group_id'] for r in result if r['group_id']]
     
     def close(self):

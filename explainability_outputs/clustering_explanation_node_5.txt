@@ -1,0 +1,34 @@
+CLUSTERING DECISION EXPLANATION FOR BUILDING 5
+============================================================
+
+Assignment: Cluster 2
+Cluster Size: 8 buildings
+
+KEY DISTINGUISHING FEATURES:
+  1. y_coord:
+     - This cluster avg: -97.36
+     - Other clusters avg: 19.09
+     - Difference: 610.1%
+  2. area:
+     - This cluster avg: 346.76
+     - Other clusters avg: 231.79
+     - Difference: 49.6%
+  3. energy_intensity:
+     - This cluster avg: 180.01
+     - Other clusters avg: 76.66
+     - Difference: 134.8%
+
+NEIGHBOR INFLUENCE:
+  - Total neighbors: 4
+  - Same cluster: 0 (0.0%)
+  - Weak local clustering (mixed neighbor clusters)
+
+BUILDING CHARACTERISTICS:
+  - Has battery storage
+  - Building area: 305 m²
+  - Energy score: 0.73
+  - Solar potential: 0.06
+
+PRACTICAL IMPLICATIONS:
+  - Coordinate interventions with cluster members for efficiency
+  - Share resources like batteries or heat networks

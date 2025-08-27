@@ -129,38 +129,42 @@ class InterventionRecommender:
         )
         interventions.extend(solar_interventions)
         
-        # 2. Battery storage recommendations
-        storage_interventions = self._recommend_storage(
-            analysis_results['energy_gaps'],
-            analysis_results['temporal_patterns'],
-            network_importance,
-            cluster_assignments,
-            complementarity_matrix
-        )
-        interventions.extend(storage_interventions)
+        # 2. Battery storage recommendations  
+        if 'temporal_patterns' in analysis_results:
+            storage_interventions = self._recommend_storage(
+                analysis_results['energy_gaps'],
+                analysis_results['temporal_patterns'],
+                network_importance,
+                cluster_assignments,
+                complementarity_matrix
+            )
+            interventions.extend(storage_interventions)
         
         # 3. Building retrofit recommendations
-        retrofit_interventions = self._recommend_retrofits(
-            building_data,
-            analysis_results['cluster_metrics'],
-            network_importance
-        )
-        interventions.extend(retrofit_interventions)
+        if 'cluster_metrics' in analysis_results:
+            retrofit_interventions = self._recommend_retrofits(
+                building_data,
+                analysis_results['cluster_metrics'],
+                network_importance
+            )
+            interventions.extend(retrofit_interventions)
         
         # 4. Demand response recommendations
-        dr_interventions = self._recommend_demand_response(
-            analysis_results['temporal_patterns'],
-            cluster_assignments,
-            network_importance
-        )
-        interventions.extend(dr_interventions)
+        if 'temporal_patterns' in analysis_results:
+            dr_interventions = self._recommend_demand_response(
+                analysis_results['temporal_patterns'],
+                cluster_assignments,
+                network_importance
+            )
+            interventions.extend(dr_interventions)
         
         # 5. Grid upgrade recommendations
-        grid_interventions = self._recommend_grid_upgrades(
-            analysis_results['network_bottlenecks'],
-            network_topology
-        )
-        interventions.extend(grid_interventions)
+        if 'network_bottlenecks' in analysis_results:
+            grid_interventions = self._recommend_grid_upgrades(
+                analysis_results['network_bottlenecks'],
+                network_topology
+            )
+            interventions.extend(grid_interventions)
         
         # 6. Smart technology recommendations
         smart_interventions = self._recommend_smart_tech(
@@ -235,11 +239,26 @@ class InterventionRecommender:
         solar_interventions = []
         
         # Find generation gaps during solar hours
-        solar_gaps = [g for g in energy_gaps if g.gap_type == 'generation']
+        # Handle both object and dict formats
+        solar_gaps = []
+        for g in energy_gaps:
+            if hasattr(g, 'gap_type'):
+                if g.gap_type == 'generation':
+                    solar_gaps.append(g)
+            elif isinstance(g, dict) and g.get('gap_type') == 'generation':
+                solar_gaps.append(g)
+            elif isinstance(g, dict) and 'gap' in g:
+                # Simple dict format with just gap value
+                solar_gaps.append(g)
         
         for gap in solar_gaps:
-            cluster_id = gap.cluster_id
-            required_generation = gap.magnitude  # kW
+            # Handle both object and dict formats
+            if hasattr(gap, 'cluster_id'):
+                cluster_id = gap.cluster_id
+                required_generation = gap.magnitude  # kW
+            elif isinstance(gap, dict):
+                cluster_id = gap.get('cluster_id', 0)
+                required_generation = gap.get('magnitude', gap.get('gap', 100))  # kW
             
             # Find buildings in cluster with solar potential
             if cluster_assignments is not None and hasattr(cluster_assignments, '__len__'):
@@ -355,12 +374,25 @@ class InterventionRecommender:
         storage_interventions = []
         
         # Find storage gaps (evening peaks, time-shifting needs)
-        storage_gaps = [g for g in energy_gaps if g.gap_type == 'storage']
+        # Handle both object and dict formats
+        storage_gaps = []
+        for g in energy_gaps:
+            if hasattr(g, 'gap_type'):
+                if g.gap_type == 'storage':
+                    storage_gaps.append(g)
+            elif isinstance(g, dict) and g.get('gap_type') == 'storage':
+                storage_gaps.append(g)
         
         for gap in storage_gaps:
-            cluster_id = gap.cluster_id
-            peak_power = gap.magnitude  # kW
-            duration = gap.duration  # hours
+            # Handle both object and dict formats
+            if hasattr(gap, 'cluster_id'):
+                cluster_id = gap.cluster_id
+                peak_power = gap.magnitude  # kW
+                duration = gap.duration  # hours
+            else:
+                cluster_id = gap.get('cluster_id', 0)
+                peak_power = gap.get('magnitude', 10)  # kW
+                duration = gap.get('duration', 3)  # hours
             
             # Calculate required storage capacity
             energy_capacity = peak_power * duration  # kWh
@@ -440,7 +472,7 @@ class InterventionRecommender:
                     'cycles': 5000,
                     'efficiency': self.battery_efficiency,
                     'shared': is_shared,
-                    'control_strategy': 'peak_shaving' if gap.timestamp in [17, 18, 19] else 'self_consumption'
+                    'control_strategy': 'peak_shaving' if (hasattr(gap, 'timestamp') and gap.timestamp in [17, 18, 19]) or (isinstance(gap, dict) and gap.get('timestamp', 0) in [17, 18, 19]) else 'self_consumption'
                 },
                 estimated_cost=energy_capacity * self.costs[InterventionType.BATTERY_STORAGE],
                 expected_impact={
@@ -555,7 +587,11 @@ class InterventionRecommender:
         
         for cluster_pattern in temporal_patterns.items():
             cluster_name, patterns = cluster_pattern
-            cluster_id = int(cluster_name.split('_')[1])
+            try:
+                cluster_id = int(cluster_name.split('_')[1])
+            except (IndexError, ValueError):
+                # If cluster name doesn't follow expected format, use index
+                cluster_id = 0
             
             # Check if cluster has significant peak hours
             peak_hours = patterns['peak_hours']
@@ -611,18 +647,38 @@ class InterventionRecommender:
         grid_interventions = []
         
         # Focus on critical bottlenecks
-        critical_bottlenecks = [b for b in network_bottlenecks if b.utilization > 0.9]
+        # Handle both object and dict formats
+        critical_bottlenecks = []
+        for b in network_bottlenecks:
+            if hasattr(b, 'utilization'):
+                if b.utilization > 0.9:
+                    critical_bottlenecks.append(b)
+            elif isinstance(b, dict) and b.get('utilization', 0) > 0.9:
+                critical_bottlenecks.append(b)
         
         for bottleneck in critical_bottlenecks:
-            if bottleneck.type == 'transformer':
+            # Handle both object and dict formats
+            if hasattr(bottleneck, 'type'):
+                bottleneck_type = bottleneck.type
+            else:
+                bottleneck_type = bottleneck.get('type', 'transformer')
+            
+            if bottleneck_type == 'transformer':
                 # Transformer upgrade
-                current_capacity = bottleneck.capacity
-                required_capacity = bottleneck.peak_load * 1.25  # 25% safety margin
+                # Handle both object and dict formats
+                if hasattr(bottleneck, 'capacity'):
+                    current_capacity = bottleneck.capacity
+                    required_capacity = bottleneck.peak_load * 1.25  # 25% safety margin
+                    location = bottleneck.location
+                else:
+                    current_capacity = bottleneck.get('capacity', 100)
+                    required_capacity = bottleneck.get('peak_load', 80) * 1.25
+                    location = bottleneck.get('location', 'transformer_1')
                 
                 intervention = Intervention(
-                    intervention_id=f"upgrade_{bottleneck.location}",
+                    intervention_id=f"upgrade_{location}",
                     type=InterventionType.GRID_UPGRADE,
-                    location=bottleneck.location,
+                    location=location,
                     size=required_capacity,
                     specifications={
                         'current_capacity': current_capacity,
@@ -634,13 +690,13 @@ class InterventionRecommender:
                     expected_impact={
                         'capacity_increase': required_capacity - current_capacity,
                         'reliability_improvement': 0.95,
-                        'loss_reduction': 0.02 * bottleneck.peak_load
+                        'loss_reduction': 0.02 * (bottleneck.peak_load if hasattr(bottleneck, 'peak_load') else bottleneck.get('peak_load', 80))
                     },
                     network_effects={
-                        'affected_clusters': len(bottleneck.affected_clusters),
-                        'criticality': bottleneck.criticality
+                        'affected_clusters': len(bottleneck.affected_clusters if hasattr(bottleneck, 'affected_clusters') else bottleneck.get('affected_clusters', [])),
+                        'criticality': bottleneck.criticality if hasattr(bottleneck, 'criticality') else bottleneck.get('criticality', 0.5)
                     },
-                    priority_score=bottleneck.criticality,  # Use criticality as initial priority
+                    priority_score=bottleneck.criticality if hasattr(bottleneck, 'criticality') else bottleneck.get('criticality', 0.5),  # Use criticality as initial priority
                     implementation_timeline='6-9 months',
                     co_benefits=['reliability', 'loss_reduction', 'future_proofing']
                 )

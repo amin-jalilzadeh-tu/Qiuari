@@ -10,6 +10,7 @@ import torch.nn.functional as F
 import numpy as np
 from typing import Dict, Tuple, Optional, List
 import logging
+from utils.constants import CONFIDENCE_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +116,7 @@ class DistanceBasedLossCalculator(nn.Module):
         # Efficiency decreases with distance
         efficiency = torch.clamp(
             self.base_efficiency - self.loss_per_meter * distances,
-            min=0.85,  # Minimum 85% efficiency
+            min=CONFIDENCE_THRESHOLD,  # Minimum 85% efficiency
             max=1.0    # Maximum 100% efficiency
         )
         

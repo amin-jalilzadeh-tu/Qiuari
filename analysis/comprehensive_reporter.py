@@ -200,7 +200,7 @@ class ComprehensiveReporter:
                 'has_heat_pump': building_data.get('has_heat_pump', [False])[i] if i < len(building_data.get('has_heat_pump', [])) else False,
                 
                 # GNN outputs
-                'cluster_probability': gnn_outputs.get('cluster_probs', [[1.0]])[i][clusters[i]] if 'cluster_probs' in gnn_outputs else 1.0,
+                'cluster_probability': gnn_outputs['cluster_probs'][i][clusters[i]] if 'cluster_probs' in gnn_outputs and i < len(gnn_outputs['cluster_probs']) and clusters[i] < len(gnn_outputs['cluster_probs'][i]) else 1.0,
                 'network_centrality': gnn_outputs.get('network_centrality_score', [0.5])[i] if i < len(gnn_outputs.get('network_centrality_score', [])) else 0.5,
                 'intervention_priority': gnn_outputs.get('intervention_priority', [0.5])[i] if i < len(gnn_outputs.get('intervention_priority', [])) else 0.5,
             }
@@ -335,28 +335,46 @@ class ComprehensiveReporter:
         self,
         clusters: np.ndarray,
         building_data: Dict,
-        intervention_plan: Dict,
+        intervention_plan,  # Can be InterventionPlan object or dict
         gnn_outputs: Dict
     ) -> pd.DataFrame:
         """Generate detailed intervention recommendations"""
         
         interventions = []
         
-        # Building-level interventions
-        if 'building_interventions' in intervention_plan:
-            for building_id, building_interventions in intervention_plan['building_interventions'].items():
-                for intervention in building_interventions:
+        # Handle InterventionPlan dataclass
+        if hasattr(intervention_plan, 'interventions'):
+            # It's an InterventionPlan object
+            for intervention in intervention_plan.interventions:
+                # Determine target type based on intervention's target_ids
+                if hasattr(intervention, 'target_ids') and intervention.target_ids:
+                    for target_id in intervention.target_ids:
+                        target_type = 'building' if 'building' in str(target_id).lower() else 'cluster'
+                        interventions.append(self._format_intervention(
+                            intervention, target_type, target_id, building_data, gnn_outputs
+                        ))
+                else:
+                    # Default to cluster level if no specific targets
                     interventions.append(self._format_intervention(
-                        intervention, 'building', building_id, building_data, gnn_outputs
+                        intervention, 'cluster', 0, building_data, gnn_outputs
                     ))
-        
-        # Cluster-level interventions
-        if 'cluster_interventions' in intervention_plan:
-            for cluster_id, cluster_interventions in intervention_plan['cluster_interventions'].items():
-                for intervention in cluster_interventions:
-                    interventions.append(self._format_intervention(
-                        intervention, 'cluster', cluster_id, building_data, gnn_outputs
-                    ))
+        # Handle legacy dictionary format
+        elif isinstance(intervention_plan, dict):
+            # Building-level interventions
+            if 'building_interventions' in intervention_plan:
+                for building_id, building_interventions in intervention_plan['building_interventions'].items():
+                    for intervention in building_interventions:
+                        interventions.append(self._format_intervention(
+                            intervention, 'building', building_id, building_data, gnn_outputs
+                        ))
+            
+            # Cluster-level interventions
+            if 'cluster_interventions' in intervention_plan:
+                for cluster_id, cluster_interventions in intervention_plan['cluster_interventions'].items():
+                    for intervention in cluster_interventions:
+                        interventions.append(self._format_intervention(
+                            intervention, 'cluster', cluster_id, building_data, gnn_outputs
+                        ))
         
         # Add default recommendations if no plan provided
         if not interventions:
@@ -425,11 +443,15 @@ class ComprehensiveReporter:
                 'cluster_id': int(cluster_id),
                 'num_buildings': len(cluster_indices),
                 
-                # Network metrics
-                'avg_centrality': np.mean([gnn_outputs.get('network_centrality_score', [0.5]*len(clusters))[i] 
-                                          for i in cluster_indices if i < len(gnn_outputs.get('network_centrality_score', []))]),
-                'max_centrality': np.max([gnn_outputs.get('network_centrality_score', [0.5]*len(clusters))[i] 
-                                         for i in cluster_indices if i < len(gnn_outputs.get('network_centrality_score', []))]),
+                # Network metrics - handle empty lists and out-of-bounds indices
+                'avg_centrality': (lambda x: np.mean(x) if len(x) > 0 else 0.5)(
+                    [gnn_outputs.get('network_centrality_score', [0.5]*len(clusters))[i] 
+                     for i in cluster_indices if i < len(gnn_outputs.get('network_centrality_score', [0.5]*len(clusters)))]
+                ),
+                'max_centrality': (lambda x: np.max(x) if len(x) > 0 else 0.5)(
+                    [gnn_outputs.get('network_centrality_score', [0.5]*len(clusters))[i] 
+                     for i in cluster_indices if i < len(gnn_outputs.get('network_centrality_score', [0.5]*len(clusters)))]
+                ),
                 
                 # Cascade potential
                 'cascade_1_hop': gnn_outputs.get('cascade_metrics', {}).get(f'cluster_{cluster_id}_1hop', 0),
@@ -545,7 +567,7 @@ class ComprehensiveReporter:
     
     def _format_intervention(
         self,
-        intervention: Dict,
+        intervention,  # Can be Intervention dataclass or dict
         target_type: str,
         target_id: str,
         building_data: Dict,
@@ -553,20 +575,47 @@ class ComprehensiveReporter:
     ) -> Dict:
         """Format intervention data for report"""
         
-        formatted = {
-            'target_type': target_type,
-            'target_id': f'{target_type.upper()}_{target_id:04d}' if isinstance(target_id, int) else target_id,
-            'intervention_type': intervention.get('type', 'unknown'),
-            'size_kw': intervention.get('size', 0),
-            'cost_eur': intervention.get('cost', 0),
-            'annual_savings_eur': intervention.get('annual_savings', 0),
-            'co2_reduction_tons': intervention.get('co2_reduction', 0),
-            'payback_years': intervention.get('payback', 0),
-            'priority': intervention.get('priority', 0.5),
-            'network_benefit': intervention.get('network_benefit', 0.5),
-            'cascade_potential': intervention.get('cascade_potential', 0.5),
-            'recommendation': intervention.get('recommendation', 'Consider implementation')
-        }
+        # Check if it's a dataclass (Intervention object)
+        if hasattr(intervention, '__dataclass_fields__'):
+            # Extract intervention type
+            if hasattr(intervention.type, 'value'):
+                intervention_type = intervention.type.value
+            elif hasattr(intervention.type, 'name'):
+                intervention_type = intervention.type.name.lower()
+            else:
+                intervention_type = str(intervention.type).lower()
+            
+            # Extract from dataclass attributes
+            formatted = {
+                'target_type': target_type,
+                'target_id': f'{target_type.upper()}_{target_id:04d}' if isinstance(target_id, int) else str(target_id),
+                'intervention_type': intervention_type,
+                'size_kw': getattr(intervention, 'capacity_kw', 0),
+                'cost_eur': getattr(intervention, 'estimated_cost', 0),
+                'annual_savings_eur': intervention.expected_impact.get('annual_savings', 0) if hasattr(intervention, 'expected_impact') else 0,
+                'co2_reduction_tons': intervention.expected_impact.get('carbon_reduction', 0) if hasattr(intervention, 'expected_impact') else 0,
+                'payback_years': getattr(intervention, 'payback_period', 0),
+                'priority': getattr(intervention, 'priority_score', 0.5),
+                'network_benefit': getattr(intervention, 'network_benefit', 0.5),
+                'cascade_potential': getattr(intervention, 'cascade_potential', 0.5),
+                'recommendation': intervention.co_benefits[0] if hasattr(intervention, 'co_benefits') and intervention.co_benefits else 'Consider implementation'
+            }
+        else:
+            # Handle as dictionary (legacy format)
+            formatted = {
+                'target_type': target_type,
+                'target_id': f'{target_type.upper()}_{target_id:04d}' if isinstance(target_id, int) else target_id,
+                'intervention_type': intervention.get('type', 'unknown'),
+                'size_kw': intervention.get('size', 0),
+                'cost_eur': intervention.get('cost', 0),
+                'annual_savings_eur': intervention.get('annual_savings', 0),
+                'co2_reduction_tons': intervention.get('co2_reduction', 0),
+                'payback_years': intervention.get('payback', 0),
+                'priority': intervention.get('priority', 0.5),
+                'network_benefit': intervention.get('network_benefit', 0.5),
+                'cascade_potential': intervention.get('cascade_potential', 0.5),
+                'recommendation': intervention.get('recommendation', 'Consider implementation')
+            }
         
         # Add additional metrics based on intervention type
         if formatted['intervention_type'] == 'solar':
@@ -579,7 +628,10 @@ class ComprehensiveReporter:
             formatted['cycles_per_year'] = 250  # Daily cycling
             
         elif formatted['intervention_type'] == 'retrofit':
-            formatted['energy_reduction_pct'] = intervention.get('reduction', 20)
+            if hasattr(intervention, '__dataclass_fields__'):
+                formatted['energy_reduction_pct'] = intervention.expected_impact.get('energy_reduction', 20) if hasattr(intervention, 'expected_impact') else 20
+            else:
+                formatted['energy_reduction_pct'] = intervention.get('reduction', 20)
             formatted['comfort_improvement'] = 'High'
             
         elif formatted['intervention_type'] == 'heat_pump':

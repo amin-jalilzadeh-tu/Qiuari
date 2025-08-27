@@ -17,7 +17,17 @@
       "Bash(neo4j status:*)",
       "Bash(cat:*)",
       "Bash(findstr:*)",
-      "Bash(cmd /c:*)"
+      "Bash(cmd /c:*)",
+      "Bash(claude-code --help)",
+      "Bash(claude mcp:*)",
+      "Bash(copy:*)",
+      "Bash(del \"D:\\Documents\\daily\\Qiuari_V3\\nul\")",
+      "Bash(del configconfig.yaml)",
+      "Bash(move configunified_config.yaml configconfig.yaml)",
+      "Bash(run_uncertainty_tests.bat)",
+      "Bash(quarto:*)",
+      "Bash(find:*)",
+      "Bash(del:*)"
     ],
     "deny": [],
     "ask": [],

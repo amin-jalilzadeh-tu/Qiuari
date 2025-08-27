@@ -1,0 +1,13 @@
+{
+  "tests_run": 5,
+  "tests_passed": 5,
+  "success_rate": 1.0,
+  "results": {
+    "attention": true,
+    "gradient_importance": true,
+    "perturbation_importance": true,
+    "subgraph": true,
+    "clustering": true
+  },
+  "output_directory": "explainability_outputs"
+}

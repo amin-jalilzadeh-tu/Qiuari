@@ -1,0 +1,2 @@
+cluster_id,lv_group,num_buildings,total_area_m2,avg_age_years,total_peak_demand_kw,total_base_load_kw,total_annual_consumption_mwh,self_sufficiency,complementarity_score,peak_reduction,network_stress,peak_hours,valley_hours,peak_valley_ratio
+0,LV_GROUP_0004,1,0,,0,0,0.0,0.0,0.0,0.0,0.0,"[3, 6, 11, 16, 23]","[9, 12, 14, 18, 21]",2.7087999461025962

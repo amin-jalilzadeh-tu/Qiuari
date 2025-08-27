@@ -194,120 +194,153 @@ class ComplementarityLoss(nn.Module):
 
 class EnergyBalanceLoss(nn.Module):
     """
-    Physics-informed loss ensuring energy balance and grid constraints
+    Energy balance loss for community formation (without electrical grid constraints)
     """
     
     def __init__(
         self,
         balance_weight: float = 1.0,
-        transformer_weight: float = 0.5,
-        voltage_weight: float = 0.3,
-        line_loss_weight: float = 0.2
+        spatial_weight: float = 0.5,
+        clustering_weight: float = 0.3
     ):
         super().__init__()
         self.balance_weight = balance_weight
-        self.transformer_weight = transformer_weight
-        self.voltage_weight = voltage_weight
-        self.line_loss_weight = line_loss_weight
+        self.spatial_weight = spatial_weight
+        self.clustering_weight = clustering_weight
         
     def forward(
         self,
-        power_flow: torch.Tensor,
+        energy_sharing: torch.Tensor,
         cluster_assignments: torch.Tensor,
-        transformer_capacity: Optional[torch.Tensor] = None,
-        line_capacity: Optional[torch.Tensor] = None
+        node_positions: Optional[torch.Tensor] = None,
+        consumption: Optional[torch.Tensor] = None,
+        generation: Optional[torch.Tensor] = None
     ) -> Tuple[torch.Tensor, Dict[str, torch.Tensor]]:
         """
-        Calculate physics constraint losses
+        Calculate energy balance and spatial losses
         
         Args:
-            power_flow: Power flow through network [N, T]
-            cluster_assignments: Cluster assignments
-            transformer_capacity: Transformer limits
-            line_capacity: Line capacity limits
+            energy_sharing: Energy sharing between nodes [N, N] or [N, N, T]
+            cluster_assignments: Cluster assignments [N] or [N, K] probabilities
+            node_positions: Spatial coordinates [N, 2]
+            consumption: Energy consumption [N] or [N, T]
+            generation: Energy generation [N] or [N, T]
             
         Returns:
             Total loss and components
         """
         losses = {}
         
-        # Energy balance (Kirchhoff's current law)
-        balance_loss = self._energy_balance_loss(power_flow)
+        # Energy balance within communities
+        balance_loss = self._energy_balance_loss(energy_sharing, consumption, generation)
         losses['balance'] = balance_loss
         
-        # Transformer capacity constraints
-        if transformer_capacity is not None:
-            transformer_loss = self._transformer_constraint_loss(
-                power_flow, transformer_capacity
+        # Spatial compactness loss
+        if node_positions is not None:
+            spatial_loss = self._spatial_compactness_loss(
+                cluster_assignments, node_positions
             )
-            losses['transformer'] = transformer_loss
+            losses['spatial'] = spatial_loss
         else:
-            transformer_loss = 0
+            spatial_loss = 0
             
-        # Line capacity constraints  
-        if line_capacity is not None:
-            line_loss = self._line_capacity_loss(power_flow, line_capacity)
-            losses['line_capacity'] = line_loss
-        else:
-            line_loss = 0
-            
-        # Voltage deviation proxy
-        voltage_loss = self._voltage_deviation_loss(power_flow)
-        losses['voltage'] = voltage_loss
+        # Clustering quality loss
+        clustering_loss = self._clustering_quality_loss(
+            energy_sharing, cluster_assignments
+        )
+        losses['clustering'] = clustering_loss
         
         total_loss = (
             self.balance_weight * balance_loss +
-            self.transformer_weight * transformer_loss +
-            self.voltage_weight * voltage_loss +
-            self.line_loss_weight * line_loss
+            self.spatial_weight * spatial_loss +
+            self.clustering_weight * clustering_loss
         )
         
         return total_loss, losses
     
-    def _energy_balance_loss(self, power_flow: torch.Tensor) -> torch.Tensor:
-        """Energy in = Energy out for each node"""
-        # Sum of incoming and outgoing power should be zero (except sources/sinks)
-        imbalance = power_flow.sum(dim=-1)  # Sum over time
+    def _energy_balance_loss(
+        self, 
+        energy_sharing: torch.Tensor,
+        consumption: Optional[torch.Tensor] = None,
+        generation: Optional[torch.Tensor] = None
+    ) -> torch.Tensor:
+        """Energy balance within each community"""
+        if consumption is None or generation is None:
+            # If no consumption/generation data, just ensure sharing is balanced
+            imbalance = energy_sharing.sum(dim=-2) - energy_sharing.sum(dim=-1)
+            if imbalance.dim() > 1:
+                imbalance = imbalance.mean(dim=-1)  # Average over time if present
+        else:
+            # Check that consumption - generation = net import
+            net_demand = consumption - generation if generation is not None else consumption
+            net_import = energy_sharing.sum(dim=-2) - energy_sharing.sum(dim=-1)
+            if net_import.dim() > net_demand.dim():
+                net_import = net_import.mean(dim=-1)
+            imbalance = net_demand - net_import
+        
         loss = (imbalance ** 2).mean()
         return loss
     
-    def _transformer_constraint_loss(
+    def _spatial_compactness_loss(
         self,
-        power_flow: torch.Tensor,
-        capacity: torch.Tensor
+        cluster_assignments: torch.Tensor,
+        node_positions: torch.Tensor
     ) -> torch.Tensor:
-        """Penalize transformer overloading"""
-        # If power_flow is per-node and capacity is per-graph, we need to handle this
-        if power_flow.dim() > capacity.dim():
-            # Assume power_flow needs to be summed per graph
-            # For now, just use mean as approximation
-            # TODO: Properly aggregate using batch indices
-            return torch.tensor(0.0, device=power_flow.device)
-        
-        # ReLU to only penalize violations
-        violations = F.relu(power_flow.abs() - capacity.unsqueeze(-1))
-        loss = (violations ** 2).mean()
-        return loss
-    
-    def _line_capacity_loss(
-        self,
-        power_flow: torch.Tensor,
-        capacity: torch.Tensor
-    ) -> torch.Tensor:
-        """Penalize line overloading"""
-        # If dimensions don't match, skip for now
-        if power_flow.dim() > capacity.dim():
-            return torch.tensor(0.0, device=power_flow.device)
+        """Penalize spatially dispersed clusters"""
+        # Convert cluster assignments to hard assignments if soft
+        if cluster_assignments.dim() > 1:
+            cluster_ids = cluster_assignments.argmax(dim=-1)
+        else:
+            cluster_ids = cluster_assignments
             
-        violations = F.relu(power_flow.abs() - capacity.unsqueeze(-1))
-        loss = (violations ** 2).mean()
-        return loss
+        num_clusters = cluster_ids.max().item() + 1
+        total_loss = 0
+        
+        for c in range(num_clusters):
+            mask = (cluster_ids == c).float()
+            if mask.sum() < 2:
+                continue
+                
+            # Get positions of nodes in this cluster
+            cluster_positions = node_positions * mask.unsqueeze(-1)
+            
+            # Calculate centroid
+            centroid = cluster_positions.sum(dim=0) / (mask.sum() + 1e-6)
+            
+            # Calculate average distance to centroid
+            distances = torch.norm(cluster_positions - centroid.unsqueeze(0), dim=-1)
+            avg_distance = (distances * mask).sum() / (mask.sum() + 1e-6)
+            
+            total_loss = total_loss + avg_distance
+            
+        return total_loss / (num_clusters + 1e-6)
     
-    def _voltage_deviation_loss(self, power_flow: torch.Tensor) -> torch.Tensor:
-        """Approximate voltage deviation based on power flow"""
-        # Simplified: voltage deviation proportional to power flow magnitude
-        deviation = (power_flow.abs() - power_flow.abs().mean()) ** 2
-        return deviation.mean()
+    def _clustering_quality_loss(
+        self,
+        energy_sharing: torch.Tensor,
+        cluster_assignments: torch.Tensor
+    ) -> torch.Tensor:
+        """Encourage energy sharing within clusters, discourage between clusters"""
+        # Get cluster affinity matrix
+        if cluster_assignments.dim() > 1:
+            # Soft assignments: use probability product
+            affinity = torch.matmul(cluster_assignments, cluster_assignments.T)
+        else:
+            # Hard assignments: binary same-cluster matrix
+            cluster_ids = cluster_assignments.unsqueeze(1)
+            affinity = (cluster_ids == cluster_ids.T).float()
+        
+        # Normalize energy sharing
+        if energy_sharing.dim() > 2:
+            energy_sharing = energy_sharing.mean(dim=-1)  # Average over time
+            
+        # Encourage within-cluster sharing, discourage between-cluster
+        within_cluster = (energy_sharing * affinity).sum()
+        between_cluster = (energy_sharing * (1 - affinity)).sum()
+        
+        # We want to maximize within and minimize between
+        loss = -within_cluster + between_cluster
+        return loss / (energy_sharing.numel() + 1e-6)
 
 
 class PeakReductionLoss(nn.Module):
@@ -480,9 +513,14 @@ class ClusterQualityLoss(nn.Module):
         """
         # Check if adjacency is edge_index format (2, E) or adjacency matrix (N, N)
         if adjacency.dim() == 2 and adjacency.shape[0] == 2:
-            # It's edge_index, skip modularity for now
-            # TODO: Convert edge_index to adjacency matrix for batch
-            return torch.tensor(0.0, device=cluster_probs.device)
+            # Convert edge_index to adjacency matrix
+            num_nodes = cluster_probs.shape[0]
+            adj_matrix = torch.zeros(num_nodes, num_nodes, device=adjacency.device)
+            edge_index = adjacency.long()
+            adj_matrix[edge_index[0], edge_index[1]] = 1.0
+            # Make symmetric if not already
+            adjacency = adj_matrix + adj_matrix.t()
+            adjacency[adjacency > 1] = 1  # Remove duplicate edges
         
         # Compute modularity matrix
         degrees = adjacency.sum(dim=1)
@@ -525,7 +563,8 @@ class UnifiedEnergyLoss(nn.Module):
         
         self.energy_balance_loss = EnergyBalanceLoss(
             balance_weight=config.get('balance_weight', 1.0),
-            transformer_weight=config.get('transformer_weight', 0.5)
+            spatial_weight=config.get('spatial_weight', 0.5),
+            clustering_weight=config.get('clustering_weight', 0.3)
         )
         
         self.peak_reduction_loss = PeakReductionLoss(
@@ -581,12 +620,14 @@ class UnifiedEnergyLoss(nn.Module):
             all_losses.update({f'comp_{k}': v for k, v in comp_components.items()})
             total_loss += self.weights['complementarity'] * comp_loss
         
-        # Physics constraints
-        if 'power_flow' in targets and self.weights.get('physics', 0) > 0:
+        # Energy balance and spatial constraints
+        if self.weights.get('physics', 0) > 0:
             phys_loss, phys_components = self.energy_balance_loss(
-                power_flow=targets['power_flow'],
+                energy_sharing=predictions.get('energy_sharing', torch.zeros(1)),
                 cluster_assignments=predictions.get('clustering_cluster_probs'),
-                transformer_capacity=targets.get('transformer_capacity')
+                node_positions=graph_data.get('positions') if graph_data else None,
+                consumption=targets.get('consumption'),
+                generation=targets.get('generation')
             )
             all_losses['physics'] = phys_loss
             all_losses.update({f'phys_{k}': v for k, v in phys_components.items()})
@@ -731,6 +772,94 @@ class DiscoveryLoss(nn.Module):
         
         losses['total'] = total_loss
         return total_loss, losses
+
+
+class SolarROILoss(nn.Module):
+    """
+    Loss function for solar ROI category prediction
+    Trains model to predict payback period categories
+    """
+    
+    def __init__(self, class_weights: Optional[torch.Tensor] = None):
+        super().__init__()
+        # Categories: excellent (<5yr), good (5-7yr), fair (7-10yr), poor (>10yr)
+        self.class_weights = class_weights
+        
+    def forward(self, predictions: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        """
+        Calculate ROI category loss
+        
+        Args:
+            predictions: Predicted ROI categories [N, 4]
+            targets: True ROI categories [N] (0=excellent, 1=good, 2=fair, 3=poor, -1=unknown)
+        """
+        # Filter out unknown labels
+        mask = targets >= 0
+        if not mask.any():
+            return torch.tensor(0.0, device=predictions.device)
+        
+        return F.cross_entropy(
+            predictions[mask],
+            targets[mask],
+            weight=self.class_weights
+        )
+
+
+class ClusterQualityLoss(nn.Module):
+    """
+    Semi-supervised loss for cluster quality
+    Learns what makes a good energy community from labeled examples
+    """
+    
+    def __init__(self):
+        super().__init__()
+        self.label_weights = {
+            'excellent': 1.0,
+            'good': 0.7,
+            'fair': 0.4,
+            'poor': 0.1
+        }
+        
+    def forward(
+        self,
+        cluster_assignments: torch.Tensor,
+        cluster_labels: Dict[int, str],
+        cluster_metrics: Optional[Dict[int, float]] = None
+    ) -> torch.Tensor:
+        """
+        Calculate cluster quality loss
+        
+        Args:
+            cluster_assignments: Soft cluster assignments [N, K]
+            cluster_labels: Quality labels for clusters {cluster_id: label}
+            cluster_metrics: Optional metrics for each cluster
+        """
+        if not cluster_labels:
+            return torch.tensor(0.0, device=cluster_assignments.device)
+        
+        loss = 0.0
+        K = cluster_assignments.shape[1]
+        
+        for cluster_id in range(K):
+            if cluster_id in cluster_labels:
+                label = cluster_labels[cluster_id]
+                target_weight = self.label_weights[label]
+                
+                # Cluster size (soft membership sum)
+                cluster_size = cluster_assignments[:, cluster_id].sum()
+                
+                # Encourage good clusters to be larger, poor clusters to be smaller
+                size_loss = -torch.log(cluster_size / cluster_assignments.shape[0] + 1e-8) * target_weight
+                loss += size_loss
+                
+                # If metrics available, use them
+                if cluster_metrics and cluster_id in cluster_metrics:
+                    metric_value = cluster_metrics[cluster_id]
+                    # Encourage high metrics for good clusters
+                    metric_loss = (1 - metric_value) * target_weight
+                    loss += metric_loss * 0.5
+        
+        return loss / K
     
     def _physics_constraint_loss(
         self,

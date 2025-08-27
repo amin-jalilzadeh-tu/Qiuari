@@ -23,17 +23,37 @@ logger = logging.getLogger(__name__)
 class BuildingEncoder(nn.Module):
     """Encodes building features into embeddings"""
     
-    def __init__(self, input_dim: int = 17, hidden_dim: int = 128):
+    def __init__(self, input_dim: Optional[int] = None, hidden_dim: int = 128):
         super().__init__()
-        
+        self.hidden_dim = hidden_dim  # Store hidden_dim as instance variable
+
+        # Auto-detect input dimension if not provided
+        if input_dim is None:
+            logger.warning("Input dimension not specified, will be set on first forward pass")
+            self.input_dim = None
+            self.input_projection = None  # Will be created dynamically
+        else:
+            self.input_dim = input_dim
+            self._create_encoders(input_dim)
+    
+    def _create_encoders(self, input_dim: int):
+        """Create encoders with known dimension"""
+        self.input_dim = input_dim
+            
         self.input_projection = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.LayerNorm(hidden_dim),
+            nn.Linear(input_dim, self.hidden_dim),  # Use self.hidden_dim
+            nn.LayerNorm(self.hidden_dim),
             nn.ReLU(),
             nn.Dropout(0.1)
         )
         
     def forward(self, x: torch.Tensor):
+        # Create encoder on first forward pass if needed
+        if self.input_projection is None:
+            self._create_encoders(x.shape[-1])
+            # Move to same device as input
+            self.input_projection = self.input_projection.to(x.device)
+            logger.info(f"Auto-detected BuildingEncoder input dimension: {x.shape[-1]}")
         return self.input_projection(x)
 
 
@@ -290,12 +310,12 @@ class HeteroEnergyGNN(nn.Module):
         self.num_layers = config.get('num_layers', 3)
         self.dropout = config.get('dropout', 0.1)
         
-        # Feature dimensions from actual data
+        # Feature dimensions from actual data - use None for auto-detection
         node_features = {
-            'building': config.get('building_features', 17),
-            'cable_group': config.get('cable_group_features', 12),
-            'transformer': config.get('transformer_features', 8),
-            'adjacency_cluster': config.get('cluster_features', 11)
+            'building': config.get('building_features'),  # None for auto-detection
+            'cable_group': config.get('cable_group_features') or 12,
+            'transformer': config.get('transformer_features') or 8,
+            'adjacency_cluster': config.get('cluster_features') or 11
         }
         
         # Node encoders

@@ -30,8 +30,8 @@ Neo4j Knowledge Graph:
 ├── Grid Topology (Hierarchical)
 │   ├── Hierarchy: Building → CableGroup (LV) → Transformer → Substation
 │   ├── Hard constraints: LV network boundaries (no sharing across)
-│   ├── Capacity limits: transformer ratings, cable capacities
-│   └── Electrical properties: resistance, impedance (for loss calculation)
+│   ├── Capacity limits: WE DONT HAVE IT, SO NOT BE INCLUDED 
+│   └── Electrical properties:WE DONT HAVE IT, SO NO NEED TO BE INCLUDED
 │
 ├── Temporal Data
 │   ├── Historical: 15-minute electricity consumption (kW)
@@ -94,7 +94,7 @@ Model Components:
 │   ├── Seasonal encoding (weekday/weekend, month)
 │   └── Hour-of-day positional encoding
 │
-├── physics_layers.py
+├── physics_layers.py   (W E DONT HAVE THESE DATA, AND ALSO WE DONT WANT TO INCLUDE THINGS THAT ARE OUTOF OUR FOCUS AND EXPERTIE!! )
 │   ├── Power flow constraints (Kirchhoff's laws)
 │   ├── Voltage feasibility checks
 │   ├── Transformer capacity enforcement

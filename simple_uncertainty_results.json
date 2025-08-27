@@ -1,0 +1,23 @@
+{
+  "passed": [
+    "MC Dropout",
+    "Bayesian Layer",
+    "Calibration",
+    "Evidential",
+    "Uncertainty vs Noise",
+    "CI Ordering"
+  ],
+  "failed": [],
+  "metrics": {
+    "mc_dropout_variance": 0.4362141489982605,
+    "bayesian_sample_variance": 1.3226964473724365,
+    "ece_before": 0.19778603315353394,
+    "ece_after": 0.19778603315353394,
+    "evidential_epistemic": 0.591282308101654,
+    "evidential_aleatoric": 2.594212532043457,
+    "clean_variance": 1.0507519245147705,
+    "noisy_variance": 2.104804754257202,
+    "ci_95_width": 0.36289289593696594,
+    "ci_90_width": 0.2880062758922577
+  }
+}

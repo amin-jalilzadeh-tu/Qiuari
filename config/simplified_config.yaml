@@ -1,0 +1,98 @@
+# Simplified Configuration - Focus on Solar Recommendations
+experiment:
+  name: solar_recommendation_gnn
+  description: Simplified GNN for solar recommendations with semi-supervised learning
+  output_dir: experiments
+  seed: 42
+
+data:
+  use_kg: true
+  mode: train
+  data_dir: data/processed
+  train_ratio: 0.6    # Less labeled data for semi-supervised
+  val_ratio: 0.2
+  test_ratio: 0.2
+  unlabeled_ratio: 0.4  # Use unlabeled data
+
+kg:
+  uri: neo4j://127.0.0.1:7687
+  user: neo4j
+  password: aminasad
+  database: neo4j
+
+graph:
+  node_types:
+    - building
+    - lv_group          # Constraint: Only within LV groups
+  edge_types:
+    - connected_to      # Physical connections
+    - belongs_to        # Hierarchical structure
+  
+model:
+  type: hetero
+  hidden_dim: 128       # Reduced from 256
+  num_layers: 3         # Reduced from 4
+  dropout: 0.2
+  temporal_window: 24   # Daily patterns
+  
+  # Focus on clustering for self-sufficiency
+  clustering:
+    num_clusters: 10-20   # Dynamic
+    min_size: 3
+    max_size: 15         # Smaller clusters
+    optimize_for: self_sufficiency
+  
+  # Solar recommendation specific
+  solar:
+    recommendation_mode: true
+    cascade_hops: 2      # See impact within 2 hops
+    intervention_types:
+      - solar_pv        # Focus only on solar
+    
+training:
+  mode: semi_supervised
+  num_epochs: 50        # Reduced from 100
+  learning_rate: 0.001
+  
+  # Semi-supervised settings
+  semi_supervised:
+    enabled: true
+    confidence_threshold: 0.8
+    pseudo_label_weight: 0.3
+    label_propagation_iterations: 5
+    
+    # Labels for good/bad clusters
+    cluster_labels:
+      good: high_self_sufficiency, low_peak_demand
+      bad: high_grid_dependency, high_peak_demand
+      
+  # Simplified loss weights
+  loss_weights:
+    clustering: 1.0      # Main task
+    solar_benefit: 2.0   # Prioritize solar impact
+    physics: 0.5         # Respect constraints
+    pseudo: 0.3          # Semi-supervised component
+    
+# Core tasks only
+tasks:
+  primary: solar_optimization
+  secondary: 
+    - cluster_discovery
+    - self_sufficiency_evaluation
+    
+evaluation:
+  metrics:
+    - self_sufficiency_rate
+    - peak_reduction
+    - solar_roi
+    - cluster_quality
+    
+# Remove all non-essential features
+enhancements:
+  enabled: false        # Turn off all enhancements
+  
+# Simple reporting
+reporting:
+  output_dir: reports
+  generate_report: true
+  focus: solar_recommendations

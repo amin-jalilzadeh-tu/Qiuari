@@ -51,8 +51,40 @@ from analysis.baseline_comparison import BaselineComparison
 from analysis.comprehensive_reporter import ComprehensiveReporter
 from analysis.lv_group_evaluator import LVGroupEvaluator, evaluate_and_select_lv_groups
 
+# Import all enhancement components
+from models.semi_supervised_layers import (
+    PseudoLabelGenerator, GraphLabelPropagation,
+    SelfTrainingModule, ConsistencyRegularization
+)
+from models.enhanced_temporal_layers import (
+    TemporalFusionNetwork, EnhancedTemporalTransformer,
+    AdaptiveLSTM, SeasonalDecomposition
+)
+from models.uncertainty_quantification import (
+    UncertaintyQuantifier, EnsembleUncertainty,
+    ConfidenceCalibrator, BayesianGNNLayer
+)
+from models.explainability_layers import (
+    EnhancedGNNExplainer, AttentionVisualizer,
+    FeatureImportanceAnalyzer, ExplainableGATConv
+)
+from models.dynamic_graph_layers import (
+    EdgeFeatureProcessor, DynamicGraphConstructor,
+    HierarchicalGraphPooling
+)
+from training.active_learning import (
+    ActiveLearningSelector, QueryByCommittee
+)
+from training.contrastive_learning import (
+    GraphContrastiveLearning, SimCLRGNN, GraphAugmentor
+)
+from utils.output_validation import (
+    PhysicsValidator, StructuredReportGenerator
+)
+from training.enhanced_trainer import EnhancedGNNTrainer
 
-class EnergyGNNSystem:
+
+class UnifiedEnergyGNNSystem:
     """
     Main system class that orchestrates all components
     """
@@ -78,6 +110,31 @@ class EnergyGNNSystem:
         # Create output directories
         self._create_directories()
         
+    
+    def _get_input_dim(self):
+        """Get input dimension from actual data"""
+        if hasattr(self, 'feature_processor') and self.feature_processor:
+            return self.feature_processor.get_feature_dim()
+        # Try to get from first batch of data
+        try:
+            sample_data = self.kg_connector.get_sample_data(limit=10)
+            if sample_data and 'features' in sample_data:
+                return sample_data['features'].shape[-1]
+        except:
+            pass
+        # Return None to trigger auto-detection
+        return None
+    
+    def _get_building_features(self):
+        """Get building feature count dynamically"""
+        try:
+            from utils.feature_mapping import feature_mapper
+            sample = self.kg_connector.get_buildings_df(limit=1)
+            features = feature_mapper.get_feature_vector(sample)
+            return features.shape[-1]
+        except:
+            return None
+    
     def _initialize_components(self):
         """Initialize all system components"""
         print("\nInitializing system components...")
@@ -95,10 +152,33 @@ class EnergyGNNSystem:
         # Model components
         self.model = self._build_model()
         
-        # Training components - use Discovery mode
-        use_discovery = self.config.get('use_discovery_mode', True)
+        # Initialize enhancements based on configuration
+        if self.config.get('enhancements', {}).get('enabled', False):
+            self._initialize_enhancements()
         
-        if use_discovery:
+        # Training components - determine mode from config
+        training_mode = self.config.get('training', {}).get('mode', 'enhanced')
+        use_enhanced = training_mode == 'enhanced' or self.config.get('enhancements', {}).get('enabled', False)
+        use_discovery = training_mode == 'discovery' or self.config.get('use_discovery_mode', False)
+        use_network_aware = training_mode == 'network_aware'
+        
+        if use_network_aware:
+            # Use network-aware trainer for multi-hop effects
+            self.trainer = NetworkAwareGNNTrainer(
+                self.config,
+                self.kg_connector
+            )
+            self.loss_fn = None
+            print("[OK] Network-aware trainer initialized")
+        elif use_enhanced:
+            # Use enhanced trainer with all new features
+            self.trainer = EnhancedGNNTrainer(
+                base_model=self.model,
+                config=self.config
+            )
+            self.loss_fn = None  # Enhanced trainer manages its own losses
+            print("[OK] Enhanced trainer initialized with all improvements")
+        elif use_discovery:
             # Use discovery trainer for unsupervised learning
             self.trainer = DiscoveryGNNTrainer(
                 self.model,
@@ -124,6 +204,141 @@ class EnergyGNNSystem:
         self.comprehensive_reporter = ComprehensiveReporter(self.config)
         
         print("[OK] All components initialized successfully")
+    
+    def _initialize_enhancements(self):
+        """Initialize ALL enhancement modules based on configuration"""
+        enhancements = self.config.get('enhancements', {})
+        model_config = self.config.get('model', {})
+        
+        # Semi-supervised learning
+        if enhancements.get('use_semi_supervised', False):
+            ssl_config = enhancements.get('semi_supervised', {})
+            self.pseudo_generator = PseudoLabelGenerator(
+                hidden_dim=model_config['hidden_dim'],
+                num_classes=model_config['num_clusters'],
+                confidence_threshold=ssl_config.get('confidence_threshold', 0.85)
+            ).to(self.device)
+            
+            self.label_propagator = GraphLabelPropagation(
+                num_iterations=ssl_config.get('propagation_iterations', 10),
+                alpha=ssl_config.get('propagation_alpha', 0.85)
+            ).to(self.device)
+            
+            self.self_trainer = SelfTrainingModule(
+                base_model=self.model,
+                num_classes=model_config['num_clusters'],
+                initial_threshold=ssl_config.get('initial_threshold', 0.9),
+                final_threshold=ssl_config.get('final_threshold', 0.7)
+            ).to(self.device)
+            print("  [+] Semi-supervised learning enabled")
+        
+        # Uncertainty quantification
+        if enhancements.get('use_uncertainty', False):
+            uq_config = enhancements.get('uncertainty', {})
+            self.uncertainty_quantifier = UncertaintyQuantifier(
+                base_model=self.model,
+                num_classes=model_config['num_clusters'],
+                mc_samples=uq_config.get('mc_samples', 20),
+                temperature=uq_config.get('temperature', 1.0)
+            ).to(self.device)
+            
+            self.confidence_calibrator = ConfidenceCalibrator(
+                num_classes=model_config['num_clusters']
+            ).to(self.device)
+            print("  [+] Uncertainty quantification enabled")
+        
+        # Explainability
+        if enhancements.get('use_explainability', False):
+            exp_config = enhancements.get('explainability', {})
+            self.explainer = EnhancedGNNExplainer(
+                model=self.model,
+                num_hops=exp_config.get('num_hops', 3)
+            ).to(self.device)
+            
+            self.attention_visualizer = AttentionVisualizer(
+                save_dir=exp_config.get('visualization_dir', 'visualizations/attention')
+            )
+            
+            if exp_config.get('register_hooks', False):
+                self.attention_visualizer.register_attention_hook(self.model)
+            
+            self.feature_analyzer = FeatureImportanceAnalyzer(
+                model=self.model
+            ).to(self.device)
+            print("  [+] Explainability enabled")
+        
+        # Active learning
+        if enhancements.get('use_active_learning', False):
+            al_config = enhancements.get('active_learning', {})
+            self.active_selector = ActiveLearningSelector(
+                model=self.model,
+                strategy=al_config.get('strategy', 'hybrid'),
+                budget=al_config.get('budget', 10),
+                device=self.device.type
+            )
+            print("  [+] Active learning enabled")
+        
+        # Contrastive learning
+        if enhancements.get('use_contrastive', False):
+            cl_config = enhancements.get('contrastive', {})
+            self.contrastive_learner = GraphContrastiveLearning(
+                encoder=self.model,
+                hidden_dim=model_config['hidden_dim'],
+                projection_dim=cl_config.get('projection_dim', 64),
+                temperature=cl_config.get('temperature', 0.5)
+            ).to(self.device)
+            print("  [+] Contrastive learning enabled")
+        
+        # Dynamic graph construction
+        if enhancements.get('use_dynamic_graph', False):
+            dg_config = enhancements.get('dynamic_graph', {})
+            self.dynamic_graph = DynamicGraphConstructor(
+                hidden_dim=model_config['hidden_dim'],
+                similarity_threshold=dg_config.get('similarity_threshold', 0.8)
+            ).to(self.device)
+            
+        if enhancements.get('use_edge_features', False):
+            self.edge_processor = EdgeFeatureProcessor(
+                node_dim=model_config.get('input_dim', 17),
+                edge_dim=model_config.get('edge_dim', 3),
+                hidden_dim=model_config['hidden_dim']
+            ).to(self.device)
+            print("  [+] Edge feature processing enabled")
+        
+        # Enhanced temporal processing
+        if enhancements.get('use_enhanced_temporal', False):
+            et_config = enhancements.get('enhanced_temporal', {})
+            self.temporal_fusion = TemporalFusionNetwork(
+                input_dim=model_config.get('temporal_dim', 8),
+                hidden_dim=model_config['hidden_dim'],
+                num_heads=model_config.get('num_heads', 8)
+            ).to(self.device)
+            print("  [+] Enhanced temporal processing enabled")
+        
+        # Physics validation
+        if enhancements.get('use_physics_validation', False):
+            pv_config = enhancements.get('physics_validation', {})
+            self.physics_validator = PhysicsValidator(
+                tolerance=pv_config.get('tolerance', 0.001)
+            )
+            print("  [+] Physics validation enabled")
+        
+        # Structured reporting and hierarchical pooling
+        if enhancements.get('use_structured_reports', False):
+            self.report_generator = StructuredReportGenerator(
+                output_dir=self.config.get('reporting', {}).get('output_dir', 'reports')
+            )
+            print("  [+] Structured reporting enabled")
+            
+        # Hierarchical pooling
+        if enhancements.get('use_hierarchical_pooling', False):
+            hp_config = enhancements.get('hierarchical_pooling', {})
+            self.hierarchical_pooling = HierarchicalGraphPooling(
+                hidden_dim=model_config['hidden_dim'],
+                pooling_ratio=hp_config.get('pooling_ratio', 0.5),
+                num_levels=hp_config.get('num_levels', 3)
+            ).to(self.device)
+            print("  [+] Hierarchical pooling enabled")
         
     def _build_model(self) -> nn.Module:
         """Build the GNN model with discovery heads"""
@@ -421,8 +636,7 @@ class EnergyGNNSystem:
             data = network_trainer.load_mv_network_data(district_name)
         else:
             print("\nCreating synthetic MV network data...")
-            from train_network_aware import create_synthetic_mv_network
-            data = create_synthetic_mv_network(num_buildings=200, num_lv_groups=10)
+            data = self._create_synthetic_mv_network(num_buildings=200, num_lv_groups=10)
         
         print(f"Loaded {data.x.shape[0]} buildings across multiple LVs")
         
@@ -758,6 +972,270 @@ class EnergyGNNSystem:
         
         return comparison_report
     
+    def active_learning_loop(self, initial_train_loader, unlabeled_pool, num_rounds: int = 5):
+        """
+        Run active learning loop for data-efficient training
+        """
+        print("\n" + "="*80)
+        print("ACTIVE LEARNING LOOP")
+        print("="*80)
+        
+        if not self.config['enhancements']['use_active_learning']:
+            print("Warning: Active learning not enabled in config")
+            return
+        
+        current_train = list(initial_train_loader)
+        remaining_pool = list(unlabeled_pool)
+        
+        for round_idx in range(num_rounds):
+            print(f"\n--- Round {round_idx + 1}/{num_rounds} ---")
+            
+            # Select samples
+            selected_indices, metrics = self.active_selector.select_samples(
+                remaining_pool, current_train
+            )
+            
+            print(f"Selected {len(selected_indices)} samples")
+            print(f"Selection metrics: {metrics}")
+            
+            # Move selected samples to training set
+            for idx in sorted(selected_indices, reverse=True):
+                if idx < len(remaining_pool):
+                    current_train.append(remaining_pool.pop(idx))
+            
+            # Retrain model
+            from torch_geometric.loader import DataLoader
+            new_train_loader = DataLoader(
+                current_train,
+                batch_size=self.config.get('data_loader', {}).get('batch_size', 32),
+                shuffle=True
+            )
+            
+            # Train for few epochs
+            if hasattr(self.trainer, 'train_epoch'):
+                self.trainer.train_epoch(new_train_loader, epoch=round_idx)
+            
+            # Update selector performance
+            val_metrics = self.trainer.validate(initial_train_loader) if hasattr(self.trainer, 'validate') else {}
+            self.active_selector.update_performance(selected_indices, val_metrics)
+        
+        print(f"[✓] Active learning complete. Final training set size: {len(current_train)}")
+        return current_train
+
+    def train_enhanced(self, num_epochs: int = None):
+        """
+        Train with enhanced features based on configuration
+        """
+        print("\n" + "="*80)
+        print("STARTING ENHANCED TRAINING")
+        print("="*80)
+        
+        # Load data
+        train_loader, val_loader, test_loader = self.load_and_prepare_data()
+        
+        # Prepare unlabeled data if using semi-supervised
+        unlabeled_loader = None
+        if self.config['enhancements']['use_semi_supervised']:
+            # Create synthetic unlabeled data from training set
+            print("Creating synthetic unlabeled data from training set")
+            unlabeled_loader = self._create_unlabeled_loader(train_loader)
+        
+        # Train based on mode
+        training_mode = self.config['training'].get('mode', 'enhanced')
+        num_epochs = num_epochs or self.config['training'].get('num_epochs', 100)
+        
+        if training_mode == 'enhanced' and isinstance(self.trainer, EnhancedGNNTrainer):
+            # Use enhanced trainer
+            results = self.trainer.train(
+                train_loader=train_loader,
+                val_loader=val_loader,
+                unlabeled_loader=unlabeled_loader,
+                num_epochs=num_epochs
+            )
+            
+            # Generate comprehensive report if configured
+            if self.config['reporting']['generate_final_report']:
+                report = self.trainer.generate_comprehensive_report(test_loader)
+                print(f"Report saved to {self.trainer.experiment_dir}")
+        else:
+            # Use standard training
+            results = self.train_model(train_loader, val_loader, num_epochs)
+        
+        # Evaluate on test set
+        if self.config['evaluation']['run_test_evaluation']:
+            test_metrics = self.evaluate_enhanced(test_loader)
+            results['test_metrics'] = test_metrics
+        
+        # Save final model
+        if self.config['training']['save_final_model']:
+            self.save_model('final_model.pt')
+        
+        return results
+    
+    def evaluate_enhanced(self, test_loader):
+        """
+        Comprehensive evaluation with all enhancements
+        """
+        print("\n" + "="*80)
+        print("ENHANCED EVALUATION")
+        print("="*80)
+        
+        metrics = {}
+        
+        # Standard evaluation
+        if hasattr(self.trainer, 'validate'):
+            metrics['standard'] = self.trainer.validate(test_loader)
+        
+        # Uncertainty evaluation
+        if self.config['enhancements']['use_uncertainty'] and hasattr(self, 'uncertainty_quantifier'):
+            metrics['uncertainty'] = self._evaluate_uncertainty(test_loader)
+        
+        # Physics validation
+        if self.config['enhancements']['use_physics_validation'] and hasattr(self, 'physics_validator'):
+            metrics['physics'] = self._evaluate_physics(test_loader)
+        
+        # Explainability analysis
+        if self.config['enhancements']['use_explainability'] and hasattr(self, 'explainer'):
+            metrics['explanations'] = self._generate_explanations(test_loader)
+        
+        # Pattern analysis
+        if self.config['evaluation']['analyze_patterns']:
+            metrics['patterns'] = self.analyze_patterns(test_loader)
+        
+        # Baseline comparison
+        if self.config['evaluation']['compare_baselines']:
+            metrics['baseline_comparison'] = self.run_baseline_comparison(test_loader)
+        
+        return metrics
+    
+    def _evaluate_uncertainty(self, data_loader):
+        """Evaluate model uncertainty"""
+        print("Evaluating uncertainty quantification...")
+        
+        uncertainties = []
+        confidences = []
+        
+        for batch in data_loader:
+            batch = batch.to(self.device)
+            output = self.uncertainty_quantifier(batch)
+            
+            uncertainties.append(output['total_uncertainty'].mean().item())
+            confidences.append(output['confidence'].mean().item())
+        
+        return {
+            'mean_uncertainty': np.mean(uncertainties),
+            'mean_confidence': np.mean(confidences),
+            'uncertainty_std': np.std(uncertainties)
+        }
+    
+    def _evaluate_physics(self, data_loader):
+        """Evaluate physics constraint violations"""
+        print("Evaluating physics constraints...")
+        
+        violations = []
+        
+        for batch in data_loader:
+            batch = batch.to(self.device)
+            output = self.model(batch)
+            
+            # Prepare predictions for validation
+            predictions = {
+                'clustering_assignments': output.get('clustering_cluster_assignments'),
+                'energy_flow': output.get('energy_flow'),
+                'power_flows': output.get('power_flows')
+            }
+            
+            # Validate
+            report = self.physics_validator.comprehensive_validation(
+                predictions,
+                self.config.get('physics_constraints', {})
+            )
+            
+            violations.append(not report['overall_valid'])
+        
+        return {
+            'violation_rate': np.mean(violations),
+            'total_violations': sum(violations)
+        }
+    
+    def _generate_explanations(self, data_loader):
+        """Generate explanations for predictions"""
+        print("Generating explanations...")
+        
+        explanations = []
+        
+        for batch_idx, batch in enumerate(data_loader):
+            if batch_idx >= 5:  # Limit to 5 batches
+                break
+                
+            batch = batch.to(self.device)
+            
+            # Explain first node in batch
+            if batch.x.size(0) > 0:
+                explanation = self.explainer.explain_node(batch, node_idx=0)
+                importance = self.feature_analyzer.comprehensive_importance(batch, 0)
+                
+                explanations.append({
+                    'batch_idx': batch_idx,
+                    'top_features': importance['top_features'],
+                    'edge_importance': explanation.get('edge_importance', [])
+                })
+        
+        # Visualize attention if configured
+        if self.config['enhancements']['explainability'].get('visualize_attention', False):
+            self.attention_visualizer.visualize_layer_attention_stats()
+        
+        return explanations
+    
+    def _create_unlabeled_loader(self, train_loader):
+        """Create unlabeled data by removing labels from training data"""
+        unlabeled_data = []
+        
+        for batch in train_loader:
+            # Clone batch without labels
+            unlabeled_batch = batch.clone()
+            if hasattr(unlabeled_batch, 'y'):
+                delattr(unlabeled_batch, 'y')
+            unlabeled_data.append(unlabeled_batch)
+        
+        from torch_geometric.loader import DataLoader
+        return DataLoader(unlabeled_data, batch_size=train_loader.batch_size, shuffle=True)
+    
+    def save_model(self, filename: str):
+        """Save model and all components"""
+        checkpoint = {
+            'model_state': self.model.state_dict(),
+            'config': self.config,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Add enhancement states if they exist
+        if hasattr(self, 'pseudo_generator'):
+            checkpoint['pseudo_generator'] = self.pseudo_generator.state_dict()
+        if hasattr(self, 'temporal_fusion'):
+            checkpoint['temporal_fusion'] = self.temporal_fusion.state_dict()
+        if hasattr(self, 'uncertainty_quantifier'):
+            checkpoint['uncertainty_quantifier'] = self.uncertainty_quantifier.state_dict()
+        
+        path = Path('checkpoints') / filename
+        torch.save(checkpoint, path)
+        print(f"Model saved to {path}")
+    
+    def load_model(self, filename: str):
+        """Load model and components"""
+        path = Path('checkpoints') / filename
+        checkpoint = torch.load(path, map_location=self.device)
+        
+        self.model.load_state_dict(checkpoint['model_state'])
+        
+        # Load enhancement states
+        if 'pseudo_generator' in checkpoint and hasattr(self, 'pseudo_generator'):
+            self.pseudo_generator.load_state_dict(checkpoint['pseudo_generator'])
+        if 'temporal_fusion' in checkpoint and hasattr(self, 'temporal_fusion'):
+            self.temporal_fusion.load_state_dict(checkpoint['temporal_fusion'])
+        
+        print(f"Model loaded from {path}")
+
     def run_inference(self, data_path: str):
         """
         Run inference on new data
@@ -775,7 +1253,7 @@ class EnergyGNNSystem:
             print("Error: No trained model found. Please train first.")
             return
             
-        self.trainer.load_checkpoint('best_model.pt')
+        self.trainer.load_checkpoint(checkpoint_path)
         self.model.eval()
         
         # Load new data (simplified - in practice, load from file or KG)
@@ -842,17 +1320,119 @@ class EnergyGNNSystem:
                     print(f"    {benefit}: {value:.2f}")
         
         print("\n[OK] Inference complete")
+    
+    def _create_synthetic_mv_network(self, num_buildings: int = 200, num_lv_groups: int = 10):
+        """Create synthetic MV network data for testing"""
+        from torch_geometric.data import Data
+        
+        # Distribute buildings across LV groups
+        buildings_per_lv = num_buildings // num_lv_groups
+        
+        # Create node features (17 dimensions as expected)
+        features = []
+        transformer_groups = []
+        
+        for lv_idx in range(num_lv_groups):
+            for b_idx in range(buildings_per_lv):
+                # Random but structured features
+                feat = [
+                    np.random.randint(0, 7) / 7.0,  # Energy label (A-G)
+                    np.random.uniform(50, 200) / 1000,  # Area
+                    np.random.uniform(20, 100) / 100,  # Roof area
+                    np.random.uniform(5, 20) / 50,  # Height
+                    np.random.random() > 0.8,  # Has solar
+                    np.random.random() > 0.9,  # Has battery
+                    np.random.random() > 0.85,  # Has heat pump
+                    np.random.uniform(0.3, 0.9),  # Solar potential
+                    np.random.uniform(0.2, 0.8),  # Electrification feasibility
+                ]
+                
+                # Pad to 17 features
+                feat.extend([np.random.random() for _ in range(17 - len(feat))])
+                features.append(feat)
+                transformer_groups.append(f'LV_{lv_idx:04d}')
+        
+        features = torch.tensor(features, dtype=torch.float32)
+        
+        # Create edges (within LV groups + some cross-LV for testing)
+        edges = []
+        
+        # Within LV group connections
+        for lv_idx in range(num_lv_groups):
+            start_idx = lv_idx * buildings_per_lv
+            end_idx = start_idx + buildings_per_lv
+            
+            # Create local connectivity
+            for i in range(start_idx, end_idx):
+                # Connect to next 2-3 neighbors
+                for j in range(i + 1, min(i + 3, end_idx)):
+                    edges.append([i, j])
+                    edges.append([j, i])
+        
+        # Add a few cross-LV edges (these should be penalized)
+        for _ in range(20):
+            lv1 = np.random.randint(0, num_lv_groups)
+            lv2 = np.random.randint(0, num_lv_groups)
+            if lv1 != lv2:
+                b1 = lv1 * buildings_per_lv + np.random.randint(0, buildings_per_lv)
+                b2 = lv2 * buildings_per_lv + np.random.randint(0, buildings_per_lv)
+                edges.append([b1, b2])
+                edges.append([b2, b1])
+        
+        edge_index = torch.tensor(edges, dtype=torch.long).t()
+        
+        # Create transformer mask
+        transformer_mask = torch.zeros(num_buildings, num_buildings)
+        for i in range(num_buildings):
+            for j in range(num_buildings):
+                if transformer_groups[i] == transformer_groups[j]:
+                    transformer_mask[i, j] = 1.0
+        
+        # Create temporal profiles
+        temporal_profiles = torch.abs(torch.randn(num_buildings, 24))
+        
+        # Add structure to profiles
+        for i in range(num_buildings):
+            # Morning and evening peaks
+            temporal_profiles[i, 7:9] += 2.0
+            temporal_profiles[i, 17:20] += 3.0
+            # Random variation by LV group
+            lv_idx = i // buildings_per_lv
+            temporal_profiles[i] += torch.randn(24) * (0.5 + 0.1 * lv_idx)
+        
+        # Create centrality features
+        degrees = torch.bincount(edge_index[0], minlength=num_buildings).float()
+        centrality_features = torch.stack([
+            degrees / degrees.max(),
+            torch.rand(num_buildings),
+            torch.rand(num_buildings),
+            torch.rand(num_buildings),
+            torch.rand(num_buildings)
+        ], dim=1)
+        
+        # Create Data object
+        data = Data(
+            x=features,
+            edge_index=edge_index,
+            transformer_mask=transformer_mask,
+            temporal_profiles=temporal_profiles,
+            centrality_features=centrality_features,
+            transformer_groups=transformer_groups,
+            building_ids=[f'B_{i:04d}' for i in range(num_buildings)]
+        )
+        
+        return data
 
 
 def main():
-    """Main execution function"""
-    parser = argparse.ArgumentParser(description='Energy GNN System')
+    """Main execution function for Unified Energy GNN System"""
+    parser = argparse.ArgumentParser(description='Unified Energy GNN System')
     parser.add_argument(
         '--mode',
         type=str,
-        choices=['train', 'evaluate', 'inference', 'full', 'network-aware'],
+        choices=['train', 'evaluate', 'inference', 'full', 'network-aware', 'active-learning', 'enhanced'],
         default='full',
-        help='Execution mode (network-aware for new multi-hop training)'
+        help='Execution mode'
     )
     parser.add_argument(
         '--config',
@@ -885,8 +1465,8 @@ def main():
     print(f"Device: {'CUDA' if torch.cuda.is_available() else 'CPU'}")
     print("="*80)
     
-    # Initialize system
-    system = EnergyGNNSystem(args.config)
+    # Initialize unified system
+    system = UnifiedEnergyGNNSystem(args.config)
     
     if args.mode == 'train':
         # Training mode
@@ -922,9 +1502,8 @@ def main():
         # Get district name if using KG
         district = None
         if system.kg_connector:
-            district = input("Enter district name (or press Enter for synthetic data): ").strip()
-            if not district:
-                district = None
+            # Use district from config or default to None for synthetic data
+            district = system.config.get('network_aware', {}).get('district', None)
         
         # Run network-aware training
         network_trainer, results = system.train_network_aware_model(
@@ -938,6 +1517,29 @@ def main():
         print("[OK] Proved GNN value through multi-hop network effects")
         print("[OK] Intervention cascade impacts tracked at 1-hop, 2-hop, 3-hop")
         print("[OK] Results saved to experiments folder")
+        
+    elif args.mode == 'active-learning':
+        # Active learning mode
+        print("\n[MODE] ACTIVE LEARNING")
+        train_loader, val_loader, test_loader = system.load_and_prepare_data()
+        
+        # Run active learning loop
+        al_config = system.config['enhancements'].get('active_learning', {})
+        system.active_learning_loop(
+            initial_train_loader=train_loader,
+            unlabeled_pool=test_loader,
+            num_rounds=al_config.get('num_rounds', 5)
+        )
+    
+    elif args.mode == 'enhanced':
+        # Enhanced training with all features
+        print("\n[MODE] ENHANCED TRAINING")
+        results = system.train_enhanced(num_epochs=args.epochs)
+        
+        print("\n" + "="*80)
+        print("ENHANCED TRAINING COMPLETE")
+        print("="*80)
+        print(f"Best metrics: {results.get('best_metrics', {})}")
         
     else:  # full mode
         # Complete pipeline
@@ -964,22 +1566,33 @@ def main():
         print("="*80)
         
         # Prepare data for comprehensive report
-        clusters = analysis_results[0]['cluster_metrics'][0].cluster_id if analysis_results else np.array([0])
+        if analysis_results and 'cluster_metrics' in analysis_results[0]:
+            # Get all cluster assignments from the first batch
+            cluster_metrics = analysis_results[0]['cluster_metrics']
+            num_buildings = len(cluster_metrics)
+            clusters = np.array([cm.cluster_id for cm in cluster_metrics])
+        else:
+            # Default if no analysis results
+            num_buildings = 10
+            clusters = np.zeros(num_buildings, dtype=int)
+        
         building_data = {
-            'building_ids': list(range(len(clusters))),
+            'building_ids': list(range(num_buildings)),
             'lv_group': 'LV_GROUP_0004',
-            'consumption_profiles': np.random.uniform(1, 10, (len(clusters), 96)),
-            'generation_profiles': np.random.uniform(0, 5, (len(clusters), 96))
+            'consumption_profiles': np.random.uniform(1, 10, (num_buildings, 96)),
+            'generation_profiles': np.random.uniform(0, 5, (num_buildings, 96))
         }
+        
+        # Determine the number of unique clusters
+        n_clusters = len(np.unique(clusters))
         
         gnn_outputs = {
             'cluster_assignments': clusters,
-            'cluster_probs': np.random.dirichlet(np.ones(5), len(clusters))
+            'cluster_probs': np.random.dirichlet(np.ones(n_clusters), num_buildings)
         }
         
-        intervention_plan = {
-            'cluster_interventions': intervention_plans[0].__dict__ if intervention_plans else {}
-        }
+        # Pass the InterventionPlan object directly if it exists, otherwise empty dict
+        intervention_plan = intervention_plans[0] if intervention_plans else {}
         
         reports = system.comprehensive_reporter.generate_full_report(
             clusters,
@@ -994,7 +1607,7 @@ def main():
         print("PIPELINE COMPLETE - SUMMARY")
         print("="*80)
         
-        print("\n📈 Model Performance:")
+        print("\n[RESULTS] Model Performance:")
         print(f"  Self-sufficiency: {comparison_report.gnn_result.metrics['self_sufficiency']:.3f}")
         print(f"  Peak reduction: {comparison_report.gnn_result.metrics['peak_reduction']:.3f}")
         print(f"  Complementarity: {comparison_report.gnn_result.metrics['complementarity']:.3f}")
@@ -1005,13 +1618,13 @@ def main():
         print(f"  vs Correlation: +{comparison_report.improvements['correlation']['self_sufficiency_improvement']:.1f}%")
         
         if intervention_plans:
-            print("\n💡 Intervention Summary:")
+            print("\n[RESULTS] Intervention Summary:")
             total_interventions = sum(len(p.interventions) for p in intervention_plans)
             total_cost = sum(p.total_cost for p in intervention_plans)
             print(f"  Total interventions: {total_interventions}")
             print(f"  Total investment: ${total_cost:,.0f}")
         
-        print("\n✅ All results saved to 'results/' directory")
+        print("\n[OK] All results saved to 'results/' directory")
         print("="*80)
 
 

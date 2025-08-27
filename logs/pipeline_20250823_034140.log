@@ -1,4 +1,0 @@
-2025-08-23 03:41:40,918 - __main__ - INFO - Energy GNN Pipeline initialized
-2025-08-23 03:41:40,919 - __main__ - INFO - Connecting to Neo4j...
-2025-08-23 03:41:40,922 - data.kg_connector - INFO - Connected to Neo4j at bolt://localhost:7687
-2025-08-23 03:41:43,145 - __main__ - ERROR - Failed to connect to Neo4j: {code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.}

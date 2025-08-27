@@ -1,11 +1,11 @@
 {
-  "plan_id": "plan_20250825_164027",
-  "total_cost": 188710.84306897674,
+  "plan_id": "plan_20250827_052024",
+  "total_cost": 295294.3706512451,
   "expected_benefits": {
-    "peak_reduction": 32.69173922478021,
-    "carbon_reduction": 68.3369285165218,
+    "peak_reduction": 34.55579291304497,
+    "carbon_reduction": 91.84029876708985,
     "self_sufficiency_increase": 0.15,
-    "annual_savings": 3422.34441947937,
+    "annual_savings": 3038.1519412994385,
     "grid_flexibility": 0
   },
   "implementation_phases": [
@@ -23,10 +23,11 @@
       "duration": "2-6 months",
       "interventions": [
         "battery_0_0",
-        "solar_19_0",
-        "solar_1_0",
-        "solar_7_0",
-        "solar_21_0"
+        "solar_17_0",
+        "solar_10_0",
+        "solar_22_0",
+        "solar_9_0",
+        "solar_11_0"
       ],
       "focus": "Solar PV, battery storage",
       "budget_percentage": 0.45
@@ -36,12 +37,15 @@
       "name": "Deep Retrofits & Grid Upgrades",
       "duration": "6-12 months",
       "interventions": [
-        "retrofit_4",
-        "retrofit_7",
-        "solar_19_0",
-        "solar_1_0",
-        "solar_7_0",
-        "solar_21_0"
+        "retrofit_6",
+        "retrofit_12",
+        "retrofit_19",
+        "retrofit_22",
+        "solar_17_0",
+        "solar_10_0",
+        "solar_22_0",
+        "solar_9_0",
+        "solar_11_0"
       ],
       "focus": "Building retrofits, transformer upgrades",
       "budget_percentage": 0.4
@@ -50,7 +54,7 @@
   "risk_assessment": {
     "technical_risk": "low",
     "financial_risk": "low",
-    "implementation_complexity": "low",
+    "implementation_complexity": "medium",
     "dependency_risk": "low"
   },
   "monitoring_metrics": [
@@ -63,9 +67,9 @@
   ],
   "interventions": [
     {
-      "id": "retrofit_4",
+      "id": "retrofit_6",
       "type": "building_retrofit",
-      "location": "4",
+      "location": "6",
       "size": 15.0,
       "cost": 50000,
       "priority": 6316.2258424037,
@@ -80,7 +84,7 @@
           "air_sealing"
         ],
         "estimated_reduction": 0.3,
-        "floor_area": 419.45534759404126
+        "floor_area": 202.076094731563
       },
       "expected_impact": {
         "consumption_reduction": 15000.0,
@@ -102,15 +106,15 @@
       ]
     },
     {
-      "id": "retrofit_7",
+      "id": "retrofit_12",
       "type": "building_retrofit",
-      "location": "7",
+      "location": "12",
       "size": 15.0,
       "cost": 50000,
       "priority": 6316.2258424037,
       "timeline": "6-12 months",
       "specifications": {
-        "current_label": "D",
+        "current_label": "E",
         "target_label": "B",
         "measures": [
           "wall_insulation",
@@ -119,7 +123,85 @@
           "air_sealing"
         ],
         "estimated_reduction": 0.3,
-        "floor_area": 302.6661844128508
+        "floor_area": 250.06780976073736
+      },
+      "expected_impact": {
+        "consumption_reduction": 15000.0,
+        "peak_reduction": 0.2568493150684932,
+        "carbon_reduction": 7.5,
+        "comfort_improvement": 0.3
+      },
+      "network_effects": {
+        "network_importance": 0.5,
+        "cluster_balance_improvement": 0.15,
+        "cascade_multiplier": 1.0,
+        "affected_interventions": 0
+      },
+      "dependencies": [],
+      "co_benefits": [
+        "comfort",
+        "property_value",
+        "health"
+      ]
+    },
+    {
+      "id": "retrofit_19",
+      "type": "building_retrofit",
+      "location": "19",
+      "size": 15.0,
+      "cost": 50000,
+      "priority": 6316.2258424037,
+      "timeline": "6-12 months",
+      "specifications": {
+        "current_label": "E",
+        "target_label": "B",
+        "measures": [
+          "wall_insulation",
+          "window_replacement",
+          "heating_system_upgrade",
+          "air_sealing"
+        ],
+        "estimated_reduction": 0.3,
+        "floor_area": 112.52358309792969
+      },
+      "expected_impact": {
+        "consumption_reduction": 15000.0,
+        "peak_reduction": 0.2568493150684932,
+        "carbon_reduction": 7.5,
+        "comfort_improvement": 0.3
+      },
+      "network_effects": {
+        "network_importance": 0.5,
+        "cluster_balance_improvement": 0.15,
+        "cascade_multiplier": 1.0,
+        "affected_interventions": 0
+      },
+      "dependencies": [],
+      "co_benefits": [
+        "comfort",
+        "property_value",
+        "health"
+      ]
+    },
+    {
+      "id": "retrofit_22",
+      "type": "building_retrofit",
+      "location": "22",
+      "size": 15.0,
+      "cost": 50000,
+      "priority": 6316.2258424037,
+      "timeline": "6-12 months",
+      "specifications": {
+        "current_label": "E",
+        "target_label": "B",
+        "measures": [
+          "wall_insulation",
+          "window_replacement",
+          "heating_system_upgrade",
+          "air_sealing"
+        ],
+        "estimated_reduction": 0.3,
+        "floor_area": 273.23596748809484
       },
       "expected_impact": {
         "consumption_reduction": 15000.0,
@@ -144,13 +226,13 @@
       "id": "battery_0_0",
       "type": "battery_storage",
       "location": "0",
-      "size": 55.64787673950195,
-      "cost": 27823.938369750977,
-      "priority": 1688.6354496320369,
+      "size": 49.40084457397461,
+      "cost": 24700.422286987305,
+      "priority": 1534.334121113333,
       "timeline": "2-4 months",
       "specifications": {
-        "power_rating": 13.911969184875488,
-        "energy_capacity": 55.64787673950195,
+        "power_rating": 12.350211143493652,
+        "energy_capacity": 49.40084457397461,
         "chemistry": "lithium_ion",
         "cycles": 5000,
         "efficiency": 0.9,
@@ -158,10 +240,10 @@
         "control_strategy": "peak_shaving"
       },
       "expected_impact": {
-        "peak_reduction": 13.911969184875488,
+        "peak_reduction": 12.350211143493652,
         "self_sufficiency_increase": 0.15,
         "grid_independence_hours": 4.0,
-        "annual_savings": 3422.34441947937
+        "annual_savings": 3038.1519412994385
       },
       "network_effects": {
         "cascade_potential": 0.5,
@@ -178,24 +260,24 @@
       ]
     },
     {
-      "id": "solar_19_0",
+      "id": "solar_17_0",
       "type": "solar_pv",
-      "location": "19",
-      "size": 15.743753332040963,
-      "cost": 15743.753332040964,
-      "priority": 317.6928800860715,
+      "location": "17",
+      "size": 15.875766216631472,
+      "cost": 15875.766216631473,
+      "priority": 317.76553999228355,
       "timeline": "3-6 months",
       "specifications": {
         "panel_type": "monocrystalline",
-        "inverter_size": 15.743753332040963,
+        "inverter_size": 15.875766216631472,
         "tilt_angle": 35,
         "azimuth": 180,
-        "estimated_generation": 27583.05583773577
+        "estimated_generation": 27814.34241153834
       },
       "expected_impact": {
-        "generation_increase": 3.148750666408193,
-        "peak_reduction": 4.7231259996122885,
-        "carbon_reduction": 13.791527918867885
+        "generation_increase": 3.1751532433262946,
+        "peak_reduction": 4.762729864989441,
+        "carbon_reduction": 13.907171205769169
       },
       "network_effects": {
         "network_importance": 0.5,
@@ -210,24 +292,24 @@
       ]
     },
     {
-      "id": "solar_1_0",
+      "id": "solar_10_0",
       "type": "solar_pv",
-      "location": "1",
-      "size": 15.5673500646889,
-      "cost": 15567.3500646889,
-      "priority": 317.59578770791586,
+      "location": "10",
+      "size": 15.523962450787488,
+      "cost": 15523.962450787489,
+      "priority": 317.57190716028435,
       "timeline": "3-6 months",
       "specifications": {
         "panel_type": "monocrystalline",
-        "inverter_size": 15.5673500646889,
+        "inverter_size": 15.523962450787488,
         "tilt_angle": 35,
         "azimuth": 180,
-        "estimated_generation": 27273.997313334956
+        "estimated_generation": 27197.98221377968
       },
       "expected_impact": {
-        "generation_increase": 3.11347001293778,
-        "peak_reduction": 4.67020501940667,
-        "carbon_reduction": 13.636998656667478
+        "generation_increase": 3.104792490157498,
+        "peak_reduction": 4.657188735236247,
+        "carbon_reduction": 13.59899110688984
       },
       "network_effects": {
         "network_importance": 0.5,
@@ -242,24 +324,24 @@
       ]
     },
     {
-      "id": "solar_7_0",
+      "id": "solar_22_0",
       "type": "solar_pv",
-      "location": "7",
-      "size": 14.919062770187603,
-      "cost": 14919.062770187604,
-      "priority": 317.238970304215,
+      "location": "22",
+      "size": 15.452946588306556,
+      "cost": 15452.946588306557,
+      "priority": 317.532820021429,
       "timeline": "3-6 months",
       "specifications": {
         "panel_type": "monocrystalline",
-        "inverter_size": 14.919062770187603,
+        "inverter_size": 15.452946588306556,
         "tilt_angle": 35,
         "azimuth": 180,
-        "estimated_generation": 26138.197973368682
+        "estimated_generation": 27073.56242271309
       },
       "expected_impact": {
-        "generation_increase": 2.9838125540375207,
-        "peak_reduction": 4.47571883105628,
-        "carbon_reduction": 13.069098986684342
+        "generation_increase": 3.0905893176613115,
+        "peak_reduction": 4.635883976491967,
+        "carbon_reduction": 13.536781211356544
       },
       "network_effects": {
         "network_importance": 0.5,
@@ -274,24 +356,56 @@
       ]
     },
     {
-      "id": "solar_21_0",
+      "id": "solar_9_0",
       "type": "solar_pv",
-      "location": "21",
-      "size": 14.656738532308314,
-      "cost": 14656.738532308314,
-      "priority": 317.094587010676,
+      "location": "9",
+      "size": 15.412180807418768,
+      "cost": 15412.180807418768,
+      "priority": 317.5103825309185,
       "timeline": "3-6 months",
       "specifications": {
         "panel_type": "monocrystalline",
-        "inverter_size": 14.656738532308314,
+        "inverter_size": 15.412180807418768,
         "tilt_angle": 35,
         "azimuth": 180,
-        "estimated_generation": 25678.605908604168
+        "estimated_generation": 27002.140774597683
       },
       "expected_impact": {
-        "generation_increase": 2.931347706461663,
-        "peak_reduction": 4.397021559692494,
-        "carbon_reduction": 12.839302954302084
+        "generation_increase": 3.082436161483754,
+        "peak_reduction": 4.62365424222563,
+        "carbon_reduction": 13.501070387298842
+      },
+      "network_effects": {
+        "network_importance": 0.5,
+        "cascade_factor": 1.0,
+        "cascade_multiplier": 1.0,
+        "affected_interventions": 0
+      },
+      "dependencies": [],
+      "co_benefits": [
+        "reduced_grid_stress",
+        "property_value_increase"
+      ]
+    },
+    {
+      "id": "solar_11_0",
+      "type": "solar_pv",
+      "location": "11",
+      "size": 8.329092301113526,
+      "cost": 8329.092301113526,
+      "priority": 313.611849098848,
+      "timeline": "3-6 months",
+      "specifications": {
+        "panel_type": "monocrystalline",
+        "inverter_size": 8.329092301113526,
+        "tilt_angle": 35,
+        "azimuth": 180,
+        "estimated_generation": 14592.5697115509
+      },
+      "expected_impact": {
+        "generation_increase": 1.6658184602227053,
+        "peak_reduction": 2.4987276903340576,
+        "carbon_reduction": 7.29628485577545
       },
       "network_effects": {
         "network_importance": 0.5,

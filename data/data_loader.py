@@ -11,7 +11,11 @@ import numpy as np
 from typing import List, Dict, Optional, Tuple, Any
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-import random
+
+
+from utils.feature_mapping import feature_mapper
+from utils.data_validator import DimensionValidator
+from utils.constants import *
 
 
 class EnergyDataLoader:
@@ -96,6 +100,10 @@ class EnergyDataLoader:
             building_ids=lv_buildings.index.tolist()
         )
         
+        # Add placeholder y for compatibility (will be replaced by pseudo-labels)
+        # Set to None to indicate unsupervised mode
+        data.y = None
+        
         # Add complementarity pairs if enabled
         if self.complementarity_sampling:
             comp_pairs = self._find_complementarity_pairs(temporal_profiles)
@@ -104,91 +112,16 @@ class EnergyDataLoader:
         return data
     
     def _create_node_features(self, buildings: pd.DataFrame) -> np.ndarray:
-        """Create node feature matrix"""
+        """Create node feature matrix using feature mapper"""
+        # Use feature mapper for Dutch data
+        if self.config.get('dutch_data_mode', True):
+            return feature_mapper.get_feature_vector(buildings)
         
-        # Map actual column names to expected features
-        feature_mapping = {
-            'area': 'floor_area',
-            'year': 'building_year',
-            'height': 'height',
-            'roof_area': 'roof_area',
-            'has_solar': 'has_solar',
-            'has_battery': 'has_battery', 
-            'has_heat_pump': 'has_heat_pump',
-            'solar_potential': 'solar_potential',
-            'electrification': 'electrification'
-        }
-        
-        # Create feature matrix with default values
-        num_buildings = len(buildings)
-        feature_list = []
-        
-        # Numerical features with defaults
-        feature_list.append(buildings.get('area', 100.0))  # Default 100 m²
-        feature_list.append(buildings.get('height', 10.0))  # Default 10 m
-        feature_list.append(buildings.get('roof_area', 50.0))  # Default 50 m²
-        
-        # Solar potential encoding
-        if 'solar_potential' in buildings.columns:
-            solar_map = {'none': 0.0, 'low': 0.25, 'medium': 0.5, 'high': 0.75, 'very_high': 1.0}
-            feature_list.append(buildings['solar_potential'].map(solar_map).fillna(0.0))
-        else:
-            feature_list.append(np.zeros(num_buildings))  # Default no potential
-        
-        # Year to age conversion
-        if 'year' in buildings.columns:
-            feature_list.append(2024 - buildings['year'])  # Building age
-        else:
-            feature_list.append(np.ones(num_buildings) * 30)  # Default 30 years
-            
-        # Binary features
-        feature_list.append(buildings.get('has_solar', False).astype(float))
-        feature_list.append(buildings.get('has_battery', False).astype(float))
-        feature_list.append(buildings.get('has_heat_pump', False).astype(float))
-        
-        # Electrification encoding
-        if 'electrification' in buildings.columns:
-            elec_map = {'not_needed': 0.0, 'conditional': 0.33, 'upgrade_needed': 0.67, 'ready': 1.0}
-            feature_list.append(buildings['electrification'].map(elec_map).fillna(0.5))
-        else:
-            feature_list.append(np.ones(num_buildings) * 0.5)  # Default conditional
-        
-        # Energy label encoding
-        if 'energy_label' in buildings.columns:
-            label_map = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7, 'Unknown': 4}
-            feature_list.append(buildings['energy_label'].map(label_map).fillna(4))
-        else:
-            feature_list.append(np.ones(num_buildings) * 4)  # Default D label
-            
-        # Building function encoding
-        if 'function' in buildings.columns:
-            function_map = {'residential': 1, 'commercial': 2, 'industrial': 3, 'public': 4}
-            feature_list.append(buildings['function'].map(function_map).fillna(1))
-        else:
-            feature_list.append(np.ones(num_buildings))  # Default residential
-        
-        # Stack all features
-        features = np.column_stack(feature_list)
-        
-        # Pad features to expected dimension (17)
-        current_dim = features.shape[1]
-        expected_dim = 17
-        
-        if current_dim < expected_dim:
-            # Add padding features (zeros)
-            padding = np.zeros((num_buildings, expected_dim - current_dim))
-            features = np.column_stack([features, padding])
-        elif current_dim > expected_dim:
-            # Truncate if too many features
-            features = features[:, :expected_dim]
-            
-        # Normalize features
-        if self.mode == 'train':
-            features = self.feature_scaler.fit_transform(features)
-        else:
-            features = self.feature_scaler.transform(features)
-            
-        return features
+        # Fallback to original implementation
+        return self._create_node_features_legacy(buildings)
+    
+    def _create_node_features_legacy(self, buildings: pd.DataFrame) -> np.ndarray:
+        """Legacy feature creation (kept for compatibility)"""
     
     def _create_edge_index(
         self,

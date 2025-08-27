@@ -1,0 +1,12 @@
+target_type,target_id,intervention_type,size_kw,cost_eur,annual_savings_eur,co2_reduction_tons,payback_years,priority,network_benefit,cascade_potential,recommendation
+cluster,CLUSTER_0000,building_retrofit,0,50000.0,0.0,7.5,0,6316.2258424037,0.5,0.5,comfort
+cluster,CLUSTER_0000,building_retrofit,0,50000.0,0.0,7.5,0,6316.2258424037,0.5,0.5,comfort
+cluster,CLUSTER_0000,building_retrofit,0,50000.0,0.0,7.5,0,6316.2258424037,0.5,0.5,comfort
+cluster,CLUSTER_0000,building_retrofit,0,50000.0,0.0,7.5,0,6316.2258424037,0.5,0.5,comfort
+cluster,CLUSTER_0000,building_retrofit,0,50000.0,0.0,7.5,0,6316.2258424037,0.5,0.5,comfort
+cluster,CLUSTER_0000,battery_storage,0,24350.845336914062,2995.1539764404297,0.0,0,1517.0650665798007,0.5,0.5,grid_stability
+cluster,CLUSTER_0000,solar_pv,0,15960.324240712704,0.0,13.981244034864329,0,317.81208073792055,0.5,0.5,reduced_grid_stress
+cluster,CLUSTER_0000,solar_pv,0,15353.94874530993,0.0,13.4500591008915,0,317.47833159716254,0.5,0.5,reduced_grid_stress
+cluster,CLUSTER_0000,solar_pv,0,15334.408964904971,0.0,13.432942253256757,0,317.467576899744,0.5,0.5,reduced_grid_stress
+cluster,CLUSTER_0000,solar_pv,0,15158.4186173986,0.0,13.278774708841173,0,317.37071179164315,0.5,0.5,reduced_grid_stress
+cluster,CLUSTER_0000,solar_pv,0,5770.719255892548,0.0,5.055150068161872,0,312.20371911036654,0.5,0.5,reduced_grid_stress

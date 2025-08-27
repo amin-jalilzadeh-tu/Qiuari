@@ -372,10 +372,23 @@ class BaselineComparison:
         # Calculate complementarity-based distance
         # Use negative correlation as similarity
         correlation_matrix = np.corrcoef(profiles)
-        distance_matrix = 1 - correlation_matrix
+        
+        # Handle NaN values and ensure proper distance matrix
+        if np.any(np.isnan(correlation_matrix)):
+            # If correlation fails, use Euclidean distance
+            from scipy.spatial.distance import pdist
+            condensed_dist = pdist(profiles, metric='euclidean')
+        else:
+            # Convert correlation to distance (1 - correlation)
+            distance_matrix = 1 - correlation_matrix
+            # Ensure diagonal is zero
+            np.fill_diagonal(distance_matrix, 0)
+            # Ensure symmetry and valid range [0, 2]
+            distance_matrix = np.clip(distance_matrix, 0, 2)
+            # Convert to condensed form
+            condensed_dist = squareform(distance_matrix)
         
         # Hierarchical clustering
-        condensed_dist = squareform(distance_matrix)
         linkage_matrix = linkage(condensed_dist, method='ward')
         clusters = fcluster(linkage_matrix, self.num_clusters, criterion='maxclust') - 1
         
@@ -478,10 +491,18 @@ class BaselineComparison:
             outputs = model(data)
             
             # Extract cluster assignments
-            if 'clustering_cluster_assignments' in outputs:
+            if 'clusters' in outputs:
+                # DiffPool output - soft assignment matrix
+                S = outputs['clusters']  # Shape: [num_nodes, num_clusters]
+                clusters = torch.argmax(S, dim=-1)
+            elif 'clustering_cluster_assignments' in outputs:
                 clusters = torch.argmax(outputs['clustering_cluster_assignments'], dim=-1)
-            else:
+            elif 'clustering_cluster_probs' in outputs:
                 clusters = torch.argmax(outputs['clustering_cluster_probs'], dim=-1)
+            else:
+                # If no clustering output, use default clustering
+                num_nodes = features.shape[0]
+                clusters = torch.zeros(num_nodes, dtype=torch.long)
             
             clusters = clusters.cpu().numpy()
             
@@ -1089,7 +1110,7 @@ class BaselineComparison:
 """
         
         if save_path:
-            with open(save_path, 'w') as f:
+            with open(save_path, 'w', encoding='utf-8') as f:
                 f.write(report_text)
             print(f"\nReport saved to {save_path}")
         

@@ -1,0 +1,98 @@
+{
+  "test_timestamp": "2025-08-27T06:28:13.460001",
+  "total_scenarios": 5,
+  "budget_compliance_rate": 1.0,
+  "roi_threshold_rate": 1.0,
+  "scenarios": [
+    {
+      "name": "Residential Solar Optimization",
+      "plan_id": "plan_20250827_062813",
+      "total_cost": 96285.333476001,
+      "num_interventions": 7,
+      "validation": {
+        "budget_compliance": true,
+        "roi_met": true,
+        "overall_roi": 0.5323940907110508
+      },
+      "benefits": {
+        "peak_reduction": 32.307187420807196,
+        "carbon_reduction": 25.412002406495407,
+        "self_sufficiency_increase": 0.15,
+        "annual_savings": 43142.5,
+        "grid_flexibility": 8.0
+      }
+    },
+    {
+      "name": "Commercial Peak Shaving",
+      "plan_id": "plan_20250827_062813",
+      "total_cost": 328352.44646651106,
+      "num_interventions": 6,
+      "validation": {
+        "budget_compliance": true,
+        "roi_met": true,
+        "overall_roi": 0.2600849283059971
+      },
+      "benefits": {
+        "peak_reduction": 108.21425192480427,
+        "carbon_reduction": 146.54955432725194,
+        "self_sufficiency_increase": 0.15,
+        "annual_savings": 42300.0,
+        "grid_flexibility": 6.0
+      }
+    },
+    {
+      "name": "Mixed-Use District Optimization",
+      "plan_id": "plan_20250827_062813",
+      "total_cost": 518426.21696423454,
+      "num_interventions": 23,
+      "validation": {
+        "budget_compliance": true,
+        "roi_met": true,
+        "overall_roi": 0.45218142365373043
+      },
+      "benefits": {
+        "peak_reduction": 163.01188888308965,
+        "carbon_reduction": 233.59779609280804,
+        "self_sufficiency_increase": 0.15,
+        "annual_savings": 164697.5,
+        "grid_flexibility": 31.200000000000003
+      }
+    },
+    {
+      "name": "Rural Microgrid Development",
+      "plan_id": "plan_20250827_062813",
+      "total_cost": 153999.75913957547,
+      "num_interventions": 7,
+      "validation": {
+        "budget_compliance": true,
+        "roi_met": true,
+        "overall_roi": 0.3975328889039114
+      },
+      "benefits": {
+        "peak_reduction": 45.30661650934298,
+        "carbon_reduction": 61.45640210861508,
+        "self_sufficiency_increase": 0.15,
+        "annual_savings": 43690.0,
+        "grid_flexibility": 8.0
+      }
+    },
+    {
+      "name": "Urban High-Density Optimization",
+      "plan_id": "plan_20250827_062813",
+      "total_cost": 386450.1875696162,
+      "num_interventions": 25,
+      "validation": {
+        "budget_compliance": true,
+        "roi_met": true,
+        "overall_roi": 0.7017323512284691
+      },
+      "benefits": {
+        "peak_reduction": 167.21187948759842,
+        "carbon_reduction": 119.7042850129133,
+        "self_sufficiency_increase": 0.1575,
+        "annual_savings": 228493.25,
+        "grid_flexibility": 42.2
+      }
+    }
+  ]
+}

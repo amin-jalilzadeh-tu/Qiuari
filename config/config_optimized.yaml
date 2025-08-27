@@ -1,0 +1,382 @@
+experiment:
+  name: unified_energy_gnn
+  description: Unified Energy GNN with all features integrated
+  output_dir: experiments
+  seed: 42
+  tags:
+  - unified
+  - multi_mode
+  - network_aware
+  - discovery
+  - enhanced
+data:
+  use_kg: true
+  mode: train
+  data_dir: data/processed
+  cache_dir: data/cache
+  train_path: data/processed/train_dataset.pt
+  val_path: data/processed/val_dataset.pt
+  test_path: data/processed/test_dataset.pt
+  unlabeled_path: null
+  inference_path: null
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  validate_neo4j: true
+  use_feature_mapper: true
+  dutch_data_mode: true
+kg:
+  uri: neo4j://127.0.0.1:7687
+  user: neo4j
+  password: aminasad
+  database: neo4j
+graph:
+  node_types:
+  - building
+  - lv_group
+  - transformer
+  - adjacency_cluster
+  edge_types:
+  - connected_to
+  - belongs_to
+  - supplies
+  - adjacent_to
+  max_distance: 500
+data_loader:
+  batch_size: 32
+  num_workers: 4
+  shuffle: true
+  pin_memory: true
+  min_cluster_size: 3
+  max_cluster_size: 20
+  prefetch_factor: 2
+  persistent_workers: true
+model:
+  type: hetero
+  input_dim: null
+  edge_dim: 3
+  hidden_dim: 256
+  num_layers: 4
+  num_clusters: 20
+  dropout: 0.1
+  building_features: null
+  cable_group_features: null
+  transformer_features: null
+  cluster_features: 11
+  temporal_dim: 8
+  num_heads: 8
+  negative_slope: 0.2
+  concat: true
+  num_interventions: 4
+  cascade_hops: 3
+  temporal_window: 24
+  max_clusters: 20
+  min_cluster_size: 3
+  max_cluster_size: 20
+  use_discovery_mode: false
+  validate_dimensions: true
+  auto_detect_features: true
+training:
+  mode: discovery
+  num_epochs: 100
+  learning_rate: 0.001
+  weight_decay: 1.0e-05
+  batch_size: 32
+  optimizer:
+    type: AdamW
+    lr: 0.001
+    weight_decay: 5.0e-05
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  scheduler:
+    type: CosineAnnealingWarmRestarts
+    T_0: 15
+    T_mult: 2
+    min_lr: 1.0e-07
+    warmup_epochs: 5
+  grad_clip: 1.0
+  early_stopping_patience: 25
+  checkpoint_interval: 5
+  val_frequency: 1
+  loss_weights:
+    supervised: 1.0
+    pseudo: 0.3
+    contrastive: 0.3
+    consistency: 0.2
+    physics: 1.0
+  save_best_only: false
+  save_final_model: true
+  use_curriculum: false
+  curriculum:
+    start_easy: true
+    difficulty_increase_rate: 0.1
+    max_difficulty: 1.0
+enhancements:
+  enabled: false
+  use_semi_supervised: false
+  semi_supervised:
+    confidence_threshold: 0.85
+    initial_threshold: 0.9
+    final_threshold: 0.7
+    propagation_iterations: 10
+    propagation_alpha: 0.85
+    use_temporal_consistency: true
+    use_graph_consistency: true
+    pseudo_label_weight: 0.5
+  use_uncertainty: false
+  uncertainty:
+    mc_samples: 20
+    temperature: 1.0
+    use_ensemble: true
+    ensemble_size: 5
+    calibration_method: temperature
+  use_explainability: true
+  explainability:
+    num_hops: 3
+    register_hooks: true
+    visualization_dir: visualizations/attention
+    visualize_attention: true
+    compute_feature_importance: true
+    explanation_method: integrated_gradients
+  use_active_learning: true
+  active_learning:
+    strategy: hybrid
+    budget: 10
+    num_rounds: 5
+    update_interval: 5
+    uncertainty_weight: 0.5
+    diversity_weight: 0.3
+    representativeness_weight: 0.2
+  use_contrastive: true
+  contrastive:
+    projection_dim: 128
+    temperature: 0.5
+    augmentation_prob: 0.2
+    contrastive_weight: 0.3
+    use_energy_aware: true
+    augmentation_strategies:
+    - node_drop
+    - edge_drop
+    - feature_mask
+  use_dynamic_graph: false
+  dynamic_graph:
+    similarity_threshold: 0.8
+    max_edges_per_node: 20
+    update_frequency: 5
+    add_edges: true
+    remove_edges: true
+    min_edge_weight: 0.1
+  use_edge_features: false
+  edge_features:
+    process_method: attention
+    edge_dim: 3
+    use_edge_dropout: true
+    edge_dropout_rate: 0.1
+  use_enhanced_temporal: true
+  enhanced_temporal:
+    use_transformer: true
+    use_lstm: true
+    fusion_method: attention
+    num_transformer_layers: 3
+    num_lstm_layers: 2
+    use_positional_encoding: true
+    use_causal_mask: false
+    forecast_horizon: 24
+  use_physics_validation: true
+  physics_validation:
+    tolerance: 0.001
+    check_energy_balance: true
+    check_power_flow: true
+    check_storage: true
+    check_transformer_loading: true
+    max_violations_allowed: 0.05
+  use_hierarchical_pooling: false
+  hierarchical_pooling:
+    pooling_ratio: 0.5
+    num_levels: 3
+    pooling_method: topk
+  use_structured_reports: true
+loss:
+  w_cluster: 1.0
+  w_placement: 1.0
+  w_flow: 1.0
+  w_physics: 1.0
+  alpha_complementarity: 2.0
+  alpha_network: 1.0
+  alpha_temporal: 0.5
+  alpha_cascade: 2.0
+  alpha_balance: 1.0
+  complementarity_weight: 1.5
+  network_impact_weight: 2.0
+  cascade_weight: 1.5
+  quality_weight: 0.8
+  min_cluster_size: 3
+  max_cluster_size: 20
+  use_constants: true
+network_aware:
+  base_epochs: 50
+  intervention_rounds: 5
+  interventions_per_round: 5
+  num_buildings: 200
+  num_lv_groups: 10
+  district: null
+  selection:
+    local_weight: 0.3
+    network_weight: 0.7
+    diversity_bonus: 0.2
+    min_spacing: 2
+  simulation:
+    solar_efficiency: 0.18
+    p2p_efficiency: 0.95
+    grid_loss_per_hop: 0.02
+evaluation:
+  run_test_evaluation: true
+  analyze_patterns: true
+  compare_baselines: true
+  generate_explanations: true
+  metrics:
+  - accuracy
+  - f1_score
+  - self_sufficiency
+  - peak_reduction
+  - complementarity
+  - physics_violations
+  - modularity
+  - conductance
+  - coverage
+  baseline_methods:
+  - kmeans
+  - spectral
+  - correlation
+  - random
+reporting:
+  output_dir: reports
+  generate_final_report: true
+  report_format: html
+  include_sections:
+  - summary
+  - predictions
+  - confidence
+  - explanations
+  - validation
+  - recommendations
+  - visualizations
+  create_visualizations: true
+  visualization_types:
+  - clusters
+  - energy_profiles
+  - network_impacts
+  - attention_maps
+  - feature_importance
+spatial_constraints:
+  max_community_radius: 500
+  max_sharing_distance: 1000
+  distance_penalty_factor: 0.001
+  min_cluster_size: 3
+  max_cluster_size: 20
+  same_cable_group_bonus: 2.0
+  cross_cable_penalty: 0.5
+  battery:
+    max_soc: 100
+    max_charge_rate: 10
+    max_discharge_rate: 10
+    efficiency: 0.95
+logging:
+  level: INFO
+  log_dir: logs
+  console:
+    enabled: true
+    level: INFO
+  file:
+    enabled: true
+    level: DEBUG
+    max_size: 10MB
+    backup_count: 5
+  use_tensorboard: true
+  tensorboard_dir: runs
+  use_wandb: false
+  wandb_project: energy-gnn-unified
+  wandb_entity: null
+  track_gradients: true
+  track_weights: true
+  log_frequency: 5
+system:
+  device: cuda
+  mixed_precision: true
+  num_workers: 0
+  pin_memory: true
+  random_seed: 42
+  gradient_checkpointing: true
+  accumulation_steps: 2
+  deterministic: true
+  benchmark: false
+inference:
+  cache_timeout: 300
+  confidence_threshold: 0.7
+  batch_size: 64
+  intervention_sizes:
+    solar:
+    - 10
+    - 20
+    - 30
+    - 50
+    - 100
+    battery:
+    - 10
+    - 25
+    - 50
+    - 100
+    retrofit:
+    - 10
+    - 20
+    - 30
+    heat_pump:
+    - 5
+    - 10
+    - 15
+  temporal_hours: 24
+  cascade_depth: 3
+planning:
+  horizon: 10
+  discount_rate: 0.05
+  intervention_budget: 1000000
+  objectives:
+  - minimize_cost
+  - maximize_self_sufficiency
+  - minimize_emissions
+  - maximize_reliability
+  constraints:
+    max_interventions_per_year: 50
+    min_roi: 0.1
+    max_payback_period: 7
+analysis:
+  pattern_detection:
+    min_pattern_size: 3
+    confidence_threshold: 0.8
+    temporal_window: 96
+  intervention:
+    simulate_cascades: true
+    max_cascade_depth: 3
+    consider_network_effects: true
+  comparison:
+    methods:
+    - kmeans
+    - spectral
+    - correlation
+    metrics:
+    - silhouette_score
+    - modularity
+    - self_sufficiency
+validation:
+  use_cross_validation: false
+  num_folds: 5
+  primary_metric: self_sufficiency
+  metrics:
+  - accuracy
+  - f1_score
+  - precision
+  - recall
+  min_accuracy: 0.8
+  max_physics_violations: 0.05

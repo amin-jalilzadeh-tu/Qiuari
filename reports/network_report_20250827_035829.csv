@@ -1,0 +1,2 @@
+cluster_id,num_buildings,avg_centrality,max_centrality,cascade_1_hop,cascade_2_hop,cascade_3_hop,transformer_loading,line_utilization,voltage_deviation,correlation_1_hop,correlation_2_hop,correlation_3_hop,network_role,intervention_impact
+13,1,0.5,0.5,0,0,0,0.5,0.5,0.0,0,0,0,Connector,0.35

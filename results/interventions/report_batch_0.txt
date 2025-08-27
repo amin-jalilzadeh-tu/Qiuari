@@ -1,15 +1,15 @@
 
 ENERGY INTERVENTION PLAN
 ========================
-Plan ID: plan_20250825_164027
-Total Investment: $188,711
+Plan ID: plan_20250827_052024
+Total Investment: $295,294
 
 EXPECTED BENEFITS
 -----------------
-Peak Reduction: 32.7 kW
-Carbon Reduction: 68.3 tons/year
+Peak Reduction: 34.6 kW
+Carbon Reduction: 91.8 tons/year
 Self-Sufficiency: 15.0% increase
-Annual Savings: $3,422
+Annual Savings: $3,038
 
 IMPLEMENTATION PHASES
 ---------------------
@@ -21,28 +21,44 @@ Budget: 15% of total
 
 Phase 2: Core Infrastructure
 Duration: 2-6 months
-Interventions: 5
+Interventions: 6
 Budget: 45% of total
 
 Phase 3: Deep Retrofits & Grid Upgrades
 Duration: 6-12 months
-Interventions: 6
+Interventions: 9
 Budget: 40% of total
 
 TOP PRIORITY INTERVENTIONS
 --------------------------
 
-retrofit_4
+retrofit_6
   Type: building_retrofit
-  Location: 4
+  Location: 6
   Size: 15.0
   Cost: $50,000
   Priority: 6316.2
   Network Effect: 1.00x
 
-retrofit_7
+retrofit_12
   Type: building_retrofit
-  Location: 7
+  Location: 12
+  Size: 15.0
+  Cost: $50,000
+  Priority: 6316.2
+  Network Effect: 1.00x
+
+retrofit_19
+  Type: building_retrofit
+  Location: 19
+  Size: 15.0
+  Cost: $50,000
+  Priority: 6316.2
+  Network Effect: 1.00x
+
+retrofit_22
+  Type: building_retrofit
+  Location: 22
   Size: 15.0
   Cost: $50,000
   Priority: 6316.2
@@ -51,39 +67,47 @@ retrofit_7
 battery_0_0
   Type: battery_storage
   Location: 0
-  Size: 55.6
-  Cost: $27,824
-  Priority: 1688.6
+  Size: 49.4
+  Cost: $24,700
+  Priority: 1534.3
   Network Effect: 1.00x
 
-solar_19_0
+solar_17_0
   Type: solar_pv
-  Location: 19
-  Size: 15.7
-  Cost: $15,744
-  Priority: 317.7
+  Location: 17
+  Size: 15.9
+  Cost: $15,876
+  Priority: 317.8
   Network Effect: 1.00x
 
-solar_1_0
+solar_10_0
   Type: solar_pv
-  Location: 1
-  Size: 15.6
-  Cost: $15,567
+  Location: 10
+  Size: 15.5
+  Cost: $15,524
   Priority: 317.6
   Network Effect: 1.00x
 
-solar_7_0
+solar_22_0
   Type: solar_pv
-  Location: 7
-  Size: 14.9
-  Cost: $14,919
-  Priority: 317.2
+  Location: 22
+  Size: 15.5
+  Cost: $15,453
+  Priority: 317.5
   Network Effect: 1.00x
 
-solar_21_0
+solar_9_0
   Type: solar_pv
-  Location: 21
-  Size: 14.7
-  Cost: $14,657
-  Priority: 317.1
+  Location: 9
+  Size: 15.4
+  Cost: $15,412
+  Priority: 317.5
+  Network Effect: 1.00x
+
+solar_11_0
+  Type: solar_pv
+  Location: 11
+  Size: 8.3
+  Cost: $8,329
+  Priority: 313.6
   Network Effect: 1.00x

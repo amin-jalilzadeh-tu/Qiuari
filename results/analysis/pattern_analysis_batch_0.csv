@@ -1,2 +1,2 @@
 cluster_id,num_buildings,self_sufficiency,self_consumption,peak_reduction,load_factor,diversity_factor,complementarity_score,network_stress,carbon_reduction,economic_benefit,magnitude_sum,magnitude_max,magnitude_mean,duration_sum,gap_type_<lambda>,multi_hop_correlation,cascade_potential,overall_score
-0,27,0.512515,1.0,0.6532849967479706,0.7674003,2.8842132,-0.99899626,1.3031008,0.5125150887450817,218.63892753124236,49.061867,13.911969,12.265467,24,demand_reduction,-0.0049192641415797015,0.0,0.08932058066129683
+0,27,0.48931473,1.0,0.5623352229595184,0.68058074,2.2848537,-1.0,1.4693333,0.48931466720607425,209.13513972759247,53.00181,14.11879,13.250452,24,demand_reduction,-0.01594374439383322,0.0,0.021628326177597024
