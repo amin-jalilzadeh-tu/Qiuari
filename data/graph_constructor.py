@@ -23,21 +23,27 @@ class GraphConstructor:
         """
         self.kg = kg_connector
         
-        # Node types
+        # Node types (including MV hierarchy)
         self.node_types = [
             'building', 
-            'cable_group', 
+            'cable_group',  # LV groups
+            'mv_station',   # NEW: MV stations
+            'hv_substation',  # NEW: HV substations
             'transformer', 
-            'substation', 
             'adjacency_cluster'
         ]
         
-        # CORRECTED edge types matching your actual relationships
+        # Edge types including MV hierarchy relationships
         self.edge_types = [
+            # Original relationships
             ('building', 'connected_to', 'cable_group'),      # CONNECTED_TO
-            ('cable_group', 'connects_to', 'transformer'),    # CONNECTS_TO (was missing!)
-            ('transformer', 'feeds_from', 'substation'),      # FEEDS_FROM
+            ('cable_group', 'connects_to', 'transformer'),    # CONNECTS_TO
+            ('transformer', 'feeds_from', 'substation'),      # FEEDS_FROM (legacy)
             ('building', 'in_cluster', 'adjacency_cluster'),  # IN_ADJACENCY_CLUSTER
+            
+            # NEW: MV-LV hierarchy relationships
+            ('cable_group', 'supplied_by', 'mv_station'),     # MV_SUPPLIES_LV
+            ('mv_station', 'supplied_by', 'hv_substation'),   # HV_SUPPLIES_MV
         ]
         
         # Node ID mappings
@@ -71,6 +77,12 @@ class GraphConstructor:
         
         # Create empty HeteroData
         graph = HeteroData()
+        
+        # Add LV group IDs if available
+        if 'lv_group_ids' in topology:
+            graph['building'].lv_group_ids = torch.tensor(
+                topology['lv_group_ids'], dtype=torch.long
+            )
         
         # Add nodes with features (including temporal if requested)
         self._add_nodes_to_graph(
@@ -285,10 +297,20 @@ class GraphConstructor:
                     t_id = f'T_{i}'
                 t_ids.append(str(t_id))
                 
+                # Create 8 features for transformer to match model expectations
+                # Convert voltage level string to numeric
+                voltage = t.get('voltage_level', 'MV')
+                voltage_val = 10000.0 if voltage == 'MV' else (400.0 if voltage == 'LV' else 150000.0)
+                
                 t_features.append([
-                    1.0,
+                    1.0,  # indicator
                     float(t.get('x', 0) or 0),
-                    float(t.get('y', 0) or 0)
+                    float(t.get('y', 0) or 0),
+                    float(t.get('capacity', 1000) or 1000),  # default capacity
+                    float(t.get('utilization', 0.5) or 0.5),  # default utilization
+                    float(t.get('age', 10) or 10),  # default age in years
+                    1.0 if t.get('is_active', True) else 0.0,  # active status
+                    voltage_val  # voltage level as numeric
                 ])
             
             if t_features:

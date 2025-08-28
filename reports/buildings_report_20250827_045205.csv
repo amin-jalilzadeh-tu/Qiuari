@@ -1,2 +1,0 @@
-building_id,cluster_id,lv_group,area_m2,height_m,age_years,energy_label,peak_demand_kw,base_load_kw,annual_consumption_kwh,roof_area_m2,solar_potential_kw,solar_suitability,has_solar,has_battery,has_heat_pump,cluster_probability,network_centrality,intervention_priority,morning_peak_kw,evening_peak_kw,night_minimum_kw,load_factor
-BLDG_0000,0,LV_GROUP_0004,100,10,20,D,5,1,5000,50,10,high,False,False,False,1.0,0.5,0.5,8.922293491392638,9.13444007010883,1.3490155708678013,0.49110388740533517

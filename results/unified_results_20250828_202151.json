@@ -1,0 +1,77 @@
+{
+  "cluster_stability": {
+    "prev_clusters": "[6 6 6 8 6 6 6 7 8 1 6 6 6 6 6 8 8 6 8 6 8 6 8 6 8 8 6 6 8 6 7 6 6 6 6 6 8\n 6 6 8 8 6 6 6 6 8 6 6 6 6 6 6 6 6 6 6 6 6 6 6 8 6 6 1 1 6 6 6 8 6 6 8 6 8\n 8 6 6 1 6 8 8 1 6 6 8 6 6 6 6 6 6 6 8 8 6 6 6 6 6 6 6 6 8 8 6 8 6 6 6 6 6\n 1 6 6 8 6 6 6 8 6 6 6 6 6 8 6 6 6 6 8 6 6 8 8 6 6 6 6 6 6 6 8 8 6 6 6 7 6\n 6 8 1 8 8 6 6 1 1 6 6 8]",
+    "stability_scores": [
+      0.26249999999999996
+    ]
+  },
+  "energy_flows": {
+    "epoch_0": {
+      "cluster_1": {
+        "total_surplus": 20.15771484375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_6": {
+        "total_surplus": 145.14317321777344,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1201.822265625,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_3": {
+      "cluster_6": {
+        "total_surplus": 98.99237060546875,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1258.0589599609375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_6": {
+      "cluster_6": {
+        "total_surplus": 50.24808120727539,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1306.8375244140625,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_9": {
+      "cluster_6": {
+        "total_surplus": 38.684078216552734,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1328.4390869140625,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    }
+  },
+  "pseudo_labels": {
+    "cluster_labels": {
+      "8": "poor",
+      "6": "fair",
+      "1": "fair"
+    },
+    "confidence": 0.7,
+    "quality_scores": {
+      "8": 0.25,
+      "6": 0.5,
+      "1": 0.5
+    }
+  },
+  "solar_cascade_effects": {}
+}

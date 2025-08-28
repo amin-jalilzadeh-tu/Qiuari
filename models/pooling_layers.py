@@ -74,16 +74,17 @@ class ConstrainedDiffPool(nn.Module):
         
     def forward(self, x: torch.Tensor, edge_index: torch.Tensor, 
                 batch: Optional[torch.Tensor] = None,
-                transformer_mask: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor, ...]:
+                transformer_mask: Optional[torch.Tensor] = None,
+                lv_group_ids: Optional[torch.Tensor] = None) -> Tuple[torch.Tensor, ...]:
         """
-        Forward pass with optional transformer constraints
+        Forward pass with LV group constraints
         
         Args:
             x: Node features [N, F]
             edge_index: Edge indices [2, E]
             batch: Batch assignment for multiple graphs
-            transformer_mask: Binary mask for valid assignments [N, K]
-                             1 = allowed, 0 = forbidden (crosses transformer)
+            transformer_mask: Binary mask for valid assignments [N, K] (legacy)
+            lv_group_ids: LV group assignment for each node [N]
         
         Returns:
             x_pooled: Pooled node features [K, F]
@@ -96,9 +97,13 @@ class ConstrainedDiffPool(nn.Module):
         # Generate soft assignment matrix
         S = self.assign_net(x)  # [N, K]
         
-        # Apply transformer constraints if provided
-        if transformer_mask is not None:
-            # Mask out invalid assignments
+        # Apply LV group constraints if provided
+        if lv_group_ids is not None:
+            # Create mask that respects LV boundaries
+            lv_mask = self._create_lv_mask(lv_group_ids)
+            S = S.masked_fill(lv_mask == 0, -1e9)
+        elif transformer_mask is not None:
+            # Legacy: Apply transformer constraints if provided
             S = S.masked_fill(transformer_mask == 0, -1e9)
         
         # Apply softmax to get probabilities
@@ -123,6 +128,49 @@ class ConstrainedDiffPool(nn.Module):
         aux_loss = link_loss + 0.1 * entropy_loss
         
         return x_pooled, adj_pooled, S, aux_loss
+    
+    def _create_lv_mask(self, lv_group_ids: torch.Tensor) -> torch.Tensor:
+        """
+        Create mask ensuring clusters don't cross LV boundaries
+        
+        Args:
+            lv_group_ids: LV group ID for each node [N]
+            
+        Returns:
+            Mask tensor [N, K] where 1 = allowed, 0 = forbidden
+        """
+        N = lv_group_ids.size(0)
+        device = lv_group_ids.device
+        
+        # Get unique LV groups
+        unique_lvs = torch.unique(lv_group_ids)
+        num_lvs = len(unique_lvs)
+        
+        # Allocate clusters per LV group
+        clusters_per_lv = self.max_clusters // num_lvs
+        remainder = self.max_clusters % num_lvs
+        
+        # Create mask
+        mask = torch.zeros(N, self.max_clusters, device=device)
+        
+        for i, lv_id in enumerate(unique_lvs):
+            # Find nodes in this LV group
+            lv_mask = (lv_group_ids == lv_id)
+            
+            # Determine cluster range for this LV
+            start_cluster = i * clusters_per_lv
+            # Add remainder clusters to first LV groups
+            if i < remainder:
+                start_cluster += i
+                end_cluster = start_cluster + clusters_per_lv + 1
+            else:
+                start_cluster += remainder
+                end_cluster = start_cluster + clusters_per_lv
+            
+            # Allow these nodes to be assigned only to their LV's clusters
+            mask[lv_mask, start_cluster:end_cluster] = 1.0
+        
+        return mask
     
     def _apply_size_constraints(self, S: torch.Tensor) -> torch.Tensor:
         """

@@ -1,0 +1,5 @@
+# This file is used internally by FFMPEG.
+file 'file:D:/Documents/daily/Qiuari_V3/manim_animations/media/videos/energy_graph/480p15/partial_movie_files/EnergyGraph/1185818338_3206130085_223132457.mp4'
+file 'file:D:/Documents/daily/Qiuari_V3/manim_animations/media/videos/energy_graph/480p15/partial_movie_files/EnergyGraph/624642324_3312956715_2722720373.mp4'
+file 'file:D:/Documents/daily/Qiuari_V3/manim_animations/media/videos/energy_graph/480p15/partial_movie_files/EnergyGraph/624642324_4290132202_1920983179.mp4'
+file 'file:D:/Documents/daily/Qiuari_V3/manim_animations/media/videos/energy_graph/480p15/partial_movie_files/EnergyGraph/624642324_2692485539_314904914.mp4'

@@ -1,0 +1,82 @@
+{
+  "cluster_stability": {
+    "prev_clusters": "[5 5 0 5 5 0 0 0 0 0 0 0 3 0 6 5 0 5 5 0 0 0 0 5 5 0 0 0 5 6 5 5 0 0 5 0 5\n 0 0 5 0 0 0 0 0 3 0 5 0 5 0 0 5 0 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0 0 5 0 0 5\n 0 0 5 0 0 5 5 0 0 5 0 0 0 0 0 3 0 0 5 0 0 5 0 0 0 0 0 0 0 5 0 0 5 0 0 0 0\n 5 5 5 3 5 5 0 0 0 0 5 0 0 0 0 0 5 0 5 0 0 5 0 0 0 0 0 0 5 0 0 0 0 0 0 5 5\n 0 0 0 0 5 5 0 5 0 5 0 5]",
+    "stability_scores": [
+      0.28125
+    ]
+  },
+  "energy_flows": {
+    "epoch_0": {
+      "cluster_0": {
+        "total_surplus": 1306.905517578125,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_5": {
+        "total_surplus": 35.1591911315918,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 25.058345794677734,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_3": {
+      "cluster_0": {
+        "total_surplus": 1167.540283203125,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 184.52435302734375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_6": {
+      "cluster_0": {
+        "total_surplus": 1159.5487060546875,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_5": {
+        "total_surplus": 20.260181427001953,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 187.31417846679688,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_9": {
+      "cluster_0": {
+        "total_surplus": 957.5693359375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 399.5179443359375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    }
+  },
+  "pseudo_labels": {
+    "cluster_labels": {
+      "0": "poor",
+      "7": "fair",
+      "5": "fair"
+    },
+    "confidence": 0.7,
+    "quality_scores": {
+      "0": 0.25,
+      "7": 0.5,
+      "5": 0.5
+    }
+  },
+  "solar_cascade_effects": {}
+}

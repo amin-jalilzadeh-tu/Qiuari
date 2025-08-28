@@ -1,2 +1,0 @@
-cluster_id,num_buildings,total_investment_eur,solar_investment_eur,battery_investment_eur,annual_savings_eur,annual_co2_reduction_tons,avg_payback_years,roi_10_years,npv_20_years,investment_per_building_eur,savings_per_building_eur,economic_viability
-0,1,132047.06554708333,0.0,0.0,2631.13250541687,60.63443206359314,0.0,-0.8007428264675294,-99257.33882548408,132047.06554708333,2631.13250541687,Unknown

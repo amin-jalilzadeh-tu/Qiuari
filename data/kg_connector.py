@@ -404,10 +404,10 @@ class KGConnector:
             """
             
             try:
-                result = session.run(query, group_id=group_id)
+                result = session.run(query, group_id=group_id).single()
             except Exception as e:
                 logger.error(f'Query failed: {e}')
-                return None.single()
+                return {'group_id': group_id, 'building_count': 0}
             return dict(result) if result else {'group_id': group_id, 'building_count': 0}
 
     
@@ -811,6 +811,182 @@ class KGConnector:
                 logger.error(f'Query failed: {e}')
                 return []
             return [r['group_id'] for r in result if r['group_id']]
+    
+    def get_mv_station_data(self, mv_station_id: str) -> Dict[str, Any]:
+        """
+        Get all data for an MV station including all LV groups and buildings.
+        
+        Args:
+            mv_station_id: MV station identifier
+            
+        Returns:
+            Dictionary with MV station data, LV groups, and buildings
+        """
+        with self.driver.session() as session:
+            # Get all LV groups under this MV station
+            query = """
+            MATCH (mv:MVStation {station_id: $mv_id})
+            OPTIONAL MATCH (mv)-[:MV_SUPPLIES_LV]->(lv:CableGroup {voltage_level: 'LV'})
+            OPTIONAL MATCH (b:Building)-[:CONNECTED_TO]->(lv)
+            WITH mv, lv, collect(DISTINCT b) as buildings
+            RETURN 
+                mv.station_id as mv_id,
+                mv.name as mv_name,
+                collect(DISTINCT {
+                    lv_id: lv.group_id,
+                    buildings: [b in buildings | {
+                        ogc_fid: b.ogc_fid,
+                        x: b.x,
+                        y: b.y,
+                        lv_group_id: lv.group_id,
+                        area: b.area,
+                        energy_label: b.energy_label,
+                        has_solar: b.has_solar,
+                        solar_capacity_kwp: b.solar_capacity_kwp,
+                        avg_electricity_demand_kw: b.avg_electricity_demand_kw,
+                        avg_heating_demand_kw: b.avg_heating_demand_kw,
+                        num_shared_walls: b.num_shared_walls,
+                        adjacency_type: b.adjacency_type
+                    }]
+                }) as lv_groups
+            """
+            
+            result = session.run(query, mv_id=mv_station_id).single()
+            
+            if result:
+                # Structure the data
+                mv_data = {
+                    'mv_station_id': result['mv_id'],
+                    'mv_station_name': result['mv_name'],
+                    'lv_groups': {},
+                    'all_buildings': [],
+                    'building_to_lv': {}  # Mapping of building_id to lv_group_id
+                }
+                
+                # Process each LV group
+                for lv_data in result['lv_groups']:
+                    if lv_data['lv_id']:  # Skip null LV groups
+                        lv_id = lv_data['lv_id']
+                        buildings = lv_data['buildings']
+                        
+                        mv_data['lv_groups'][lv_id] = {
+                            'lv_id': lv_id,
+                            'buildings': buildings,
+                            'building_count': len(buildings)
+                        }
+                        
+                        # Add to all buildings list and create mapping
+                        for building in buildings:
+                            mv_data['all_buildings'].append(building)
+                            mv_data['building_to_lv'][building['ogc_fid']] = lv_id
+                
+                logger.info(f"Retrieved MV station {mv_station_id} with {len(mv_data['lv_groups'])} LV groups and {len(mv_data['all_buildings'])} buildings")
+                return mv_data
+            
+            return None
+    
+    def get_all_mv_stations(self) -> List[str]:
+        """
+        Get list of all MV station IDs.
+        
+        Returns:
+            List of MV station IDs
+        """
+        with self.driver.session() as session:
+            query = """
+            MATCH (mv:MVStation)
+            RETURN mv.station_id as mv_id
+            ORDER BY mv_id
+            """
+            result = session.run(query)
+            return [r['mv_id'] for r in result]
+    
+    def get_mv_lv_hierarchy(self, lv_group_id: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Get MV-LV-Building hierarchy from the updated KG.
+        
+        Args:
+            lv_group_id: Optional specific LV group ID. If None, gets full hierarchy.
+            
+        Returns:
+            Hierarchical structure with MV stations, LV groups, and buildings
+        """
+        with self.driver.session() as session:
+            if lv_group_id:
+                # Get hierarchy for specific LV group
+                query = """
+                MATCH (lv:CableGroup {group_id: $lv_group_id, voltage_level: 'LV'})
+                OPTIONAL MATCH (mv:MVStation)-[:MV_SUPPLIES_LV]->(lv)
+                OPTIONAL MATCH (hv:HVSubstation)-[:HV_SUPPLIES_MV]->(mv)
+                OPTIONAL MATCH (b:Building)-[:CONNECTED_TO]->(lv)
+                RETURN 
+                    hv.substation_id as hv_id,
+                    hv.name as hv_name,
+                    mv.station_id as mv_id,
+                    mv.name as mv_name,
+                    lv.group_id as lv_id,
+                    count(DISTINCT b) as building_count,
+                    collect(DISTINCT {
+                        id: b.ogc_fid,
+                        x: b.x,
+                        y: b.y,
+                        area: b.area,
+                        energy_label: b.energy_label,
+                        has_solar: b.has_solar
+                    })[..10] as sample_buildings
+                """
+                result = session.run(query, lv_group_id=lv_group_id).single()
+                
+                if result:
+                    return {
+                        'hv_substation': {
+                            'id': result['hv_id'],
+                            'name': result['hv_name']
+                        } if result['hv_id'] else None,
+                        'mv_station': {
+                            'id': result['mv_id'],
+                            'name': result['mv_name']
+                        } if result['mv_id'] else None,
+                        'lv_group': {
+                            'id': result['lv_id'],
+                            'building_count': result['building_count'],
+                            'sample_buildings': result['sample_buildings']
+                        }
+                    }
+            else:
+                # Get full hierarchy summary
+                query = """
+                MATCH (mv:MVStation)
+                OPTIONAL MATCH (hv:HVSubstation)-[:HV_SUPPLIES_MV]->(mv)
+                OPTIONAL MATCH (mv)-[:MV_SUPPLIES_LV]->(lv:CableGroup {voltage_level: 'LV'})
+                WITH hv, mv, count(DISTINCT lv) as lv_count
+                ORDER BY hv.substation_id, mv.station_id
+                RETURN 
+                    hv.substation_id as hv_id,
+                    hv.name as hv_name,
+                    mv.station_id as mv_id,
+                    mv.name as mv_name,
+                    lv_count
+                """
+                result = session.run(query)
+                
+                hierarchy = {}
+                for record in result:
+                    hv_id = record['hv_id'] or 'Unknown'
+                    if hv_id not in hierarchy:
+                        hierarchy[hv_id] = {
+                            'name': record['hv_name'],
+                            'mv_stations': []
+                        }
+                    hierarchy[hv_id]['mv_stations'].append({
+                        'id': record['mv_id'],
+                        'name': record['mv_name'],
+                        'lv_count': record['lv_count']
+                    })
+                
+                return hierarchy
+        
+        return {}
     
     def close(self):
         """Close Neo4j connection."""

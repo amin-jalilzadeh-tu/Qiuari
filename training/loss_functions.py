@@ -1,6 +1,7 @@
 """
 Loss functions for Energy GNN training
 Focuses on complementarity, energy metrics, and physics constraints
+Enhanced with temporal complementarity support
 """
 
 import torch
@@ -129,8 +130,8 @@ class ComplementarityLoss(nn.Module):
         Ensure clusters are well-separated in embedding space
         """
         # Compute cluster centers
-        cluster_centers = torch.matmul(cluster_probs.t(), embeddings)
-        cluster_sizes = cluster_probs.sum(dim=0, keepdim=True).t() + 1e-8
+        cluster_centers = torch.matmul(cluster_probs.T, embeddings)
+        cluster_sizes = cluster_probs.sum(dim=0, keepdim=True).T + 1e-8
         cluster_centers = cluster_centers / cluster_sizes
         
         # Compute pairwise distances between cluster centers
@@ -544,6 +545,89 @@ class ClusterQualityLoss(nn.Module):
         return loss
 
 
+class TemporalComplementarityLoss(nn.Module):
+    """
+    Enhanced complementarity loss using temporal patterns from temporal_layers
+    """
+    
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, temporal_complementarity: torch.Tensor, 
+                cluster_assignments: torch.Tensor) -> torch.Tensor:
+        """
+        Calculate loss based on temporal complementarity matrix
+        
+        Args:
+            temporal_complementarity: [N, N] matrix from temporal processor (negative = good)
+            cluster_assignments: [N, K] soft cluster assignments
+            
+        Returns:
+            Loss value (lower is better)
+        """
+        if temporal_complementarity is None or cluster_assignments is None:
+            return torch.tensor(0.0, requires_grad=True)
+        
+        K = cluster_assignments.shape[1]
+        cluster_complementarity = []
+        
+        for k in range(K):
+            # Get cluster membership weights
+            weights = cluster_assignments[:, k].unsqueeze(1) @ cluster_assignments[:, k].unsqueeze(0)
+            
+            # Weight temporal complementarity by cluster membership
+            # temporal_complementarity is negative for complementary pairs
+            cluster_comp = (temporal_complementarity * weights).sum() / (weights.sum() + 1e-8)
+            cluster_complementarity.append(cluster_comp)
+        
+        # We want negative values (complementary), so return positive loss
+        loss = torch.stack(cluster_complementarity).mean()
+        return loss  # Minimizing this maximizes complementarity
+
+
+class PeakIdentificationLoss(nn.Module):
+    """
+    Loss for peak hour identification accuracy
+    """
+    
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, predicted_peaks: torch.Tensor, 
+                temporal_features: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """
+        Calculate peak identification loss
+        
+        Args:
+            predicted_peaks: [N, 24] peak probabilities from temporal processor
+            temporal_features: [N, 24, F] actual temporal data (optional)
+            
+        Returns:
+            Loss value
+        """
+        if predicted_peaks is None:
+            return torch.tensor(0.0, requires_grad=True)
+        
+        if temporal_features is not None:
+            # Calculate actual peaks from temporal data
+            consumption = temporal_features[:, :, 0]  # First channel is consumption
+            actual_peaks = torch.zeros_like(predicted_peaks)
+            
+            # Mark top 4 hours as peaks for each building
+            _, peak_indices = torch.topk(consumption, k=4, dim=1)
+            actual_peaks.scatter_(1, peak_indices, 1.0)
+            
+            # Binary cross entropy
+            loss = F.binary_cross_entropy(predicted_peaks, actual_peaks)
+        else:
+            # Self-supervised: peaks should be sparse and consistent
+            sparsity_loss = predicted_peaks.mean()  # Encourage sparsity
+            consistency_loss = torch.var(predicted_peaks, dim=0).mean()  # Consistent across buildings
+            loss = sparsity_loss + 0.5 * consistency_loss
+        
+        return loss
+
+
 class UnifiedEnergyLoss(nn.Module):
     """
     Unified loss combining all energy GNN objectives
@@ -686,14 +770,28 @@ class DiscoveryLoss(nn.Module):
         self.alpha_quality = config.get('alpha_clustering', 1.5)
         self.alpha_peak = config.get('alpha_peak', 1.0)
         self.alpha_coverage = config.get('alpha_coverage', 0.5)
-        self.alpha_temporal = config.get('alpha_temporal', 0.3)
+        self.alpha_temporal = config.get('alpha_temporal', 0.5)  # Increased weight for temporal
+        self.alpha_temporal_comp = config.get('alpha_temporal_comp', 0.7)  # Temporal complementarity
+        self.alpha_peak_identification = config.get('alpha_peak_identification', 0.3)
         
-        # Component losses
-        self.complementarity_loss = ComplementarityLoss()
-        self.cluster_quality_loss = ClusterQualityLoss(
-            min_size=config.get('min_cluster_size', 3),
-            max_size=config.get('max_cluster_size', 20)
+        # Component losses - initialize with default values
+        self.complementarity_loss = ComplementarityLoss(
+            correlation_weight=config.get('correlation_weight', 1.0),
+            separation_weight=config.get('separation_weight', 0.5),
+            diversity_weight=config.get('diversity_weight', 0.3)
         )
+        
+        # Temporal losses
+        self.temporal_complementarity_loss = TemporalComplementarityLoss()
+        self.peak_identification_loss = PeakIdentificationLoss()
+        
+        # Note: There are two ClusterQualityLoss classes - using the first one
+        # Create a simple placeholder for cluster quality
+        self.min_cluster_size = config.get('min_cluster_size', 3)
+        self.max_cluster_size = config.get('max_cluster_size', 20)
+        
+        # Store model reference for accessing temporal outputs
+        self.model = None
         
     def forward(
         self,
@@ -754,11 +852,56 @@ class DiscoveryLoss(nn.Module):
             orphans = torch.sum(max_assignment < 0.1) / len(max_assignment)
             losses['coverage'] = orphans
         
+        # 6. LV Boundary Violation Loss (HEAVY PENALTY)
+        if 'clusters' in predictions and batch is not None:
+            # Check if lv_group_ids exists in batch
+            lv_group_ids = None
+            if hasattr(batch, 'lv_group_ids'):
+                lv_group_ids = batch.lv_group_ids
+            elif isinstance(batch, dict) and 'lv_group_ids' in batch:
+                lv_group_ids = batch['lv_group_ids']
+            
+            if lv_group_ids is not None:
+                violation_loss = self._lv_boundary_violation_loss(
+                    predictions['clusters'], lv_group_ids
+                )
+                losses['lv_violation'] = violation_loss * 100.0  # Heavy penalty
+        
         # 6. Temporal Stability Loss (if multiple timesteps)
         if 'clusters_prev' in predictions and 'clusters' in predictions:
             losses['temporal'] = self._temporal_stability_loss(
                 predictions['clusters_prev'], predictions['clusters']
             )
+        
+        # 6. Temporal Complementarity Loss (if temporal outputs available)
+        if hasattr(self, 'model') and self.model is not None:
+            if hasattr(self.model, 'temporal_outputs') and self.model.temporal_outputs is not None:
+                temporal_outputs = self.model.temporal_outputs
+                
+                # Temporal complementarity
+                if 'temporal_complementarity' in temporal_outputs and 'clusters' in predictions:
+                    temp_comp_loss = self.temporal_complementarity_loss(
+                        temporal_outputs['temporal_complementarity'],
+                        predictions['clusters']
+                    )
+                    losses['temporal_complementarity'] = temp_comp_loss
+                else:
+                    losses['temporal_complementarity'] = torch.tensor(0.0)
+                
+                # Peak identification
+                if 'peak_probabilities' in temporal_outputs:
+                    # Get temporal features if available
+                    temp_features = physics_data.get('temporal_features', None)
+                    peak_loss = self.peak_identification_loss(
+                        temporal_outputs['peak_probabilities'],
+                        temp_features
+                    )
+                    losses['peak_identification'] = peak_loss
+                else:
+                    losses['peak_identification'] = torch.tensor(0.0)
+        else:
+            losses['temporal_complementarity'] = torch.tensor(0.0)
+            losses['peak_identification'] = torch.tensor(0.0)
         
         # Combine losses
         total_loss = (
@@ -767,11 +910,77 @@ class DiscoveryLoss(nn.Module):
             self.alpha_quality * (losses.get('size', 0) + losses.get('entropy', 0)) +
             self.alpha_peak * losses.get('peak', 0) +
             self.alpha_coverage * losses.get('coverage', 0) +
-            self.alpha_temporal * losses.get('temporal', 0)
+            self.alpha_temporal * losses.get('temporal', 0) +
+            self.alpha_temporal_comp * losses.get('temporal_complementarity', 0) +
+            self.alpha_peak_identification * losses.get('peak_identification', 0)
         )
         
         losses['total'] = total_loss
         return total_loss, losses
+    
+    def _peak_reduction_loss(
+        self,
+        demand: torch.Tensor,
+        clusters: torch.Tensor
+    ) -> torch.Tensor:
+        """
+        Calculate peak reduction loss
+        """
+        # Original peak (sum of individual peaks)
+        peak_original = torch.max(demand, dim=-1)[0] if demand.dim() > 1 else torch.max(demand)
+        
+        # Clustered peak (peak of aggregated demand)
+        if clusters.dim() == 2:  # Soft assignments
+            # Aggregate demand per cluster
+            cluster_demand = torch.matmul(clusters.T, demand.unsqueeze(-1)).squeeze()
+            peak_clustered = torch.max(cluster_demand)
+        else:
+            peak_clustered = peak_original  # Fallback
+        
+        # Calculate reduction
+        peak_reduction = (peak_original - peak_clustered) / (peak_original + 1e-8)
+        
+        # Penalize if reduction is less than 25%
+        return torch.relu(0.25 - peak_reduction)
+    
+    def _lv_boundary_violation_loss(self, cluster_assignments: torch.Tensor, 
+                                   lv_group_ids: torch.Tensor) -> torch.Tensor:
+        """
+        Calculate penalty for LV boundary violations
+        Returns high loss if buildings in same cluster belong to different LV groups
+        """
+        # Handle both soft and hard assignments
+        if cluster_assignments.dim() > 1:
+            # Soft assignments - check co-membership probability
+            co_membership = torch.matmul(cluster_assignments, cluster_assignments.T)
+            
+            # Create LV group mask (1 if same LV, 0 if different)
+            lv_mask = lv_group_ids.unsqueeze(0) == lv_group_ids.unsqueeze(1)
+            lv_mask = lv_mask.float()
+            
+            # Violations: high co-membership probability but different LV groups
+            violations = co_membership * (1 - lv_mask)
+            
+            # Average violation rate
+            return violations.mean()
+        else:
+            # Hard assignments
+            hard_assignments = cluster_assignments
+            
+            violations = 0
+            unique_clusters = torch.unique(hard_assignments)
+            
+            for cluster_id in unique_clusters:
+                cluster_mask = hard_assignments == cluster_id
+                cluster_lv_groups = lv_group_ids[cluster_mask]
+                
+                # Check if all buildings in cluster belong to same LV group
+                if len(torch.unique(cluster_lv_groups)) > 1:
+                    violations += 1
+            
+            # Return violation rate
+            num_clusters = len(unique_clusters)
+            return violations / (num_clusters + 1e-8)
 
 
 class SolarROILoss(nn.Module):
@@ -920,31 +1129,6 @@ class ClusterQualityLoss(nn.Module):
             )
         
         return loss
-    
-    def _peak_reduction_loss(
-        self,
-        demand: torch.Tensor,
-        clusters: torch.Tensor
-    ) -> torch.Tensor:
-        """
-        Calculate peak reduction loss
-        """
-        # Original peak (sum of individual peaks)
-        peak_original = torch.max(demand, dim=-1)[0] if demand.dim() > 1 else torch.max(demand)
-        
-        # Clustered peak (peak of aggregated demand)
-        if clusters.dim() == 2:  # Soft assignments
-            # Aggregate demand per cluster
-            cluster_demand = torch.matmul(clusters.T, demand.unsqueeze(-1)).squeeze()
-            peak_clustered = torch.max(cluster_demand)
-        else:
-            peak_clustered = peak_original  # Fallback
-        
-        # Calculate reduction
-        peak_reduction = (peak_original - peak_clustered) / (peak_original + 1e-8)
-        
-        # Penalize if reduction is less than 25%
-        return torch.relu(0.25 - peak_reduction)
     
     def _check_transformer_violations(
         self,

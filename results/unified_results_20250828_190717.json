@@ -1,0 +1,127 @@
+{
+  "cluster_stability": {
+    "prev_clusters": "[4 4 4 9 4 9 9 4 0 8 5 5 4 4 4 4 3 9 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 5 4\n 4 4 5 9 4 4 4 4 5 4 4 4 9 4 5 5 4 4 4 5 4 0 4 4 4 4 5 4 9 4 4 4 4 4 4 5 4\n 4 4 4 4 9 4 4 5 4 4 4 4 5 4 4 4 4 4 4 4 4 9 4 4 4 4 4 4 4 4 4 5 8 5 4 4 4\n 4 4 4 4 4 4 4 4 9 4 4 4 4 4 5 5 4 4 5 4 4 4 4 5 9 4 4 4 3 4 4 5 4 9 4 5 9\n 9 4 4 9 9 4 3 4 9 5 4 4]",
+    "stability_scores": [
+      0.39375000000000004
+    ]
+  },
+  "energy_flows": {
+    "epoch_0": {
+      "cluster_0": {
+        "total_surplus": 12.024502754211426,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_3": {
+        "total_surplus": 76.07151794433594,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_4": {
+        "total_surplus": 118.50211334228516,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_5": {
+        "total_surplus": 33.739288330078125,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 177.43678283691406,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 888.96240234375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_9": {
+        "total_surplus": 45.31867599487305,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_3": {
+      "cluster_3": {
+        "total_surplus": 45.148162841796875,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_4": {
+        "total_surplus": 20.183713912963867,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 255.53912353515625,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1016.001220703125,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_6": {
+      "cluster_3": {
+        "total_surplus": 30.18295669555664,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 312.08349609375,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 1009.654296875,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    },
+    "epoch_9": {
+      "cluster_3": {
+        "total_surplus": 87.49234008789062,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 296.1481628417969,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_8": {
+        "total_surplus": 973.4104614257812,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    }
+  },
+  "pseudo_labels": {
+    "cluster_labels": {
+      "8": "poor",
+      "3": "fair",
+      "4": "poor",
+      "5": "good",
+      "7": "fair",
+      "9": "good",
+      "1": "poor",
+      "0": "fair"
+    },
+    "confidence": 0.7,
+    "quality_scores": {
+      "8": 0.25,
+      "3": 0.5,
+      "4": 0.25,
+      "5": 0.75,
+      "7": 0.5,
+      "9": 0.75,
+      "1": 0.25,
+      "0": 0.5
+    }
+  },
+  "solar_cascade_effects": {}
+}

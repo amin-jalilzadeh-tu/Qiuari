@@ -1,0 +1,286 @@
+# Unified Configuration for Energy GNN System
+# Complete configuration for clustering, solar recommendations, and semi-supervised learning
+
+# Knowledge Graph Connection
+kg:
+  uri: "neo4j://127.0.0.1:7687"
+  user: "neo4j"
+  password: "aminasad"
+
+# Model Architecture
+model:
+  type: "hetero"  # heterogeneous GNN
+  hidden_dim: 128
+  num_layers: 3
+  dropout: 0.2
+  num_heads: 4  # attention heads
+  
+  # Clustering configuration
+  num_clusters: 30  # max clusters across all LV groups
+  min_cluster_size: 3
+  max_cluster_size: 20
+  
+  # Feature dimensions (auto-detected if null)
+  building_features: null
+  cable_group_features: 12
+  transformer_features: 8
+  
+  # Components to enable
+  use_attention: true
+  use_diffpool: true
+  use_uncertainty: true
+  use_explainability: true
+  use_temporal: true  # Enable temporal processing layers
+
+# Training Configuration
+training:
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 1  # MV stations per batch
+  
+  # Learning rate schedule
+  scheduler:
+    type: "cosine_annealing_warm_restarts"
+    T_0: 10
+    T_mult: 2
+    eta_min: 0.000001
+  
+  # Optimizer
+  optimizer: "adamw"
+  gradient_clip: 1.0
+  
+  # Training phases (REDUCED FOR QUICK TESTING)
+  phases:
+    unsupervised: 3  # Pure discovery epochs (was 30)
+    semi_supervised: 3  # With simulated labels (was 30)
+    fine_tuning: 2  # With real + simulated labels (was 40)
+  
+  # Early stopping
+  early_stopping:
+    patience: 15
+    min_delta: 0.001
+    monitor: "cluster_quality_score"
+
+# Loss Function Weights
+loss_weights:
+  # Primary objectives
+  complementarity: 2.0
+  physics: 1.5
+  structure: 1.0
+  cluster_quality: 1.5
+  
+  # Temporal objectives (NEW)
+  temporal_complementarity: 0.7  # Enhanced complementarity using patterns
+  peak_identification: 0.3  # Peak hour detection accuracy
+  
+  # Secondary objectives
+  solar: 0.5
+  uncertainty: 0.3
+  temporal_stability: 0.3
+  
+  # Constraints (high penalty)
+  lv_boundary_violation: 100.0
+  size_violation: 10.0
+
+# Cluster Quality Metrics
+cluster_metrics:
+  weights:
+    self_sufficiency: 0.3
+    complementarity: 0.3
+    peak_reduction: 0.2
+    compactness: 0.1
+    size_appropriateness: 0.1
+  
+  # Thresholds for labeling
+  thresholds:
+    excellent: 0.8
+    good: 0.6
+    fair: 0.4
+    poor: 0.0
+  
+  # Label confidence based on observation time
+  min_observation_days: 7
+  confidence_increase_per_week: 0.1
+
+# Loss configuration
+loss:
+  weights:
+    complementarity: 2.0
+    physics: 1.5
+    structure: 1.0
+    cluster_quality: 1.5
+    solar: 0.5
+    uncertainty: 0.3
+
+# Task configuration  
+task:
+  cluster_labeling:
+    weights:
+      self_sufficiency: 0.3
+      complementarity: 0.3
+      peak_reduction: 0.2
+      compactness: 0.1
+      size_appropriateness: 0.1
+    thresholds:
+      excellent: 0.8
+      good: 0.6
+      fair: 0.4
+      poor: 0.0
+    min_observation_days: 7
+    confidence_increase_per_week: 0.1
+  
+  # Solar Simulation Configuration
+  solar:
+    # Installation costs
+    cost_per_kwp: 1200  # euros
+    maintenance_per_kwp_year: 20  # euros
+  
+    # Energy prices
+    electricity_price: 0.25  # euros/kWh
+    feed_in_tariff: 0.08  # euros/kWh
+  
+    # Performance factors
+    annual_generation_per_kwp: 1200  # kWh/kWp/year
+    degradation_rate: 0.005  # 0.5% per year
+  
+    # ROI categories (years)
+    roi_categories:
+    excellent: 5
+    good: 7
+    fair: 10
+    poor: 15
+  
+    # Simulation parameters
+    self_consumption_base: 0.3
+    self_consumption_with_battery: 0.7
+    cascade_impact_radius: 3  # hops
+
+# Data Loading
+data_loader:
+  min_cluster_size: 3
+  max_cluster_size: 20
+  lv_group_only: false  # Process full MV
+  complementarity_sampling: true
+  num_workers: 4
+  
+  # Temporal configuration
+  temporal_window: 24  # hours
+  temporal_resolution: "hourly"
+  
+  # Data split
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  
+  # Split strategy
+  split_by: "mv_station"  # or "temporal", "random"
+
+# Evaluation Metrics
+evaluation:
+  # Metrics to track (no ground truth)
+  metrics:
+    - "avg_self_sufficiency"
+    - "avg_complementarity"
+    - "avg_peak_reduction"
+    - "lv_boundary_violations"
+    - "size_violations"
+    - "cluster_stability"
+    - "orphan_buildings_ratio"
+    - "avg_cluster_quality_score"
+  
+  # Baseline comparisons
+  baselines:
+    - "random_clustering"
+    - "kmeans_consumption"
+    - "geographic_clustering"
+    - "no_clustering"
+  
+  # Validation frequency
+  validate_every: 5  # epochs
+  
+  # Visualization
+  visualize:
+    clusters: true
+    energy_flows: true
+    attention_weights: true
+    uncertainty_maps: true
+
+# Uncertainty Quantification
+uncertainty:
+  # MC Dropout
+  mc_iterations: 20
+  dropout_rate: 0.2
+  
+  # Confidence calibration
+  calibration_method: "temperature_scaling"
+  calibration_samples: 100
+  
+  # Thresholds
+  high_confidence: 0.8
+  low_confidence: 0.3
+
+# Explainability
+explainability:
+  # Methods to use
+  methods:
+    - "attention_weights"
+    - "gradient_importance"
+    - "gnn_explainer"
+    - "path_tracing"
+  
+  # Explanation generation
+  generate_for:
+    - "cluster_assignments"
+    - "solar_recommendations"
+    - "energy_flows"
+  
+  # Storage
+  save_explanations: true
+  explanation_format: "json"
+
+# Hyperparameter Optimization
+hyperopt:
+  enabled: false  # Set to true for hyperparameter search
+  n_trials: 50
+  
+  search_space:
+    hidden_dim: [64, 128, 256]
+    num_layers: [2, 3, 4]
+    dropout: [0.1, 0.2, 0.3]
+    learning_rate: [0.0001, 0.001, 0.01]
+    max_clusters: [20, 30, 40]
+  
+  optimization_metric: "avg_cluster_quality_score"
+  
+  # Use Optuna backend
+  backend: "optuna"
+  study_name: "energy_gnn_optimization"
+
+# Output Configuration
+output:
+  # Directories
+  checkpoint_dir: "checkpoints"
+  results_dir: "results"
+  log_dir: "logs"
+  
+  # Checkpointing
+  save_every: 10  # epochs
+  keep_best_n: 3
+  
+  # Logging
+  log_level: "INFO"
+  tensorboard: true
+  wandb: false
+  
+  # Results format
+  save_predictions: true
+  save_labels: true
+  save_metrics: true
+  
+# Experiment tracking
+experiment:
+  name: "unified_energy_gnn"
+  tags: ["clustering", "solar", "semi_supervised"]
+  description: "Dynamic sub-clustering with solar recommendations"
+  seed: 42
