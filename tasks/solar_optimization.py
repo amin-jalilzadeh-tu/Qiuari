@@ -120,7 +120,8 @@ class SolarOptimization:
             graph_data: Dict,
             clustering_results: Dict,
             embeddings: Optional[torch.Tensor] = None,
-            temporal_data: Optional[pd.DataFrame] = None) -> Dict:
+            temporal_data: Optional[pd.DataFrame] = None,
+            cluster_quality_labels: Optional[Dict] = None) -> Dict:
         """
         Run solar optimization based on clustering results
         
@@ -153,7 +154,12 @@ class SolarOptimization:
         cluster_plans = {}
         
         for cluster_id, cluster_buildings in enumerate(clusters):
-            logger.info(f"Analyzing cluster {cluster_id} with {len(cluster_buildings)} buildings")
+            # Get cluster quality label if available
+            cluster_quality = 'unknown'
+            if cluster_quality_labels and cluster_id in cluster_quality_labels:
+                cluster_quality = cluster_quality_labels[cluster_id]
+            
+            logger.info(f"Analyzing cluster {cluster_id} ({cluster_quality} quality) with {len(cluster_buildings)} buildings")
             
             # Analyze solar potential for cluster
             cluster_candidates = self._analyze_cluster_solar_potential(
@@ -161,7 +167,8 @@ class SolarOptimization:
                 buildings,
                 cluster_id,
                 complementarity_matrix,
-                temporal_data
+                temporal_data,
+                cluster_quality  # Pass quality label
             )
             
             # Optimize solar placement within cluster
@@ -204,7 +211,8 @@ class SolarOptimization:
                                         buildings: Dict,
                                         cluster_id: int,
                                         complementarity_matrix: Optional[torch.Tensor],
-                                        temporal_data: Optional[pd.DataFrame]) -> List[SolarCandidate]:
+                                        temporal_data: Optional[pd.DataFrame],
+                                        cluster_quality: str = 'unknown') -> List[SolarCandidate]:
         """
         Analyze solar potential for buildings in a cluster
         """
@@ -242,11 +250,12 @@ class SolarOptimization:
                 temporal_data
             )
             
-            # Calculate total score
+            # Calculate total score with cluster quality boost
             total_score = self._calculate_total_score(
                 technical_score,
                 economic_score,
-                complementarity_score
+                complementarity_score,
+                cluster_quality  # Pass cluster quality for prioritization
             )
             
             # Determine recommended capacity
@@ -463,9 +472,10 @@ class SolarOptimization:
     def _calculate_total_score(self,
                               technical: float,
                               economic: float,
-                              complementarity: float) -> float:
+                              complementarity: float,
+                              cluster_quality: str = 'unknown') -> float:
         """
-        Combine scores with weights
+        Combine scores with weights and prioritize poor clusters
         """
         weights = {
             'technical': 0.3,
@@ -477,11 +487,29 @@ class SolarOptimization:
             weights['complementarity'] = 0.4
             weights['economic'] = 0.3
         
-        return (
+        base_score = (
             weights['technical'] * technical +
             weights['economic'] * economic +
             weights['complementarity'] * complementarity
         )
+        
+        # BOOST PRIORITY FOR POOR PERFORMING CLUSTERS
+        # This ensures solar goes to clusters that need improvement most
+        quality_multipliers = {
+            'poor': 1.5,      # 50% boost for poor clusters
+            'fair': 1.2,      # 20% boost for fair clusters  
+            'good': 1.0,      # No change for good clusters
+            'excellent': 0.9, # Slight reduction for excellent (already performing well)
+            'unknown': 1.0    # No change if quality unknown
+        }
+        
+        multiplier = quality_multipliers.get(cluster_quality.lower(), 1.0)
+        final_score = base_score * multiplier
+        
+        if cluster_quality == 'poor' and final_score > 0.5:
+            logger.debug(f"Boosted score from {base_score:.2f} to {final_score:.2f} for poor cluster")
+        
+        return final_score
     
     def _calculate_recommended_capacity(self, building: Dict) -> float:
         """

@@ -1,4 +1,28 @@
+i have this data in my database. you connect it, explore my table, and see where   
+  in kg builder we had issu: ZZZZZZZZZZZ\aa_Qu_SQL+KG-builder\kg_builder_1_2.py      
+  ZZZZZZZZZZZ\aa_Qu_SQL+KG-builder\kg_builder_1.py
+  ZZZZZZZZZZZ\aa_Qu_SQL+KG-builder\kg_builder_2.py
+  ZZZZZZZZZZZ\aa_Qu_SQL+KG-builder\kg_builder_3.py
+  ZZZZZZZZZZZ\aa_Qu_SQL+KG-builder\kg_builder_4_optimizer.py\
+  \
+  \
+  {
+    "label": "localhost",
+    "host": "localhost",
+    "user": "aminj",
+    "port": 5433,
+    "ssl": false,
+    "database": "research",
+    "password": "Aminej@geodan!"
+  }\
+  \
+  \
+  schema is amin_grid abd table you can check: buildings_1_deducted
 
+
+
+
+  
 
 you made over complexd what we had, as you can see also things in enhanced part in main py file. well later i asked you to make smplified, as you made main simplified. well it wasnt exactly what i wanted. but any way, before just making our last model, lets first explore things, and lets have chat that what i want to do. so, we will have a chat, as you will explain what files do and you willl ask what aspecti want or s
 

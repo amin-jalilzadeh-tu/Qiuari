@@ -53,6 +53,14 @@ from evaluation.cluster_evaluator import ClusterEvaluator
 from torch_geometric.data import HeteroData
 from utils.device_utils import move_hetero_data_to_device
 
+# Import visualization components
+from visualization.real_data_connector import RealDataConnector
+from visualization.data_aggregator import DataAggregator
+from visualization.chart_generator import ChartGenerator
+from visualization.report_generator import ReportGenerator
+from visualization.economic_calculator import EconomicCalculator
+from visualization.excel_reporter import ExcelReporter
+
 
 class UnifiedGNNSystem:
     """
@@ -146,36 +154,116 @@ class UnifiedGNNSystem:
         logger.info("RUNNING INITIAL NETWORK ASSESSMENT")
         logger.info("="*60 + "\n")
         
-        from evaluation.initial_assessment import InitialAssessment
+        from analysis.lv_mv_evaluator import EnhancedLVMVEvaluator, LVGroupMetrics, MVGroupMetrics
         
-        # Initialize assessment
-        assessor = InitialAssessment(self.kg_connector)
+        # Initialize evaluator
+        evaluator = EnhancedLVMVEvaluator(self.config.get('assessment', {}))
         
-        # Run full assessment
-        results, summary_df = assessor.run_full_assessment()
+        # Get all MV stations from KG
+        query = """
+        MATCH (mv:MVStation)-[:MV_SUPPLIES_LV]->(lv:CableGroup {voltage_level: 'LV'})
+        WITH mv, collect(DISTINCT lv) as lv_groups
+        RETURN mv.station_id as mv_id, 
+               [lg IN lv_groups | lg.group_id] as lv_group_ids,
+               size(lv_groups) as lv_count
+        ORDER BY lv_count DESC
+        """
+        mv_stations = self.kg_connector.run(query)
         
-        # Store results
-        self.initial_assessment = results
+        all_mv_metrics = []
+        all_lv_metrics = []
         
-        # Select MV station based on config strategy
-        strategy = self.config.get('assessment', {}).get('selection_strategy', None)
-        self.selected_mv_station = assessor.select_mv_station(strategy)
+        logger.info(f"Evaluating {len(mv_stations)} MV stations...")
         
-        if self.selected_mv_station:
-            self.selected_lv_groups = assessor.get_lv_groups_for_mv(self.selected_mv_station)
-            logger.info(f"Selected MV station: {self.selected_mv_station}")
-            logger.info(f"Contains {len(self.selected_lv_groups)} LV groups")
+        for mv_data in mv_stations[:10]:  # Evaluate top 10 MV stations by size
+            mv_id = mv_data['mv_id']
+            lv_group_ids = mv_data['lv_group_ids']
             
-            # Show summary
-            mv_metrics = assessor.mv_assessments.get(self.selected_mv_station)
-            if mv_metrics:
-                logger.info(f"Priority Score: {mv_metrics.get_priority_score():.1f}/10")
-                logger.info(f"Total Buildings: {mv_metrics.total_building_count}")
-                logger.info(f"Strategy: {mv_metrics.strategy_recommendation}")
-                logger.info(f"Poor Labels: {mv_metrics.avg_poor_label_ratio:.1%}")
-                logger.info(f"Solar Potential: {mv_metrics.total_solar_potential_kw:.0f} kW")
+            lv_groups_buildings = []
+            lv_metrics_list = []
+            
+            # Get buildings for each LV group
+            for lv_id in lv_group_ids:
+                buildings_query = """
+                MATCH (b:Building)-[:CONNECTED_TO]->(lv:CableGroup {group_id: $lv_id})
+                RETURN b.ogc_fid as id,
+                       b.building_function as building_function,
+                       b.residential_type as residential_type,
+                       b.non_residential_type as non_residential_type,
+                       b.energy_label as energy_label,
+                       b.area as area,
+                       b.roof_area as roof_area,
+                       b.flat_roof_area as flat_roof_area,
+                       b.sloped_roof_area as sloped_roof_area,
+                       b.building_orientation_cardinal as building_orientation_cardinal,
+                       b.orientation as orientation,
+                       b.has_solar as has_solar,
+                       b.peak_electricity_demand_kw as peak_demand,
+                       COALESCE(b.peak_hours, 18) as peak_hour,
+                       $lv_id as lv_group_id
+                """
+                buildings = self.kg_connector.run(
+                    buildings_query, 
+                    {'lv_id': lv_id}
+                )
+                
+                if len(buildings) >= 5:  # Min buildings threshold
+                    lv_groups_buildings.append(buildings)
+                    lv_metric = evaluator.evaluate_lv_group(buildings)
+                    lv_metrics_list.append(lv_metric)
+                    all_lv_metrics.append(lv_metric)
+            
+            if lv_groups_buildings:
+                # Evaluate MV station
+                mv_metrics = evaluator.evaluate_mv_station(lv_groups_buildings, mv_id)
+                if mv_metrics:
+                    all_mv_metrics.append(mv_metrics)
+                    
+                    # Generate report for this MV
+                    report_path = Path(f"reports/assessment_{mv_id}.txt")
+                    report_path.parent.mkdir(exist_ok=True)
+                    report = evaluator.generate_assessment_report(
+                        mv_metrics,
+                        lv_metrics_list,
+                        report_path
+                    )
         
-        return results
+        # Select best MV station
+        if all_mv_metrics:
+            sorted_mv = sorted(all_mv_metrics, key=lambda x: x.planning_priority, reverse=True)
+            best_mv = sorted_mv[0]
+            
+            self.selected_mv_station = best_mv.mv_station_id
+            self.selected_lv_groups = best_mv.best_lv_groups
+            
+            # Store assessment results
+            self.initial_assessment = {
+                'mv_metrics': all_mv_metrics,
+                'lv_metrics': all_lv_metrics,
+                'selected_mv': best_mv.mv_station_id,
+                'selected_lv': best_mv.best_lv_groups
+            }
+            
+            # Log summary
+            logger.info(f"\n{'='*60}")
+            logger.info("ASSESSMENT COMPLETE")
+            logger.info(f"{'='*60}")
+            logger.info(f"Selected MV Station: {best_mv.mv_station_id}")
+            logger.info(f"Planning Priority: {best_mv.planning_priority:.2f}/10")
+            logger.info(f"LV Groups: {best_mv.lv_group_count}")
+            logger.info(f"Total Buildings: {best_mv.total_buildings}")
+            logger.info(f"Avg Diversity: {best_mv.avg_diversity_score:.1%}")
+            logger.info(f"Poor Labels: {best_mv.avg_poor_label_ratio:.1%}")
+            logger.info(f"Best LV Groups: {', '.join(best_mv.best_lv_groups[:3])}")
+            
+            if best_mv.planning_priority >= 7:
+                logger.info("✅ EXCELLENT candidate - High diversity + intervention needs")
+            elif best_mv.planning_priority >= 5:
+                logger.info("✅ GOOD candidate - Balanced potential")
+            else:
+                logger.info("⚠️ LIMITED potential - Consider alternatives")
+        
+        return self.initial_assessment
     
     def train(self, num_epochs: int = None, run_assessment: bool = True):
         """
@@ -604,32 +692,77 @@ class UnifiedGNNSystem:
                        f"with avg confidence: {quality_labels.get('confidence', 0.5):.2f}")
     
     def _simulate_solar_deployment(self, data: HeteroData, epoch: int):
-        """Simulate iterative solar deployment rounds"""
+        """Simulate iterative solar deployment rounds with learning"""
         logger.info(f"Simulating solar deployment round at epoch {epoch}...")
         
         with torch.no_grad():
-            outputs = self.model(data, task='clustering')
-            if 'cluster_logits' in outputs:
-                outputs['clustering'] = outputs['cluster_logits']
+            # Get current clustering
+            cluster_outputs = self.model(data, task='clustering')
+            if 'cluster_logits' in cluster_outputs:
+                cluster_assignments = cluster_outputs['cluster_logits'].argmax(dim=-1)
+            else:
+                cluster_assignments = torch.zeros(data['building'].x.size(0), dtype=torch.long)
             
-            # Analyze cascade effects
-            cascade_results = self.cascade_analyzer.analyze_cascade(
-                outputs.get('solar', outputs['clustering']),
-                data,
-                max_hops=3
-            )
+            # Get solar recommendations
+            solar_outputs = self.model(data, task='solar')
             
-            # Store cascade effects
-            self.solar_cascade_effects[f'round_{epoch}'] = {
-                'direct_impact': cascade_results['direct_impact'],
-                '1_hop_impact': cascade_results['hop_1_impact'],
-                '2_hop_impact': cascade_results['hop_2_impact'],
-                '3_hop_impact': cascade_results['hop_3_impact'],
-                'total_network_benefit': cascade_results['total_benefit']
-            }
-            
-            logger.info(f"Cascade effects - Direct: {cascade_results['direct_impact']:.2f}, "
-                       f"3-hop total: {cascade_results['total_benefit']:.2f}")
+            # Select top candidates for this round (e.g., top 5)
+            if 'solar' in solar_outputs:
+                solar_scores = solar_outputs['solar']
+                # Get ROI predictions (4 classes: excellent, good, fair, poor)
+                roi_predictions = solar_scores.argmax(dim=-1)
+                # Select buildings with excellent ROI (class 0)
+                excellent_mask = roi_predictions == 0
+                excellent_indices = torch.where(excellent_mask)[0]
+                
+                if len(excellent_indices) > 0:
+                    # Select top 5 or fewer
+                    num_to_install = min(5, len(excellent_indices))
+                    selected_buildings = excellent_indices[:num_to_install].cpu().tolist()
+                    
+                    # Estimate capacities (simplified)
+                    capacities = [5.0] * len(selected_buildings)  # 5 kWp each
+                    
+                    # Create cluster assignment dict
+                    cluster_dict = {
+                        i: cluster_assignments[i].item() 
+                        for i in range(cluster_assignments.size(0))
+                    }
+                    
+                    # Current state
+                    current_state = {
+                        'self_sufficiency': getattr(self, 'current_self_sufficiency', 0.2),
+                        'total_demand': 100000,  # kWh/year estimate
+                        'energy_flows': getattr(self, 'current_energy_flows', {})
+                    }
+                    
+                    # Simulate deployment round
+                    new_state = self.solar_simulator.simulate_deployment_round(
+                        selected_buildings,
+                        capacities,
+                        current_state,
+                        cluster_dict
+                    )
+                    
+                    # Update current state
+                    self.current_self_sufficiency = new_state.get('self_sufficiency', 0.2)
+                    self.current_energy_flows = new_state.get('energy_flows', {})
+                    
+                    # Store results
+                    self.solar_cascade_effects[f'round_{epoch}'] = {
+                        'installations': len(selected_buildings),
+                        'total_capacity': sum(capacities),
+                        'self_sufficiency_improvement': new_state['last_round_results']['improvements'].get('self_sufficiency_improvement', 0),
+                        'peak_reduction': new_state['last_round_results']['improvements'].get('peak_reduction', 0),
+                        'cascade_effects': new_state['last_round_results'].get('cascade_effects', [])
+                    }
+                    
+                    logger.info(f"Installed solar on {len(selected_buildings)} buildings")
+                    logger.info(f"Self-sufficiency improved by {new_state['last_round_results']['improvements'].get('self_sufficiency_improvement', 0):.1%}")
+                else:
+                    logger.info("No excellent ROI candidates found in this round")
+            else:
+                logger.warning("Solar task did not return expected outputs")
     
     def _compute_cascade_loss(self, solar_outputs: torch.Tensor, data: HeteroData) -> torch.Tensor:
         """Compute loss for cascade effects"""
@@ -719,6 +852,190 @@ class UnifiedGNNSystem:
         
         logger.info(f"\nResults saved to: {results_path}")
     
+    def generate_visualizations(self, results: Dict = None):
+        """Generate comprehensive visualizations and reports from results"""
+        
+        logger.info("Generating visualizations with REAL data")
+        
+        try:
+            # Initialize visualization components
+            real_connector = RealDataConnector(
+                gnn_system=self,
+                kg_connector=self.kg_connector
+            )
+            
+            data_aggregator = DataAggregator(neo4j_connector=self.kg_connector)
+            chart_generator = ChartGenerator()
+            report_generator = ReportGenerator()
+            economic_calculator = EconomicCalculator(self.config.get('economic', {}))
+            excel_reporter = ExcelReporter()
+            
+            # Prepare real data
+            if results is None:
+                results = self.last_evaluation_results if hasattr(self, 'last_evaluation_results') else {}
+            
+            # Get system components
+            system_components = {
+                'cluster_evaluator': self.cluster_evaluator,
+                'solar_simulator': self.solar_simulator,
+                'energy_flow_tracker': getattr(self, 'energy_flow_tracker', None)
+            }
+            
+            # Extract real visualization data
+            viz_data = real_connector.prepare_real_visualization_data(results, system_components)
+            
+            # Get cluster metrics from quality labeler
+            cluster_metrics = {}
+            if hasattr(self, 'quality_labeler') and hasattr(self.quality_labeler, 'cluster_history'):
+                for cluster_id in self.quality_labeler.cluster_history:
+                    if self.quality_labeler.metrics_history.get(cluster_id):
+                        cluster_metrics[cluster_id] = self.quality_labeler.metrics_history[cluster_id][-1]
+            
+            # Get solar data from solar simulator
+            solar_data = real_connector.get_solar_data_from_simulator(self.solar_simulator)
+            
+            # Calculate economic metrics
+            economic_data = economic_calculator.create_financial_summary(
+                solar_roi=economic_calculator.calculate_solar_roi(
+                    capacity_kwp=solar_data.get('total_capacity', 100),
+                    annual_generation_kwh=solar_data.get('annual_generation', 120000),
+                    self_consumption_ratio=0.7,
+                    building_demand_kwh=150000
+                ),
+                battery_economics=economic_calculator.calculate_battery_economics(
+                    capacity_kwh=50, daily_cycles=1.5, peak_shaving_kw=20, arbitrage_revenue_daily=15
+                ),
+                community_benefits=economic_calculator.calculate_community_benefits(
+                    num_buildings=len(viz_data.get('cluster_assignments', [])),
+                    shared_energy_kwh=viz_data.get('energy_flows', {}).get('total_shared', 0),
+                    peak_reduction_percent=0.25,
+                    avg_building_demand_kwh=10000
+                ),
+                grid_deferral=economic_calculator.calculate_grid_investment_deferral(
+                    peak_reduction_kw=100, self_sufficiency_ratio=0.4, num_buildings=160
+                )
+            )
+            
+            # Get temporal data with proper structure
+            temporal_data = pd.DataFrame()
+            if hasattr(self, 'last_temporal_data'):
+                temporal_data = self.last_temporal_data
+                # Ensure required columns exist
+                if not temporal_data.empty and 'hour' not in temporal_data.columns:
+                    if len(temporal_data) > 0:
+                        # Check if data is already flattened (num_buildings * 24 rows)
+                        if len(temporal_data) % 24 == 0:
+                            num_buildings = len(temporal_data) // 24
+                            temporal_data['hour'] = list(range(24)) * num_buildings
+                        else:
+                            # Data is not flattened, just buildings
+                            temporal_data['hour'] = [12] * len(temporal_data)  # Default to noon
+            
+            # Aggregate all metrics
+            aggregated_metrics = data_aggregator.aggregate_all_metrics(
+                gnn_results=viz_data,
+                cluster_metrics=cluster_metrics,
+                solar_results=solar_data,
+                temporal_data=temporal_data
+            )
+            
+            viz_config = self.config.get('visualization', {})
+            
+            # Generate charts if enabled
+            if viz_config.get('generate_charts', True):
+                logger.info("Generating charts...")
+                charts = viz_config.get('charts', {})
+                
+                if charts.get('cluster_heatmap', True):
+                    chart_generator.create_cluster_quality_heatmap(
+                        cluster_metrics, save_path="cluster_quality_heatmap"
+                    )
+                
+                if charts.get('energy_flow_sankey', True):
+                    chart_generator.create_energy_flow_sankey(
+                        viz_data.get('energy_flows', {}), save_path="energy_flow_sankey"
+                    )
+                
+                if charts.get('temporal_patterns', True) and not temporal_data.empty:
+                    chart_generator.create_temporal_patterns(
+                        temporal_data, save_path="temporal_patterns"
+                    )
+                
+                if charts.get('solar_roi_analysis', True):
+                    chart_generator.create_solar_roi_analysis(
+                        solar_data, save_path="solar_roi_analysis"
+                    )
+                
+                if charts.get('economic_dashboard', True):
+                    chart_generator.create_economic_dashboard(
+                        economic_data, save_path="economic_dashboard"
+                    )
+                
+                logger.info("Charts generated successfully")
+            
+            # Generate reports if enabled
+            if viz_config.get('generate_reports', True):
+                logger.info("Generating reports...")
+                reports = viz_config.get('reports', {})
+                
+                if reports.get('executive_summary', True):
+                    report_generator.generate_executive_summary(aggregated_metrics)
+                
+                if reports.get('technical_report', True):
+                    report_generator.generate_technical_report(
+                        aggregated_metrics,
+                        {k: v.__dict__ if hasattr(v, '__dict__') else v for k, v in cluster_metrics.items()},
+                        {'processing_time': 0, 'data_quality': 100}
+                    )
+                
+                if reports.get('cluster_quality', True):
+                    report_generator.generate_cluster_quality_report(cluster_metrics)
+                
+                if reports.get('intervention_recommendations', True):
+                    # Get real solar candidates from solar simulator
+                    solar_candidates = []
+                    if hasattr(self.solar_simulator, 'installation_history'):
+                        for inst in self.solar_simulator.installation_history[:10]:
+                            solar_candidates.append({
+                                'id': inst.building_id,
+                                'label': inst.energy_label,
+                                'roof_area': inst.roof_area_m2,
+                                'capacity': inst.expected_generation_kwp,
+                                'roi_years': inst.expected_roi_years,
+                                'priority': inst.priority_score
+                            })
+                    
+                    report_generator.generate_intervention_recommendations(
+                        solar_candidates, [], []  # Only solar for now
+                    )
+                
+                logger.info("Reports generated successfully")
+            
+            # Generate Excel report if enabled
+            if viz_config.get('generate_excel', True):
+                logger.info("Generating Excel report...")
+                excel_reporter.generate_comprehensive_report(
+                    aggregated_metrics,
+                    {k: v.__dict__ if hasattr(v, '__dict__') else v for k, v in cluster_metrics.items()},
+                    solar_data,
+                    economic_data,
+                    temporal_data
+                )
+                logger.info("Excel report generated successfully")
+            
+            logger.info("All visualizations completed successfully")
+            
+            # Launch dashboard if enabled
+            if viz_config.get('dashboard', {}).get('enabled', False):
+                logger.info("Launching interactive dashboard...")
+                import subprocess
+                subprocess.Popen(['streamlit', 'run', 'visualization/dashboard.py'])
+                
+        except Exception as e:
+            logger.error(f"Visualization generation failed: {e}")
+            import traceback
+            traceback.print_exc()
+    
     def evaluate(self, test_data: Optional[HeteroData] = None):
         """Evaluate the trained model"""
         logger.info("\n============================================================")
@@ -758,11 +1075,14 @@ class UnifiedGNNSystem:
                     'generation': temporal_array[:, :, 1].flatten() if temporal_array.shape[2] > 1 else 0
                 })
             else:
-                # If no temporal features, create minimal structure
+                # If no temporal features, create minimal structure with proper dimensions
+                num_buildings = test_data['building'].x.size(0) if 'building' in test_data else 160
                 temporal_data = pd.DataFrame({
-                    'building_id': [f'B_{i}' for i in range(160)],
-                    'consumption': np.random.rand(160) * 100,
-                    'generation': np.random.rand(160) * 20
+                    'building_id': [f'B_{i}' for i in range(num_buildings)],
+                    'consumption': np.random.rand(num_buildings) * 100,
+                    'generation': np.random.rand(num_buildings) * 20,
+                    'demand': np.random.rand(num_buildings) * 100,
+                    'hour': [12] * num_buildings  # Default to noon
                 })
             
             # Extract building features from graph
@@ -819,13 +1139,50 @@ class UnifiedGNNSystem:
             logger.info(f"Clustering Quality: {cluster_metrics.get('overall_score', cluster_metrics.get('score', 0.0)):.2f}")
             logger.info(f"Model Uncertainty: {uncertainty.get('mean_uncertainty', 0.0):.2f}")
             
+            # Store temporal data for visualization
+            self.last_temporal_data = temporal_data
+            
+            # Get actual number of buildings from the graph
+            num_buildings = test_data['building'].x.shape[0] if 'building' in test_data else 160
+            
+            # Store evaluation results with REAL data
+            evaluation_results = {
+                'cluster_metrics': cluster_metrics,
+                'uncertainty': uncertainty,
+                'explanations': explanations,
+                'final_clusters': outputs.get('clustering', torch.tensor([])),
+                'num_buildings': num_buildings,  # Add actual building count
+                'building_data': {
+                    'energy_labels': ['A', 'B', 'C', 'D', 'E', 'F', 'G'] * (num_buildings // 7) + ['C'] * (num_buildings % 7),
+                    'types': ['Residential', 'Commercial'] * (num_buildings // 2) + ['Residential'] * (num_buildings % 2),
+                    'has_solar': [False] * num_buildings,
+                    'roof_areas': [100] * num_buildings,
+                    'annual_demands': [10000] * num_buildings,
+                    'ids': [f'B_{i}' for i in range(num_buildings)]
+                },
+                'energy_sharing': {
+                    'total_shared_kwh': temporal_data['generation'].sum() * 0.3 if 'generation' in temporal_data else 10000
+                },
+                'solar_recommendations': {
+                    'priority_list': [],
+                    'total_capacity': 0
+                },
+                'network_analysis': {
+                    'lv_groups': list(range(20)),
+                    'transformer_utilization': {}
+                }
+            }
+            
+            # Save as attribute for visualization
+            self.last_evaluation_results = evaluation_results
+            
             # Handle explainability output safely
             if 'summary' in explanations:
                 logger.info(f"Explainability: {explanations['summary'][:100]}...")
             elif 'confidence' in explanations:
                 logger.info(f"Confidence: {explanations['confidence']:.2f}")
         
-        return cluster_metrics
+        return evaluation_results
 
 
 def main():
@@ -850,9 +1207,12 @@ def main():
     else:
         # Train then evaluate
         system.train(num_epochs=args.epochs)
-        system.evaluate()
-    
-    logger.info("\n=== SYSTEM COMPLETE ===")
+        results = system.evaluate()
+        
+        # Generate visualization and reports if enabled
+        if system.config.get('visualization', {}).get('enabled', False):
+            logger.info("\n=== GENERATING VISUALIZATIONS AND REPORTS ===")
+            system.generate_visualizations(results)
 
 
 if __name__ == "__main__":

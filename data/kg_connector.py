@@ -43,6 +43,28 @@ class KGConnector:
             logger.error(f"Connection failed: {e}")
             return False
     
+    def run(self, query: str, params: Dict = None) -> List[Dict]:
+        """
+        Run a Cypher query and return results.
+        
+        Args:
+            query: Cypher query string
+            params: Query parameters
+            
+        Returns:
+            List of result records as dictionaries
+        """
+        if params is None:
+            params = {}
+            
+        try:
+            with self.driver.session() as session:
+                result = session.run(query, params)
+                return [dict(record) for record in result]
+        except Exception as e:
+            logger.error(f"Query execution failed: {e}")
+            return []
+    
     def get_district_hierarchy(self, district_name: str) -> Dict[str, Any]:
         """
         Get complete grid hierarchy for a district.

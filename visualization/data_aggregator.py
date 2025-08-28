@@ -174,7 +174,17 @@ class DataAggregator:
         # From GNN results
         if 'cluster_assignments' in gnn_results:
             clusters = gnn_results['cluster_assignments']
-            unique_clusters = len(set(clusters)) if isinstance(clusters, list) else 0
+            # Handle nested lists or tensors
+            if isinstance(clusters, list):
+                # Flatten if nested
+                if clusters and isinstance(clusters[0], list):
+                    clusters = [item for sublist in clusters for item in sublist]
+                try:
+                    unique_clusters = len(set(clusters))
+                except TypeError:
+                    unique_clusters = 0
+            else:
+                unique_clusters = 0
             data['num_clusters'] = unique_clusters
             
             if unique_clusters > 0:

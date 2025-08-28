@@ -127,6 +127,46 @@ task:
       good: 0.6
       fair: 0.4
       poor: 0.0
+
+# Visualization and Reporting
+visualization:
+  enabled: true
+  generate_reports: true
+  generate_charts: true
+  generate_excel: true
+  
+  # Report types to generate
+  reports:
+    executive_summary: true
+    technical_report: true
+    cluster_quality: true
+    intervention_recommendations: true
+    stakeholder_report: true
+  
+  # Chart types to generate  
+  charts:
+    cluster_heatmap: true
+    energy_flow_sankey: true
+    temporal_patterns: true
+    solar_roi_analysis: true
+    economic_dashboard: true
+    network_graph: true
+    lv_group_summary: true
+    comparison_charts: true
+  
+  # Output settings
+  output_dir: "results"
+  save_formats: ["html", "json", "xlsx", "md"]
+  
+  # Data sources (use real data only)
+  use_real_data: true
+  skip_fake_data: true
+  
+  # Dashboard settings
+  dashboard:
+    enabled: false  # Set to true to launch dashboard after training
+    port: 8501
+    auto_open_browser: false
     min_observation_days: 7
     confidence_increase_per_week: 0.1
   

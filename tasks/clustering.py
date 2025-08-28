@@ -333,8 +333,16 @@ class EnergyCommunityClustering:
             group_embeddings = embeddings[group_indices]
             group_complementarity = complementarity[group_indices][:, group_indices]
             
-            # Determine optimal number of clusters
-            num_clusters = self._determine_num_clusters(len(group_buildings))
+            # Determine optimal number of clusters dynamically for this LV group
+            # Use new method if we have enough buildings, otherwise fall back to heuristic
+            if len(group_buildings) >= 10 and self.config.complementarity_weight > 0:
+                num_clusters = self._determine_optimal_k_per_lv(
+                    group_embeddings, 
+                    group_complementarity,
+                    len(group_buildings)
+                )
+            else:
+                num_clusters = self._determine_num_clusters(len(group_buildings))
             
             # Perform spectral clustering with complementarity
             clusters = self._spectral_clustering_with_constraints(
@@ -363,6 +371,92 @@ class EnergyCommunityClustering:
         num_clusters = min(num_clusters, max_clusters)
         
         return num_clusters
+    
+    def _determine_optimal_k_per_lv(self, group_embeddings: torch.Tensor, 
+                                     group_complementarity: torch.Tensor,
+                                     num_buildings: int) -> int:
+        """
+        Dynamically determine optimal number of clusters for this specific LV group
+        based on complementarity patterns and modularity
+        """
+        if num_buildings < self.config.min_cluster_size * 2:
+            return 1  # Too small to cluster
+        
+        # Try different K values
+        min_k = max(2, num_buildings // self.config.max_cluster_size)
+        max_k = min(num_buildings // self.config.min_cluster_size, 10)  # Cap at 10 for efficiency
+        
+        best_k = min_k
+        best_score = -float('inf')
+        
+        for k in range(min_k, max_k + 1):
+            # Perform clustering with this K
+            clusters = self._spectral_clustering_with_constraints(
+                group_embeddings,
+                group_complementarity,
+                k,
+                self.config.min_cluster_size,
+                self.config.max_cluster_size
+            )
+            
+            # Evaluate quality
+            score = self._evaluate_clustering_quality(
+                clusters,
+                group_complementarity,
+                group_embeddings
+            )
+            
+            if score > best_score:
+                best_score = score
+                best_k = k
+        
+        logger.info(f"LV group with {num_buildings} buildings: optimal K={best_k} (score={best_score:.3f})")
+        return best_k
+    
+    def _evaluate_clustering_quality(self, clusters: List[List[int]], 
+                                    complementarity: torch.Tensor,
+                                    embeddings: torch.Tensor) -> float:
+        """
+        Evaluate clustering quality based on:
+        1. Internal complementarity (negative correlation within clusters)
+        2. Separation between clusters
+        3. Size balance
+        """
+        if not clusters:
+            return 0.0
+        
+        score = 0.0
+        total_buildings = sum(len(c) for c in clusters)
+        
+        # 1. Internal complementarity score
+        for cluster in clusters:
+            if len(cluster) < 2:
+                continue
+            
+            # Average complementarity within cluster
+            cluster_comp = 0.0
+            pairs = 0
+            for i in range(len(cluster)):
+                for j in range(i+1, len(cluster)):
+                    cluster_comp += complementarity[cluster[i], cluster[j]].item()
+                    pairs += 1
+            
+            if pairs > 0:
+                # Higher negative values (complementarity) = better score
+                score += -cluster_comp / pairs  # Negate because negative correlation is good
+        
+        # 2. Size balance penalty
+        cluster_sizes = [len(c) for c in clusters]
+        mean_size = np.mean(cluster_sizes)
+        size_variance = np.var(cluster_sizes)
+        size_penalty = size_variance / (mean_size ** 2 + 1e-6)
+        score -= size_penalty * 0.5
+        
+        # 3. Coverage bonus (fewer orphans)
+        coverage = total_buildings / embeddings.shape[0]
+        score += coverage * 0.3
+        
+        return score
     
     def _spectral_clustering_with_constraints(self,
                                              embeddings: torch.Tensor,

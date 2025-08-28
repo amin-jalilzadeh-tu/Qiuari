@@ -436,7 +436,8 @@ class EnergyKnowledgeGraphBuilder:
                     b.ndvi_mean_100m,
                     b.ntl_mean_500m,
                     b.ndwi_mean_250m
-                FROM amin.buildings_1_deducted b
+                -- FIXED: Use amsterdam table which has orientation data
+                FROM amin_grid.amsterdam_buildings_1_deducted b
                 LEFT JOIN amin_grid.tlip_building_connections bc
                     ON b.ogc_fid = bc.building_id
                 WHERE b.area > 10 

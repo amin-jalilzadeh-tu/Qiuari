@@ -50,6 +50,11 @@ class SolarPerformanceSimulator:
         # Solar generation curve (hourly, normalized)
         self.solar_curve = self._create_solar_curve()
         
+        # Learning from deployment history
+        self.deployment_history = []
+        self.performance_feedback = {}
+        self.learned_adjustments = {}
+        
         logger.info("Initialized SolarPerformanceSimulator")
     
     def _create_solar_curve(self) -> np.ndarray:
@@ -401,3 +406,226 @@ class SolarPerformanceSimulator:
                         f"{performance['roi_category']} ({performance['roi_years']:.1f} years)")
         
         return labels
+    
+    def simulate_deployment_round(
+        self,
+        selected_buildings: List[int],
+        capacities: List[float],
+        current_state: Dict,
+        cluster_assignments: Dict
+    ) -> Dict:
+        """
+        Simulate a round of solar deployments and learn from results
+        
+        Args:
+            selected_buildings: Buildings to install solar on
+            capacities: Solar capacities for each building
+            current_state: Current network state (energy flows, metrics)
+            cluster_assignments: Current cluster assignments
+            
+        Returns:
+            New state after deployments with improvements
+        """
+        logger.info(f"Simulating deployment round with {len(selected_buildings)} installations")
+        
+        # Initialize new state
+        new_state = current_state.copy()
+        round_results = {
+            'installations': [],
+            'total_capacity': sum(capacities),
+            'improvements': {},
+            'cascade_effects': []
+        }
+        
+        # Simulate each installation
+        for building_id, capacity in zip(selected_buildings, capacities):
+            # Calculate immediate impact
+            installation = {
+                'building_id': building_id,
+                'capacity_kwp': capacity,
+                'cluster_id': cluster_assignments.get(building_id, 0)
+            }
+            
+            # Simulate production
+            annual_generation = capacity * self.annual_generation_per_kwp
+            
+            # Update energy flows
+            if 'energy_flows' not in new_state:
+                new_state['energy_flows'] = {}
+            
+            new_state['energy_flows'][building_id] = {
+                'generation': annual_generation,
+                'self_consumption': annual_generation * 0.3,  # Default 30%
+                'export': annual_generation * 0.7
+            }
+            
+            # Calculate cascade effects on cluster
+            cluster_id = cluster_assignments.get(building_id, 0)
+            cluster_buildings = [b for b, c in cluster_assignments.items() if c == cluster_id]
+            
+            cascade_impact = self._calculate_cascade_impact(
+                building_id,
+                capacity,
+                cluster_buildings,
+                current_state
+            )
+            
+            round_results['cascade_effects'].append(cascade_impact)
+            installation['cascade_impact'] = cascade_impact
+            
+            # Store in history
+            self.deployment_history.append(installation)
+            round_results['installations'].append(installation)
+        
+        # Calculate overall improvements
+        improvements = self._calculate_improvements(current_state, new_state)
+        round_results['improvements'] = improvements
+        
+        # Learn from this round
+        self._update_learning(round_results)
+        
+        # Update state metrics
+        new_state['self_sufficiency'] = improvements.get('self_sufficiency_improvement', 0)
+        new_state['peak_reduction'] = improvements.get('peak_reduction', 0)
+        new_state['last_round_results'] = round_results
+        
+        logger.info(f"Round complete: {improvements.get('self_sufficiency_improvement', 0):.1%} self-sufficiency improvement")
+        
+        return new_state
+    
+    def _calculate_cascade_impact(
+        self,
+        building_id: int,
+        capacity: float,
+        cluster_buildings: List[int],
+        current_state: Dict
+    ) -> Dict:
+        """Calculate cascade effects of installation on cluster"""
+        
+        # Direct impact
+        direct_benefit = capacity * self.annual_generation_per_kwp
+        
+        # Sharing potential with neighbors
+        num_neighbors = len(cluster_buildings) - 1
+        sharing_potential = min(direct_benefit * 0.7, num_neighbors * 1000)  # kWh/year
+        
+        # Peak shaving effect
+        peak_reduction = capacity * 0.6  # kW
+        
+        # Economic spillover
+        economic_benefit = (
+            sharing_potential * (self.electricity_price - self.feed_in_tariff) +
+            peak_reduction * 100  # €100/kW peak reduction value
+        )
+        
+        return {
+            'direct_benefit_kwh': direct_benefit,
+            'sharing_potential_kwh': sharing_potential,
+            'peak_reduction_kw': peak_reduction,
+            'economic_benefit_euro': economic_benefit,
+            'affected_buildings': num_neighbors
+        }
+    
+    def _calculate_improvements(self, old_state: Dict, new_state: Dict) -> Dict:
+        """Calculate improvements between states"""
+        
+        improvements = {}
+        
+        # Self-sufficiency improvement
+        old_ss = old_state.get('self_sufficiency', 0.2)
+        new_generation = sum(
+            flow.get('generation', 0) 
+            for flow in new_state.get('energy_flows', {}).values()
+        )
+        total_demand = old_state.get('total_demand', 100000)  # kWh/year
+        
+        new_ss = min(1.0, old_ss + new_generation / total_demand)
+        improvements['self_sufficiency_improvement'] = new_ss - old_ss
+        
+        # Peak reduction
+        total_capacity = sum(
+            inst['capacity_kwp'] 
+            for inst in self.deployment_history[-10:]  # Last 10 installations
+        )
+        improvements['peak_reduction'] = total_capacity * 0.6  # kW
+        
+        # CO2 reduction
+        improvements['co2_reduction_tons'] = new_generation * 0.0003  # tons/year
+        
+        # Economic value
+        improvements['annual_savings'] = (
+            new_generation * 0.3 * self.electricity_price +  # Self-consumption savings
+            new_generation * 0.7 * self.feed_in_tariff      # Export revenue
+        )
+        
+        return improvements
+    
+    def _update_learning(self, round_results: Dict):
+        """Update learned adjustments from deployment results"""
+        
+        # Extract performance patterns
+        for installation in round_results['installations']:
+            building_id = installation['building_id']
+            cascade_impact = installation['cascade_impact']
+            
+            # Store feedback
+            self.performance_feedback[building_id] = {
+                'actual_sharing': cascade_impact['sharing_potential_kwh'],
+                'actual_peak_reduction': cascade_impact['peak_reduction_kw'],
+                'timestamp': datetime.now()
+            }
+            
+            # Learn adjustment factors
+            cluster_id = installation['cluster_id']
+            if cluster_id not in self.learned_adjustments:
+                self.learned_adjustments[cluster_id] = {
+                    'sharing_factor': 1.0,
+                    'peak_factor': 1.0
+                }
+            
+            # Update factors based on actual vs expected
+            expected_sharing = installation['capacity_kwp'] * 1000  # Simple expectation
+            actual_sharing = cascade_impact['sharing_potential_kwh']
+            
+            if expected_sharing > 0:
+                sharing_ratio = actual_sharing / expected_sharing
+                # Exponential moving average
+                self.learned_adjustments[cluster_id]['sharing_factor'] = (
+                    0.7 * self.learned_adjustments[cluster_id]['sharing_factor'] +
+                    0.3 * sharing_ratio
+                )
+            
+            logger.debug(f"Updated learning for cluster {cluster_id}: "
+                        f"sharing factor = {self.learned_adjustments[cluster_id]['sharing_factor']:.2f}")
+    
+    def get_learned_recommendations(self, cluster_id: int) -> Dict:
+        """Get recommendations based on learned patterns"""
+        
+        if cluster_id not in self.learned_adjustments:
+            return {
+                'priority': 'medium',
+                'expected_performance': 'standard'
+            }
+        
+        adjustments = self.learned_adjustments[cluster_id]
+        
+        # High sharing factor = good for solar
+        if adjustments['sharing_factor'] > 1.2:
+            priority = 'high'
+            performance = 'excellent'
+        elif adjustments['sharing_factor'] > 0.8:
+            priority = 'medium'
+            performance = 'good'
+        else:
+            priority = 'low'
+            performance = 'fair'
+        
+        return {
+            'priority': priority,
+            'expected_performance': performance,
+            'sharing_factor': adjustments['sharing_factor'],
+            'historical_data': len([
+                h for h in self.deployment_history 
+                if h.get('cluster_id') == cluster_id
+            ])
+        }

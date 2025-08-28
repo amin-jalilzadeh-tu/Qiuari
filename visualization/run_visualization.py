@@ -10,7 +10,7 @@ from pathlib import Path
 from datetime import datetime
 import pandas as pd
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 # Add parent directory to path
 sys.path.append('..')
@@ -37,15 +37,17 @@ logger = logging.getLogger(__name__)
 class VisualizationRunner:
     """Main runner for all visualization and reporting"""
     
-    def __init__(self, results_path: str = None, neo4j_config: Dict = None):
+    def __init__(self, results_path: str = None, neo4j_config: Dict = None, gnn_system=None):
         """
         Initialize visualization runner
         
         Args:
             results_path: Path to GNN results file
             neo4j_config: Neo4j connection configuration
+            gnn_system: Reference to GNN system for real data
         """
         self.results_path = results_path
+        self.gnn_system = gnn_system
         
         # Initialize components
         self.kg_connector = None
@@ -55,6 +57,13 @@ class VisualizationRunner:
                 user=neo4j_config.get('user', 'neo4j'),
                 password=neo4j_config.get('password', 'password')
             )
+        
+        # Import and initialize real data connector
+        from visualization.real_data_connector import RealDataConnector
+        self.real_connector = RealDataConnector(
+            gnn_system=gnn_system,
+            kg_connector=self.kg_connector
+        )
         
         self.data_aggregator = DataAggregator(neo4j_connector=self.kg_connector)
         self.chart_generator = ChartGenerator()
@@ -70,95 +79,223 @@ class VisualizationRunner:
         self.aggregated_metrics = None
     
     def load_gnn_results(self) -> Dict:
-        """Load GNN results from file or generate sample data"""
+        """Load GNN results from file or fetch from real system"""
         
         if self.results_path and Path(self.results_path).exists():
             logger.info(f"Loading results from {self.results_path}")
             with open(self.results_path, 'r') as f:
                 self.gnn_results = json.load(f)
+        elif self.gnn_system and hasattr(self.gnn_system, 'last_evaluation_results'):
+            logger.info("Loading REAL results from GNN system")
+            self.gnn_results = self.gnn_system.last_evaluation_results
         else:
-            logger.info("Generating sample GNN results")
-            self.gnn_results = self._generate_sample_gnn_results()
+            logger.info("Fetching REAL data from Knowledge Graph")
+            self.gnn_results = self._fetch_real_data_from_kg()
         
         return self.gnn_results
     
-    def generate_cluster_metrics(self) -> Dict[int, EnhancedClusterMetrics]:
-        """Generate or load cluster quality metrics"""
+    def _fetch_real_data_from_kg(self) -> Dict:
+        """Fetch real data from Knowledge Graph instead of fake data"""
         
-        logger.info("Generating cluster quality metrics")
+        if not self.kg_connector:
+            logger.warning("No KG connector available, returning minimal structure")
+            return {}
         
-        # Generate sample cluster metrics
-        self.cluster_metrics = {}
+        # Get real building data
+        building_query = """
+        MATCH (b:Building)
+        OPTIONAL MATCH (b)-[:CONNECTED_TO]->(lv:CableGroup {voltage_level: 'LV'})
+        RETURN b.id as id, 
+               b.energy_label as energy_label,
+               b.building_function as type,
+               b.has_solar as has_solar,
+               b.suitable_roof_area as roof_area,
+               b.annual_consumption_kwh as annual_consumption,
+               b.peak_electricity_kw as peak_demand,
+               lv.group_id as lv_group
+        LIMIT 200
+        """
         
-        for cluster_id in range(1, 13):  # 12 clusters
-            metrics = EnhancedClusterMetrics(
-                cluster_id=cluster_id,
-                timestamp=0,
-                lv_group_id=np.random.randint(1, 21),
-                self_sufficiency_ratio=np.random.uniform(0.3, 0.7),
-                self_consumption_ratio=np.random.uniform(0.6, 0.95),
-                complementarity_score=np.random.uniform(0.5, 0.9),
-                peak_reduction_ratio=np.random.uniform(0.15, 0.35),
-                temporal_stability=np.random.uniform(0.7, 0.95),
-                member_count=np.random.randint(5, 15),
-                size_appropriateness=np.random.uniform(0.6, 1.0),
-                total_demand_kwh=np.random.uniform(50000, 200000),
-                total_generation_kwh=np.random.uniform(20000, 100000),
-                total_shared_kwh=np.random.uniform(10000, 50000),
-                grid_import_kwh=np.random.uniform(20000, 100000),
-                grid_export_kwh=np.random.uniform(5000, 30000),
-                building_type_diversity=np.random.uniform(0.4, 0.8),
-                energy_label_diversity=np.random.uniform(0.5, 0.9),
-                peak_hour_diversity=np.random.uniform(0.3, 0.7),
-                cost_savings_percent=np.random.uniform(10, 30),
-                revenue_potential=np.random.uniform(1000, 5000),
-                avg_distance_m=np.random.uniform(50, 200),
-                compactness_score=np.random.uniform(0.5, 0.9)
-            )
+        results = {'building_data': {}}
+        
+        try:
+            building_result = self.kg_connector.run(building_query, {})
             
-            self.cluster_metrics[cluster_id] = metrics
+            energy_labels = []
+            types = []
+            has_solar = []
+            roof_areas = []
+            annual_consumptions = []
+            peak_demands = []
+            ids = []
+            lv_groups = []
+            
+            for record in building_result:
+                ids.append(record.get('id', f'B_{len(ids):03d}'))
+                energy_labels.append(record.get('energy_label', 'D'))
+                types.append(record.get('type', 'Residential'))
+                has_solar.append(record.get('has_solar', False))
+                roof_areas.append(float(record.get('roof_area', 100)))
+                annual_consumptions.append(float(record.get('annual_consumption', 10000)))
+                peak_demands.append(float(record.get('peak_demand', 15)))
+                lv_groups.append(record.get('lv_group', 'LV_001'))
+            
+            results['building_data'] = {
+                'ids': ids,
+                'energy_labels': energy_labels,
+                'types': types,
+                'has_solar': has_solar,
+                'roof_areas': roof_areas,
+                'annual_consumptions': annual_consumptions,
+                'peak_demands': peak_demands,
+                'lv_groups': lv_groups
+            }
+            
+            results['num_buildings'] = len(ids)
+            
+        except Exception as e:
+            logger.error(f"Error fetching from KG: {e}")
         
+        return results
+    
+    def generate_cluster_metrics(self) -> Dict:
+        """Load real cluster quality metrics from system"""
+        
+        logger.info("Loading REAL cluster quality metrics")
+        
+        # Try to get from GNN system first
+        if self.gnn_system:
+            if hasattr(self.gnn_system, 'cluster_evaluator'):
+                self.cluster_metrics = self.real_connector.get_cluster_metrics_from_system(
+                    self.gnn_system.cluster_evaluator
+                )
+            elif hasattr(self.gnn_system, 'quality_labeler') and hasattr(self.gnn_system.quality_labeler, 'labeled_clusters'):
+                # Get from quality labeler
+                self.cluster_metrics = {}
+                for cluster_id, label_data in self.gnn_system.quality_labeler.labeled_clusters.items():
+                    self.cluster_metrics[cluster_id] = {
+                        'quality_label': label_data.quality_category,
+                        'quality_score': label_data.quality_score,
+                        'confidence': label_data.confidence,
+                        'member_count': label_data.num_buildings,
+                        'lv_group_id': label_data.lv_group_id,
+                        **label_data.metrics  # Include all metrics
+                    }
+        
+        # Fallback to fetching from results
+        if not self.cluster_metrics and 'cluster_metrics' in self.gnn_results:
+            self.cluster_metrics = self.gnn_results['cluster_metrics']
+        
+        # If still empty, get from real data connector
+        if not self.cluster_metrics:
+            system_components = {}
+            if self.gnn_system:
+                system_components['cluster_evaluator'] = getattr(self.gnn_system, 'cluster_evaluator', None)
+                
+            viz_data = self.real_connector.prepare_real_visualization_data(
+                self.gnn_results, 
+                system_components
+            )
+            self.cluster_metrics = viz_data.get('cluster_metrics', {})
+        
+        logger.info(f"Loaded {len(self.cluster_metrics)} cluster metrics")
         return self.cluster_metrics
     
     def generate_solar_analysis(self) -> Dict:
-        """Generate solar installation analysis"""
+        """Load real solar installation analysis from system"""
         
-        logger.info("Generating solar installation analysis")
+        logger.info("Loading REAL solar installation analysis")
         
-        # Generate priority list
-        priority_list = []
-        for i in range(50):
-            priority_list.append({
-                'id': f'B{i:03d}',
-                'energy_label': np.random.choice(['E', 'F', 'G']),
-                'roof_area': np.random.uniform(50, 200),
-                'capacity': np.random.uniform(5, 30),
-                'roi': np.random.uniform(4, 12),
-                'priority_score': np.random.uniform(0.6, 0.95),
-                'annual_generation': np.random.uniform(6000, 36000)
-            })
+        # Try to get from GNN system
+        if self.gnn_system and hasattr(self.gnn_system, 'solar_simulator'):
+            self.solar_results = self.real_connector.get_solar_data_from_simulator(
+                self.gnn_system.solar_simulator
+            )
+            
+            # Get priority list from solar simulator
+            priority_list = self.solar_results.get('priority_list', [])
+        else:
+            # Fetch from KG - buildings with poor energy labels and good roof area
+            priority_list = self._fetch_solar_candidates_from_kg()
         
         # Sort by priority score
-        priority_list.sort(key=lambda x: x['priority_score'], reverse=True)
+        priority_list.sort(key=lambda x: x.get('priority_score', 0), reverse=True)
         
-        self.solar_results = {
+        # Update solar results
+        if not self.solar_results:
+            self.solar_results = {}
+            
+        self.solar_results.update({
             'priority_list': priority_list,
-            'total_capacity': sum(b['capacity'] for b in priority_list),
+            'total_capacity': sum(b.get('capacity', 0) for b in priority_list) if priority_list else 0,
             'num_installations': len(priority_list),
-            'avg_roi': np.mean([b['roi'] for b in priority_list]),
-            'total_investment': sum(b['capacity'] for b in priority_list) * 1200,
-            'annual_generation': sum(b['annual_generation'] for b in priority_list),
-            'co2_savings': sum(b['annual_generation'] for b in priority_list) * 0.5 / 1000,
-            'roi_years': [b['roi'] for b in priority_list],
-            'payback_periods': [b['roi'] for b in priority_list],
+            'avg_roi': np.mean([b.get('roi', 10) for b in priority_list]) if priority_list else 10,
+            'total_investment': sum(b.get('capacity', 0) for b in priority_list) * 1200 if priority_list else 0,
+            'annual_generation': sum(b.get('annual_generation', 0) for b in priority_list) if priority_list else 0,
+            'co2_savings': sum(b.get('annual_generation', 0) for b in priority_list) * 0.5 / 1000 if priority_list else 0,
+            'roi_years': [b.get('roi', 10) for b in priority_list] if priority_list else [],
+            'payback_periods': [b.get('roi', 10) for b in priority_list] if priority_list else [],
             'installations_by_label': {
-                'E': sum(1 for b in priority_list if b['energy_label'] == 'E'),
-                'F': sum(1 for b in priority_list if b['energy_label'] == 'F'),
-                'G': sum(1 for b in priority_list if b['energy_label'] == 'G')
+                'E': sum(1 for b in priority_list if b.get('energy_label') == 'E') if priority_list else 0,
+                'F': sum(1 for b in priority_list if b.get('energy_label') == 'F') if priority_list else 0,
+                'G': sum(1 for b in priority_list if b.get('energy_label') == 'G') if priority_list else 0
             }
-        }
+        })
         
         return self.solar_results
+    
+    def _fetch_solar_candidates_from_kg(self) -> List[Dict]:
+        """Fetch real solar candidates from KG based on poor energy labels"""
+        
+        if not self.kg_connector:
+            return []
+        
+        query = """
+        MATCH (b:Building)
+        WHERE b.energy_label IN ['E', 'F', 'G']
+        AND b.suitable_roof_area > 50
+        AND (b.has_solar = false OR b.has_solar IS NULL)
+        RETURN b.id as id,
+               b.energy_label as energy_label,
+               b.suitable_roof_area as roof_area,
+               b.annual_consumption_kwh as consumption,
+               b.lv_group_id as lv_group
+        ORDER BY b.suitable_roof_area DESC
+        LIMIT 50
+        """
+        
+        candidates = []
+        try:
+            result = self.kg_connector.run(query, {})
+            for record in result:
+                roof_area = float(record.get('roof_area') or 100)
+                consumption = float(record.get('consumption') or 10000)
+                capacity = min(roof_area * 0.15, 30)  # 150W/m2, max 30kWp
+                
+                # Simple ROI calculation
+                annual_gen = capacity * 1200  # kWh/kWp/year
+                annual_savings = min(annual_gen, consumption) * 0.25  # EUR/kWh
+                investment = capacity * 1200  # EUR/kWp
+                roi_years = investment / annual_savings if annual_savings > 0 else 20
+                
+                # Priority score: POOR LABELS GET HIGHER PRIORITY
+                label_scores = {'E': 0.6, 'F': 0.8, 'G': 1.0}  # G gets highest priority
+                priority = label_scores.get(record.get('energy_label', 'E'), 0.5) * (roof_area / 200)
+                
+                candidates.append({
+                    'id': record.get('id', f'B_{len(candidates):03d}'),
+                    'energy_label': record.get('energy_label', 'F'),
+                    'roof_area': roof_area,
+                    'capacity': capacity,
+                    'roi': roi_years,
+                    'priority_score': min(priority, 1.0),
+                    'annual_generation': annual_gen,
+                    'lv_group': record.get('lv_group', 'unknown')
+                })
+        except Exception as e:
+            logger.error(f"Error fetching solar candidates from KG: {e}")
+        
+        return candidates
     
     def calculate_economics(self) -> Dict:
         """Calculate comprehensive economic metrics"""
@@ -233,26 +370,72 @@ class VisualizationRunner:
         return self.economic_results
     
     def generate_temporal_data(self) -> pd.DataFrame:
-        """Generate sample temporal data"""
+        """Load REAL temporal data from KG or system"""
         
-        logger.info("Generating temporal data")
+        logger.info("Loading REAL temporal data from KG")
         
-        # Create hourly data for buildings
+        # First try to get from real data connector
+        temporal_df = self.real_connector.get_temporal_data_from_kg()
+        
+        if not temporal_df.empty:
+            logger.info(f"Loaded {len(temporal_df)} temporal records from KG")
+            return temporal_df
+        
+        # Fallback: Create realistic profiles based on building data
+        logger.info("Creating realistic temporal profiles from building features")
+        
+        # Get actual building data
+        building_ids = []
+        energy_labels = []
+        has_solar = []
+        annual_consumptions = []
+        
+        if 'building_data' in self.gnn_results:
+            bd = self.gnn_results['building_data']
+            building_ids = bd.get('ids', [])[:50]  # Limit to 50 for performance
+            energy_labels = bd.get('energy_labels', [])[:50]
+            has_solar = bd.get('has_solar', [])[:50]
+            annual_consumptions = bd.get('annual_consumptions', [])[:50]
+        
+        if not building_ids:
+            # No data available, return empty
+            return pd.DataFrame()
+        
+        # Create realistic hourly profiles
         data = []
         
-        for building_id in range(160):
+        for idx, building_id in enumerate(building_ids):
+            # Get building characteristics
+            annual_kwh = annual_consumptions[idx] if idx < len(annual_consumptions) else 10000
+            daily_avg = annual_kwh / 365
+            has_pv = has_solar[idx] if idx < len(has_solar) else False
+            
             for hour in range(24):
-                demand = 30 + 10*np.sin((hour-6)*np.pi/12) + np.random.normal(0, 5)
-                generation = max(0, 15*np.sin((hour-6)*np.pi/12)) + np.random.normal(0, 2)
+                # Realistic consumption profile
+                if 7 <= hour <= 9:  # Morning peak
+                    hourly_demand = daily_avg / 24 * 1.8
+                elif 17 <= hour <= 21:  # Evening peak
+                    hourly_demand = daily_avg / 24 * 2.0
+                elif 23 <= hour or hour <= 6:  # Night
+                    hourly_demand = daily_avg / 24 * 0.5
+                else:  # Daytime
+                    hourly_demand = daily_avg / 24 * 1.2
+                
+                # Solar generation if has PV
+                generation = 0
+                if has_pv and 7 <= hour <= 19:
+                    # Realistic solar curve
+                    solar_capacity = 5  # kWp assumption
+                    generation = solar_capacity * max(0, np.sin((hour - 6) * np.pi / 13))
                 
                 data.append({
                     'building_id': building_id,
                     'timestamp': hour,
                     'hour': hour,
-                    'demand': max(0, demand),
+                    'demand': max(0, hourly_demand),
                     'generation': max(0, generation),
-                    'cluster_id': building_id % 12,
-                    'peak_hour': hour in [17, 18, 19, 20]
+                    'energy_label': energy_labels[idx] if idx < len(energy_labels) else 'D',
+                    'has_solar': has_pv
                 })
         
         return pd.DataFrame(data)
@@ -514,7 +697,7 @@ def main():
     neo4j_config = {
         'uri': 'neo4j://127.0.0.1:7687',
         'user': 'neo4j',
-        'password': 'DS4citizens'
+        'password': 'aminasad'
     }
     
     # Check for results file
