@@ -1,0 +1,66 @@
+{
+  "cluster_stability": {
+    "prev_clusters": "[2 2 2 2 3 2 2 2 2 2 2 4 3 7 2 5 2 3 2 2 2 3 1 3 2 2 3 4 2 7 2 2 7 2 2 2 2\n 2 2 2 6 2 2 3 2 1 4 3 3 2 2 2 3 2 3 2 2 2 2 2 2 3 2 2 3 7 0 2 2 2 2 7 2 2\n 4 2 4 2 2 3 2 3 2 2 2 3 2 6 2 2 7 2 7 2 2 2 3 2 2 3 2 2 4 2 6 2 3 2 2 2 7\n 2 2 2 3 2 3 2 3 2 3 3 2 2 3 2 2 2 3 6 2 2 2 2 2 2 2 2 2 2 2 3 2 2 2 2 2 2\n 2 2 2 2 2 3 2 6 3 2 2 2]"
+  },
+  "energy_flows": {
+    "epoch_0": {
+      "cluster_0": {
+        "total_surplus": 111.33627319335938,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_1": {
+        "total_surplus": 17.09503746032715,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_2": {
+        "total_surplus": 726.9883422851562,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_3": {
+        "total_surplus": 83.19469451904297,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_4": {
+        "total_surplus": 110.27661895751953,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_5": {
+        "total_surplus": 172.6469268798828,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      },
+      "cluster_7": {
+        "total_surplus": 121.33258819580078,
+        "total_deficit": 0.0,
+        "self_sufficiency": 1.0
+      }
+    }
+  },
+  "pseudo_labels": {
+    "cluster_labels": {
+      "2": "poor",
+      "3": "poor",
+      "4": "good",
+      "7": "good",
+      "5": "good",
+      "0": "poor",
+      "6": "fair"
+    },
+    "confidence": 0.7,
+    "quality_scores": {
+      "2": 0.25,
+      "3": 0.25,
+      "4": 0.75,
+      "7": 0.75,
+      "5": 0.75,
+      "0": 0.25,
+      "6": 0.5
+    }
+  },
+  "solar_cascade_effects": {}
+}
