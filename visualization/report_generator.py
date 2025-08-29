@@ -40,7 +40,7 @@ class ReportGenerator:
         data = {
             'date': datetime.now().strftime('%B %d, %Y'),
             'num_clusters': metrics.num_clusters,
-            'num_buildings': metrics.num_lv_groups * metrics.avg_buildings_per_lv,
+            'num_buildings': metrics.total_clustered_buildings if hasattr(metrics, 'total_clustered_buildings') else int(metrics.num_clusters * metrics.avg_cluster_size) if metrics.num_clusters > 0 else 0,
             'self_sufficiency': f"{metrics.avg_self_sufficiency:.1%}",
             'cost_savings': f"€{metrics.total_cost_savings_eur:,.0f}",
             'carbon_reduction': f"{metrics.carbon_reduction_tons:.1f}",

@@ -72,6 +72,19 @@ class ConstrainedDiffPool(nn.Module):
             nn.Linear(input_dim, input_dim)
         )
         
+        # Initialize assignment network with balanced outputs
+        self._init_balanced_assignment()
+    
+    def _init_balanced_assignment(self):
+        """Initialize the final layer of assignment network to encourage balanced clusters"""
+        final_layer = self.assign_net[-1]
+        if isinstance(final_layer, nn.Linear):
+            # Initialize with small random weights to avoid strong initial preferences
+            nn.init.normal_(final_layer.weight, mean=0.0, std=0.1)
+            if final_layer.bias is not None:
+                # Initialize bias to encourage uniform distribution across clusters
+                nn.init.constant_(final_layer.bias, 0.0)
+        
     def forward(self, x: torch.Tensor, edge_index: torch.Tensor, 
                 batch: Optional[torch.Tensor] = None,
                 transformer_mask: Optional[torch.Tensor] = None,
@@ -95,22 +108,28 @@ class ConstrainedDiffPool(nn.Module):
         N = x.size(0)
         
         # Generate soft assignment matrix
-        S = self.assign_net(x)  # [N, K]
+        S_logits = self.assign_net(x)  # [N, K]
         
         # Apply LV group constraints if provided
         if lv_group_ids is not None:
             # Create mask that respects LV boundaries
             lv_mask = self._create_lv_mask(lv_group_ids)
-            S = S.masked_fill(lv_mask == 0, -1e9)
+            S_logits = S_logits.masked_fill(lv_mask == 0, -1e9)
         elif transformer_mask is not None:
             # Legacy: Apply transformer constraints if provided
-            S = S.masked_fill(transformer_mask == 0, -1e9)
+            S_logits = S_logits.masked_fill(transformer_mask == 0, -1e9)
+        
+        # Add load balancing regularization to encourage uniform distribution
+        S_logits = self._add_load_balancing_regularization(S_logits)
         
         # Apply softmax to get probabilities
-        S = F.softmax(S, dim=1)  # [N, K]
+        S = F.softmax(S_logits, dim=1)  # [N, K]
         
-        # Apply cluster size constraints
+        # Apply cluster size constraints (iterative balancing)
         S = self._apply_size_constraints(S)
+        
+        # Apply hard rebalancing if needed
+        S = self._hard_rebalance(S)
         
         # Generate new embeddings
         x_embed = self.embed_net(x)  # [N, F]
@@ -125,13 +144,14 @@ class ConstrainedDiffPool(nn.Module):
         # Calculate auxiliary losses
         link_loss = self._link_prediction_loss(adj, S)
         entropy_loss = self._entropy_loss(S)
-        aux_loss = link_loss + 0.1 * entropy_loss
+        balance_loss = self._balance_loss(S)
+        aux_loss = link_loss + 0.1 * entropy_loss + 0.5 * balance_loss
         
         return x_pooled, adj_pooled, S, aux_loss
     
     def _create_lv_mask(self, lv_group_ids: torch.Tensor) -> torch.Tensor:
         """
-        Create mask ensuring clusters don't cross LV boundaries
+        Create mask ensuring clusters respect LV boundaries but allow multiple clusters per LV
         
         Args:
             lv_group_ids: LV group ID for each node [N]
@@ -146,35 +166,37 @@ class ConstrainedDiffPool(nn.Module):
         unique_lvs = torch.unique(lv_group_ids)
         num_lvs = len(unique_lvs)
         
-        # Allocate clusters per LV group
-        clusters_per_lv = self.max_clusters // num_lvs
-        remainder = self.max_clusters % num_lvs
+        # Allow more clusters per LV group for flexibility
+        min_clusters_per_lv = 1
+        max_clusters_per_lv = max(2, self.max_clusters // max(1, num_lvs - 5))  # Allow overlap
         
-        # Create mask
-        mask = torch.zeros(N, self.max_clusters, device=device)
+        # Create mask (start with all allowed)
+        mask = torch.ones(N, self.max_clusters, device=device)
         
+        # For very large LV groups, enforce some boundaries
         for i, lv_id in enumerate(unique_lvs):
-            # Find nodes in this LV group
             lv_mask = (lv_group_ids == lv_id)
+            lv_size = lv_mask.sum().item()
             
-            # Determine cluster range for this LV
-            start_cluster = i * clusters_per_lv
-            # Add remainder clusters to first LV groups
-            if i < remainder:
-                start_cluster += i
-                end_cluster = start_cluster + clusters_per_lv + 1
-            else:
-                start_cluster += remainder
-                end_cluster = start_cluster + clusters_per_lv
-            
-            # Allow these nodes to be assigned only to their LV's clusters
-            mask[lv_mask, start_cluster:end_cluster] = 1.0
+            # Only apply strict boundaries for very large LV groups
+            if lv_size > 30:  # Large LV groups get some restrictions
+                # Assign a preferred cluster range but don't forbid others completely
+                start_cluster = (i * 2) % self.max_clusters
+                end_cluster = min(start_cluster + max_clusters_per_lv, self.max_clusters)
+                
+                # Reduce probability for non-preferred clusters rather than forbidding
+                preferred_mask = torch.zeros(self.max_clusters, device=device)
+                preferred_mask[start_cluster:end_cluster] = 1.0
+                
+                # Apply soft constraint (0.3 for non-preferred, 1.0 for preferred)
+                constraint = 0.3 + 0.7 * preferred_mask
+                mask[lv_mask] = mask[lv_mask] * constraint.unsqueeze(0)
         
         return mask
     
     def _apply_size_constraints(self, S: torch.Tensor) -> torch.Tensor:
         """
-        Apply min/max size constraints to clusters
+        Apply min/max size constraints to clusters using stronger penalties
         
         Args:
             S: Soft assignment matrix [N, K]
@@ -182,18 +204,43 @@ class ConstrainedDiffPool(nn.Module):
         Returns:
             Constrained assignment matrix
         """
-        # Calculate current cluster sizes
+        # Calculate current cluster sizes (expected counts)
         cluster_sizes = torch.sum(S, dim=0)  # [K]
         
-        # Penalize clusters that are too small or too large
+        # Create penalty based on size violations
         size_penalty = torch.zeros_like(cluster_sizes)
-        size_penalty[cluster_sizes < self.min_cluster_size] = -1.0
-        size_penalty[cluster_sizes > self.max_cluster_size] = -1.0
         
-        # Apply penalty to assignments
+        # Strong penalty for oversized clusters
+        oversized_mask = cluster_sizes > self.max_cluster_size
+        size_penalty[oversized_mask] = -torch.log(cluster_sizes[oversized_mask] / self.max_cluster_size + 1e-8)
+        
+        # Moderate penalty for undersized clusters (but allow some small clusters)
+        undersized_mask = (cluster_sizes > 0) & (cluster_sizes < self.min_cluster_size)
+        size_penalty[undersized_mask] = -0.5 * torch.log(cluster_sizes[undersized_mask] / self.min_cluster_size + 1e-8)
+        
+        # Apply penalty to logits before softmax
         if torch.any(size_penalty != 0):
-            S_adjusted = S * (1.0 + size_penalty.unsqueeze(0))
-            S_adjusted = F.normalize(S_adjusted, p=1, dim=1)
+            # Convert S back to logits, apply penalty, then re-normalize
+            S_logits = torch.log(S + 1e-8)
+            S_logits = S_logits + size_penalty.unsqueeze(0)  # Add penalty to logits
+            S_adjusted = F.softmax(S_logits, dim=1)
+            
+            # Additional hard constraint: if cluster is very oversized, redistribute
+            very_oversized = cluster_sizes > self.max_cluster_size * 1.5
+            if torch.any(very_oversized):
+                for k in torch.where(very_oversized)[0]:
+                    # Find nodes most weakly assigned to this cluster
+                    cluster_probs = S_adjusted[:, k]
+                    threshold = torch.quantile(cluster_probs, 0.7)  # Keep top 70% assignments
+                    
+                    # Redistribute bottom 30% to other clusters
+                    weak_assignments = cluster_probs < threshold
+                    if weak_assignments.any():
+                        # Zero out weak assignments to oversized cluster
+                        S_adjusted[weak_assignments, k] = 0.0
+                        # Renormalize rows
+                        S_adjusted[weak_assignments] = F.normalize(S_adjusted[weak_assignments], p=1, dim=1)
+            
             return S_adjusted
         
         return S
@@ -248,6 +295,112 @@ class ConstrainedDiffPool(nn.Module):
         """
         entropy = -torch.mean(torch.sum(S * torch.log(S + 1e-8), dim=1))
         return entropy
+    
+    def _balance_loss(self, S: torch.Tensor) -> torch.Tensor:
+        """
+        Balance loss to encourage even cluster sizes
+        
+        Args:
+            S: Soft assignment matrix [N, K]
+            
+        Returns:
+            Balance loss (lower = more balanced)
+        """
+        N, K = S.shape
+        target_size = N / K  # Ideal cluster size
+        
+        # Calculate actual cluster sizes
+        cluster_sizes = S.sum(dim=0)  # [K]
+        
+        # Penalize deviation from target size
+        size_deviations = torch.abs(cluster_sizes - target_size)
+        balance_loss = size_deviations.mean() / target_size
+        
+        return balance_loss
+    
+    def _hard_rebalance(self, S: torch.Tensor) -> torch.Tensor:
+        """
+        Hard rebalancing to enforce cluster size limits more aggressively
+        
+        Args:
+            S: Soft assignment matrix [N, K]
+            
+        Returns:
+            Rebalanced assignment matrix
+        """
+        N, K = S.shape
+        max_iterations = 5
+        
+        for iteration in range(max_iterations):
+            cluster_sizes = S.sum(dim=0)
+            
+            # Check if any cluster is oversized (be more strict)
+            very_oversized = cluster_sizes > self.max_cluster_size
+            
+            if not torch.any(very_oversized):
+                break
+            
+            # For each oversized cluster, find weakest members and redistribute
+            for k in torch.where(very_oversized)[0]:
+                excess = cluster_sizes[k] - self.max_cluster_size
+                if excess <= 0:
+                    continue
+                
+                # Find nodes most weakly assigned to this cluster
+                cluster_probs = S[:, k]
+                
+                # Get indices of weakest assignments (take more aggressive approach)
+                num_to_redistribute = min(int(excess.ceil().item()) + 5, len(cluster_probs))
+                _, weak_indices = torch.topk(cluster_probs, 
+                                           num_to_redistribute, 
+                                           largest=False)
+                
+                # Zero out assignments to oversized cluster
+                S[weak_indices, k] = 1e-8
+                
+                # Redistribute to other clusters based on their current capacity
+                available_capacity = torch.clamp(
+                    self.max_cluster_size - cluster_sizes, 
+                    min=0
+                )
+                
+                # Normalize available capacity to get redistribution weights
+                redistrib_weights = available_capacity / (available_capacity.sum() + 1e-8)
+                
+                # Redistribute the weak assignments
+                for i, node_idx in enumerate(weak_indices):
+                    S[node_idx] = S[node_idx] + redistrib_weights * S[node_idx, k]
+                
+                # Renormalize the affected rows
+                S[weak_indices] = F.normalize(S[weak_indices], p=1, dim=1)
+        
+        return S
+    
+    def _add_load_balancing_regularization(self, S_logits: torch.Tensor) -> torch.Tensor:
+        """
+        Add load balancing regularization to logits to encourage uniform cluster sizes
+        
+        Args:
+            S_logits: Assignment logits [N, K]
+            
+        Returns:
+            Regularized logits
+        """
+        N, K = S_logits.shape
+        target_size = N / K
+        
+        # Get current soft cluster sizes
+        current_probs = F.softmax(S_logits, dim=1)
+        current_sizes = current_probs.sum(dim=0)  # [K]
+        
+        # Calculate load balancing penalty
+        # Penalize clusters that are over-represented
+        load_penalties = torch.log(current_sizes / target_size + 1e-8) * 1.0  # Increased from 0.5
+        
+        # Apply penalty to discourage assignment to over-represented clusters
+        S_logits = S_logits - load_penalties.unsqueeze(0)
+        
+        return S_logits
 
 
 class TransformerConstrainedPooling(nn.Module):

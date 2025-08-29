@@ -1,0 +1,68 @@
+# Data Validation Configuration
+# Ensures realistic values in the energy system
+
+building_limits:
+  # Dutch LV group standards (urban areas with 630 kVA transformers)
+  max_buildings_per_lv: 250  # Dense urban areas
+  typical_buildings_per_lv: 150  # Standard Dutch urban configuration
+  min_buildings_per_lv: 30  # Rural/suburban areas
+  
+  # Dutch MV station standards
+  max_buildings_per_mv: 800  # Large urban MV station (outlier, will skip)
+  typical_buildings_per_mv: 400  # Standard MV station with multiple transformers
+  min_buildings_per_mv: 50  # Small rural MV station
+
+energy_limits:
+  # Realistic energy consumption (kWh/day)
+  residential:
+    min: 5
+    max: 50
+    typical: 15
+  commercial:
+    min: 20
+    max: 500
+    typical: 100
+  industrial:
+    min: 100
+    max: 5000
+    typical: 1000
+    
+  # Realistic solar generation (kWp)
+  solar_capacity:
+    residential_min: 2
+    residential_max: 10
+    commercial_min: 10
+    commercial_max: 100
+    industrial_min: 50
+    industrial_max: 500
+    
+  # Self-sufficiency limits
+  max_self_sufficiency: 0.8  # 80% max (need grid at night)
+  typical_self_sufficiency: 0.3  # 30% typical
+  
+financial_limits:
+  # Realistic financial metrics
+  solar_cost_per_kwp:
+    min: 800
+    max: 1500
+    typical: 1200
+    
+  roi_years:
+    min: 5
+    max: 15
+    typical: 8
+    
+  monthly_savings_per_building:
+    min: 10
+    max: 200
+    typical: 50
+
+cluster_limits:
+  # Realistic cluster sizes
+  max_buildings_per_cluster: 25
+  typical_buildings_per_cluster: 10
+  min_buildings_per_cluster: 3
+  
+  # Realistic number of clusters
+  max_clusters_per_lv: 3
+  typical_clusters_per_lv: 2

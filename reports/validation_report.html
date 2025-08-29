@@ -1,0 +1,262 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>GNN Model Validation Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h1 { color: #333; }
+                h2 { color: #666; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+                .summary { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0; }
+                .passed { color: green; font-weight: bold; }
+                .failed { color: red; font-weight: bold; }
+                .partial { color: orange; font-weight: bold; }
+                .not_tested { color: gray; }
+                table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background: #f0f0f0; }
+                .category-header { background: #e0e0e0; font-weight: bold; }
+                .progress-bar { width: 200px; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
+                .progress-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ffaa00, #44ff44); }
+            </style>
+        </head>
+        <body>
+            <h1>GNN Model Validation Report</h1>
+            <div class="summary">
+                <h2>Summary</h2>
+                <p><strong>Model:</strong> HeteroEnergyGNN</p>
+                <p><strong>Date:</strong> 2025-08-29 11:37</p>
+                <p><strong>Overall Compliance:</strong> 73.0%</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 73.03030303030303%"></div>
+                </div>
+                <p><strong>Critical Failures:</strong> 4</p>
+                <p><strong>Warnings:</strong> 3</p>
+            </div>
+        
+            <div class="critical">
+                <h2>⚠️ Critical Failures</h2>
+                <ul>
+            <li class='failed'>GNN Architecture Type: Not a GNN architecture</li><li class='failed'>Message Passing Layers: Insufficient message passing layers</li><li class='failed'>LV Boundary Constraint: 1 clusters cross LV boundaries</li><li class='failed'>LV Boundary Enforcement: 1 clusters cross LV boundaries</li></ul></div>
+            <div class="recommendations">
+                <h2>📋 Recommendations</h2>
+                <ol>
+            <li>Address remaining gaps to achieve full compliance</li><li>Review Architecture implementation - 2 critical components missing</li><li>Fix clustering constraints - LV boundaries and size limits must be enforced</li><li>Improve Clustering components - 1 partially compliant</li><li>Improve Energy components - 1 partially compliant</li><li>Improve Constraints components - 1 partially compliant</li></ol></div>
+        <h2>Detailed Requirements Validation</h2>
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Requirement</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Evidence/Details</th>
+            </tr>
+        <tr><td rowspan='5' class='category-header'>Architecture</td>
+                    <td>GNN Architecture Type</td>
+                    <td class='failed'>FAILED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Heterogeneous Node Types</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>All required node types present: {'cable_group', 'building', 'transformer'}</td>
+                </tr>
+                <tr>
+                    <td>Message Passing Layers</td>
+                    <td class='failed'>FAILED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Attention Mechanisms</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Attention mechanisms detected</td>
+                </tr>
+                <tr>
+                    <td>MC Dropout for Uncertainty</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Dropout layers present, MC Dropout system available</td>
+                </tr>
+                <tr><td rowspan='5' class='category-header'>Clustering</td>
+                    <td>Dynamic Sub-clustering</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Dynamic clustering with 10 clusters</td>
+                </tr>
+                <tr>
+                    <td>Cluster Size Range</td>
+                    <td class='partial'>PARTIAL</td>
+                    <td>80/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>LV Boundary Constraint</td>
+                    <td class='failed'>FAILED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Cluster Optimization</td>
+                    <td class='nottested'>NOT_TESTED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Cluster Stability</td>
+                    <td class='nottested'>NOT_TESTED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr><td rowspan='4' class='category-header'>Energy</td>
+                    <td>Energy Flow Tracking</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Energy flows tracked across epochs</td>
+                </tr>
+                <tr>
+                    <td>Energy Sharing Constraint</td>
+                    <td class='nottested'>NOT_TESTED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Energy Balance Calculation</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Energy balance metrics calculated</td>
+                </tr>
+                <tr>
+                    <td>Temporal Energy Patterns</td>
+                    <td class='partial'>PARTIAL</td>
+                    <td>50/100</td>
+                    <td></td>
+                </tr>
+                <tr><td rowspan='3' class='category-header'>Quality</td>
+                    <td>Quality Assessment</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Quality labeler component present</td>
+                </tr>
+                <tr>
+                    <td>Quality Metrics</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Quality metrics calculator available</td>
+                </tr>
+                <tr>
+                    <td>Quality Categories</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Cluster quality categorization present</td>
+                </tr>
+                <tr><td rowspan='4' class='category-header'>Solar</td>
+                    <td>Solar Recommendations</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Solar recommendation output present</td>
+                </tr>
+                <tr>
+                    <td>Cascade Modeling</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Cascade analyzer component present</td>
+                </tr>
+                <tr>
+                    <td>ROI Calculation</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>ROI categorization present</td>
+                </tr>
+                <tr>
+                    <td>Penetration Roadmap</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Roadmap planner component present</td>
+                </tr>
+                <tr><td rowspan='3' class='category-header'>Learning</td>
+                    <td>Unsupervised Discovery</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Unsupervised discovery phase implemented</td>
+                </tr>
+                <tr>
+                    <td>Pseudo-label Generation</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Pseudo-labels generated</td>
+                </tr>
+                <tr>
+                    <td>Iterative Learning</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Semi-supervised learning phase present</td>
+                </tr>
+                <tr><td rowspan='3' class='category-header'>Constraints</td>
+                    <td>LV Boundary Enforcement</td>
+                    <td class='failed'>FAILED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Cluster Size Limits</td>
+                    <td class='partial'>PARTIAL</td>
+                    <td>80/100</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Network Topology</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Hierarchical topology present</td>
+                </tr>
+                <tr><td rowspan='3' class='category-header'>Uncertainty</td>
+                    <td>Confidence Intervals</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Uncertainty analyzer present</td>
+                </tr>
+                <tr>
+                    <td>MC Dropout Usage</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>20 MC Dropout iterations configured</td>
+                </tr>
+                <tr>
+                    <td>Calibrated Confidence</td>
+                    <td class='nottested'>NOT_TESTED</td>
+                    <td>0/100</td>
+                    <td></td>
+                </tr>
+                <tr><td rowspan='3' class='category-header'>Explainability</td>
+                    <td>Clustering Explanations</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Explainability generator present</td>
+                </tr>
+                <tr>
+                    <td>Solar Explanations</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Explainability generator present</td>
+                </tr>
+                <tr>
+                    <td>Human-readable Summaries</td>
+                    <td class='passed'>PASSED</td>
+                    <td>100/100</td>
+                    <td>Human-readable explanations generated</td>
+                </tr>
+                
+        </table>
+        
+        <h2>Performance Metrics</h2>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+        <tr><td>Num Clusters</td><td>1</td></tr><tr><td>Avg Cluster Size</td><td>160.00</td></tr><tr><td>Min Cluster Size</td><td>160</td></tr><tr><td>Max Cluster Size</td><td>160</td></tr><tr><td>Solar Output Dim</td><td>4</td></tr><tr><td>Total Parameters</td><td>1234449</td></tr><tr><td>Trainable Parameters</td><td>1234449</td></tr>
+        </table>
+        </body>
+        </html>
+        

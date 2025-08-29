@@ -1,0 +1,44 @@
+{
+  "building_id": "B_141",
+  "timestamp": "2025-08-29T11:59:43.592902",
+  "audience": "building_owner",
+  "current_status": {
+    "community": "Energy Community 3",
+    "monthly_consumption": "1601000 kWh",
+    "energy_label": "A",
+    "has_solar": true,
+    "solar_generation": "300 kWh/month"
+  },
+  "community_benefits": {
+    "estimated_savings": "\u20ac59.15/month",
+    "annual_savings": "\u20ac710/year",
+    "self_sufficiency": "33.3%",
+    "carbon_reduction": "109.1 kg CO2/year",
+    "shared_energy_access": "Access to neighbors' surplus solar energy",
+    "reduced_grid_dependence": "47% less grid reliance"
+  },
+  "community_match": {
+    "match_score": 0.7109610143960683,
+    "key_reasons": [
+      "Located within efficient energy sharing distance",
+      "Connected through same transformer for minimal losses",
+      "Your solar generation can supply neighbors during peak"
+    ],
+    "compatibility": "EXCELLENT"
+  },
+  "recommendations": [
+    "Shift dishwasher and washing to 12-3pm for maximum community benefit",
+    "Consider 5 kWh battery to increase self-consumption to 80%"
+  ],
+  "next_steps": [
+    "Join your assigned energy community",
+    "Consider installing solar panels if applicable",
+    "Shift flexible consumption to peak generation hours (11am-3pm)",
+    "Monitor your energy dashboard for optimization opportunities"
+  ],
+  "financial_projection": {
+    "5_year_savings": "\u20ac3549",
+    "solar_roi_years": "Already installed",
+    "property_value_increase": "2-4% estimated increase with solar + community membership"
+  }
+}

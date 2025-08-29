@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-08-29T11:53:53.269392",
+  "num_clusters": 8,
+  "avg_cluster_size": 20.0,
+  "total_clustered_buildings": 160,
+  "cluster_stability": 0,
+  "avg_self_sufficiency": 0.21144585347217315,
+  "avg_complementarity": 0,
+  "total_peak_reduction": 0,
+  "total_demand_mwh": 7.894485291537083,
+  "total_generation_mwh": 1.6692561801925763,
+  "total_shared_energy_mwh": 0.19809724682581104,
+  "grid_import_mwh": 6.225229111344507,
+  "grid_export_mwh": 0.0,
+  "num_solar_buildings": 0,
+  "total_solar_capacity_kw": 0,
+  "avg_solar_roi_years": 0,
+  "solar_coverage_percent": 0,
+  "total_cost_savings_eur": 3200,
+  "avg_cost_reduction_percent": 0.2509311747507745,
+  "carbon_reduction_tons": 0.8346280900962881,
+  "peak_charge_savings_eur": 0.0,
+  "avg_voltage_deviation": 0.02,
+  "transformer_utilization_percent": 65,
+  "line_loss_percent": 3.5,
+  "congestion_events": 0,
+  "energy_label_distribution": {
+    "C": 28,
+    "A": 22,
+    "B": 22,
+    "D": 22,
+    "E": 22,
+    "F": 22,
+    "G": 22
+  },
+  "building_type_distribution": {
+    "Residential": 80,
+    "Commercial": 80
+  },
+  "num_lv_groups": 0,
+  "avg_buildings_per_lv": 0,
+  "lv_groups_with_clusters": 0
+}

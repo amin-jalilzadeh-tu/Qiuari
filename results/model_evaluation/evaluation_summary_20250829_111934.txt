@@ -1,0 +1,47 @@
+============================================================
+GNN MODEL EVALUATION SUMMARY
+============================================================
+
+TRAINING PERFORMANCE:
+------------------------------
+phase_1_discovery:
+  initial_loss: 3.9484341144561768
+  final_loss: 3.9243788719177246
+  loss_reduction: 0.02405524253845215
+  loss_reduction_pct: 0.6092349990184731
+  final_clusters: 8
+  cluster_stability: 0.4444444444444444
+
+phase_2_semi_supervised:
+  initial_loss: 3.9235825538635254
+  final_loss: 3.921515703201294
+  loss_reduction: 0.0020668506622314453
+  loss_reduction_pct: 0.05267763922021294
+  final_clusters: 7
+  cluster_stability: 0.33333333333333337
+
+phase_3_solar:
+  initial_loss: 3.1552906036376953
+  final_loss: 3.1511223316192627
+  loss_reduction: 0.004168272018432617
+  loss_reduction_pct: 0.13210421929527089
+  final_clusters: 1
+  cluster_stability: 1.0
+
+CLUSTER QUALITY:
+------------------------------
+  num_clusters: 5
+  size_std: 34.6526
+  size_balance: 0.0316
+  avg_cohesion: 2557.02587890625
+  avg_separation: 1539.0811767578125
+  separation_cohesion_ratio: 0.6019028425216675
+  is_collapsed: False
+  largest_cluster_ratio: 0.5938
+
+RECOMMENDATIONS:
+------------------------------
+1. Cluster sizes are highly imbalanced - consider balanced sampling or size penalties
+2. Poor cluster separation - increase embedding dimension or adjust clustering loss
+3. phase_1_discovery: Unstable cluster assignments - add temporal smoothing
+4. phase_2_semi_supervised: Unstable cluster assignments - add temporal smoothing

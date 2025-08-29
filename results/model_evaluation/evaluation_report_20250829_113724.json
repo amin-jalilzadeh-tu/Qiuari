@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-08-29T11:37:24.858154",
+  "training_summary": {
+    "phase_1_discovery": {
+      "initial_loss": 3.9420838356018066,
+      "final_loss": 3.9420838356018066,
+      "loss_reduction": 0.0,
+      "loss_reduction_pct": 0.0,
+      "final_clusters": 4,
+      "cluster_count_stability": 0.0,
+      "building_assignment_stability": 0.0
+    },
+    "phase_2_semi_supervised": {
+      "initial_loss": 3.934082508087158,
+      "final_loss": 3.934082508087158,
+      "loss_reduction": 0.0,
+      "loss_reduction_pct": 0.0,
+      "final_clusters": 6,
+      "cluster_count_stability": 0.0,
+      "building_assignment_stability": 0.0
+    },
+    "phase_3_solar": {
+      "initial_loss": 3.159111261367798,
+      "final_loss": 3.159111261367798,
+      "loss_reduction": 0.0,
+      "loss_reduction_pct": 0.0,
+      "final_clusters": 1,
+      "cluster_count_stability": 0.0,
+      "building_assignment_stability": 0.0
+    }
+  },
+  "cluster_quality": {
+    "num_clusters": 8,
+    "cluster_sizes": [
+      6,
+      64,
+      40,
+      14,
+      1,
+      33,
+      1,
+      1
+    ],
+    "size_std": 21.85177338341216,
+    "size_balance": 0.015625,
+    "avg_cohesion": 3991.934814453125,
+    "avg_separation": 2079.606689453125,
+    "separation_cohesion_ratio": 0.520952045917511,
+    "is_collapsed": false,
+    "largest_cluster_ratio": 0.4
+  },
+  "convergence_analysis": {},
+  "recommendations": [
+    "Cluster sizes are highly imbalanced - consider balanced sampling or size penalties",
+    "Poor cluster separation - increase embedding dimension or adjust clustering loss",
+    "phase_1_discovery: Number of clusters fluctuating - stabilize cluster formation",
+    "phase_2_semi_supervised: Number of clusters fluctuating - stabilize cluster formation",
+    "phase_3_solar: Number of clusters fluctuating - stabilize cluster formation"
+  ]
+}

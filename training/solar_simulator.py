@@ -6,7 +6,7 @@ Generates synthetic solar performance data for training
 import numpy as np
 import torch
 import pandas as pd
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Any
 from datetime import datetime, timedelta
 import logging
 
@@ -406,6 +406,102 @@ class SolarPerformanceSimulator:
                         f"{performance['roi_category']} ({performance['roi_years']:.1f} years)")
         
         return labels
+    
+    def simulate_multi_year_deployment(
+        self,
+        roadmap: Any,  # SolarRoadmap type
+        initial_state: Dict,
+        cluster_assignments: Any  # torch.Tensor
+    ) -> List[Dict]:
+        """
+        Simulate multi-year solar deployment according to roadmap
+        
+        Args:
+            roadmap: Solar deployment roadmap
+            initial_state: Initial system state
+            cluster_assignments: Cluster assignments
+            
+        Returns:
+            List of yearly states
+        """
+        import torch
+        
+        states = []
+        current_state = initial_state.copy()
+        cumulative_solar = {}
+        
+        for year_idx, year_plan in enumerate(roadmap.yearly_plans):
+            # Simulate this year's deployments
+            cluster_dict = {}
+            if torch.is_tensor(cluster_assignments):
+                cluster_dict = {i: cluster_assignments[i].item() for i in range(len(cluster_assignments))}
+            else:
+                cluster_dict = cluster_assignments
+                
+            year_state = self.simulate_deployment_round(
+                selected_buildings=year_plan.target_installations,
+                capacities=year_plan.capacities,
+                current_state=current_state,
+                cluster_assignments=cluster_dict
+            )
+            
+            # Update cumulative solar
+            for building_id, capacity in zip(year_plan.target_installations, year_plan.capacities):
+                cumulative_solar[building_id] = cumulative_solar.get(building_id, 0) + capacity
+            
+            # Add year-specific metrics
+            year_state['year'] = year_plan.year
+            year_state['cumulative_capacity_mw'] = sum(cumulative_solar.values()) / 1000
+            year_state['cumulative_buildings'] = len(cumulative_solar)
+            year_state['annual_investment'] = year_plan.budget_required
+            year_state['cumulative_investment'] = sum(p.budget_required for p in roadmap.yearly_plans[:year_idx+1])
+            
+            # Calculate learning effects
+            learning_factor = (1 - self.learning_rate) ** year_plan.year
+            year_state['cost_reduction_factor'] = learning_factor
+            year_state['effective_cost_per_kwp'] = self.cost_per_kwp * learning_factor
+            
+            # Project future benefits
+            year_state['projected_annual_savings'] = self._calculate_annual_savings(
+                cumulative_solar,
+                year_state.get('self_sufficiency', 0.3)
+            )
+            
+            states.append(year_state)
+            current_state = year_state
+        
+        return states
+    
+    def _calculate_annual_savings(
+        self,
+        solar_installations: Dict[int, float],
+        self_sufficiency: float
+    ) -> float:
+        """
+        Calculate projected annual savings from solar installations
+        
+        Args:
+            solar_installations: Building ID to capacity mapping
+            self_sufficiency: Self-sufficiency rate
+            
+        Returns:
+            Annual savings in euros
+        """
+        total_capacity = sum(solar_installations.values())
+        annual_generation = total_capacity * self.annual_generation_per_kwp
+        
+        # Savings from self-consumption
+        self_consumed = annual_generation * self_sufficiency
+        self_consumption_savings = self_consumed * self.electricity_price
+        
+        # Revenue from export
+        exported = annual_generation * (1 - self_sufficiency)
+        export_revenue = exported * self.feed_in_tariff
+        
+        # Maintenance costs
+        maintenance = total_capacity * self.maintenance_per_kwp
+        
+        return self_consumption_savings + export_revenue - maintenance
     
     def simulate_deployment_round(
         self,

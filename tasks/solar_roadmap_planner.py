@@ -553,8 +553,13 @@ class SolarRoadmapPlanner:
             if plan.cluster_assignments:
                 # Analyze cluster changes
                 cluster_stats = defaultdict(int)
-                for building_id, cluster_id in plan.cluster_assignments.items():
-                    cluster_stats[cluster_id] += 1
+                # Handle both dict and list types
+                if isinstance(plan.cluster_assignments, dict):
+                    for building_id, cluster_id in plan.cluster_assignments.items():
+                        cluster_stats[cluster_id] += 1
+                elif isinstance(plan.cluster_assignments, list):
+                    for cluster_id in plan.cluster_assignments:
+                        cluster_stats[cluster_id] += 1
                 
                 evolution.append({
                     'year': plan.year,

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-29T11:12:28.522257",
+  "training_summary": {
+    "phase_1_discovery": {
+      "initial_loss": 3.930936574935913,
+      "final_loss": 3.926055431365967,
+      "loss_reduction": 0.004881143569946289,
+      "loss_reduction_pct": 0.12417253437944029,
+      "final_clusters": 8,
+      "cluster_stability": 0.2222222222222222
+    },
+    "phase_2_semi_supervised": {
+      "initial_loss": 0.5070891976356506,
+      "final_loss": 0.44529247283935547,
+      "loss_reduction": 0.061796724796295166,
+      "loss_reduction_pct": 12.186559107239516,
+      "final_clusters": 4,
+      "cluster_stability": 0.33333333333333337
+    },
+    "phase_3_solar": {
+      "initial_loss": 1.5452412366867065,
+      "final_loss": 1.34001886844635,
+      "loss_reduction": 0.20522236824035645,
+      "loss_reduction_pct": 13.28092749326264,
+      "final_clusters": 1,
+      "cluster_stability": 1.0
+    }
+  },
+  "cluster_quality": {
+    "num_clusters": 5,
+    "cluster_sizes": [
+      1,
+      1,
+      5,
+      142,
+      11
+    ],
+    "size_std": 55.12168357370809,
+    "size_balance": 0.007042253521126761,
+    "avg_cohesion": 

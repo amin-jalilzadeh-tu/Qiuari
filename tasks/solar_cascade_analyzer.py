@@ -7,6 +7,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from typing import Dict, List, Tuple, Optional
+from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,6 +28,10 @@ class SolarCascadeAnalyzer:
         self.max_hops = config.get('max_hops', 3)
         self.impact_decay = config.get('impact_decay', 0.7)  # Decay per hop
         self.min_impact = config.get('min_impact', 0.1)  # Minimum impact threshold
+        
+        # Temporal tracking
+        self.cascade_history = []
+        self.temporal_impacts = {}
         
         logger.info(f"Initialized SolarCascadeAnalyzer with {self.max_hops} hops")
     
@@ -97,7 +102,175 @@ class SolarCascadeAnalyzer:
             'hops_tracker': hops_tracker,
             'total_affected': (impact_scores > self.min_impact).sum().item(),
             'network_benefits': benefits,
-            'cascade_radius': max(hops_tracker.keys()) if hops_tracker else 0
+            'cascade_radius': max(hops_tracker.keys()) if hops_tracker else 0,
+            'timestamp': datetime.now()
+        }
+    
+    def analyze_temporal_cascade(
+        self,
+        roadmap_years: List[Dict],
+        edge_index: torch.Tensor,
+        building_features: torch.Tensor
+    ) -> Dict:
+        """
+        Analyze cascade effects over multiple years
+        
+        Args:
+            roadmap_years: Yearly installation plans
+            edge_index: Building connections
+            building_features: Building features
+            
+        Returns:
+            Temporal cascade analysis
+        """
+        cumulative_impacts = torch.zeros(building_features.shape[0])
+        yearly_analysis = []
+        
+        for year_idx, year_plan in enumerate(roadmap_years):
+            year_impacts = torch.zeros(building_features.shape[0])
+            
+            # Analyze each installation in this year
+            for building_id, capacity in year_plan.items():
+                cascade = self.analyze_cascade(
+                    building_id=building_id,
+                    capacity_kwp=capacity,
+                    graph_data={},
+                    edge_index=edge_index,
+                    building_features=building_features
+                )
+                
+                # Accumulate impacts
+                year_impacts += cascade['impact_scores']
+            
+            # Apply temporal decay to previous impacts
+            cumulative_impacts = cumulative_impacts * 0.95 + year_impacts
+            
+            # Store yearly analysis
+            yearly_analysis.append({
+                'year': year_idx + 1,
+                'new_impacts': year_impacts.sum().item(),
+                'cumulative_impacts': cumulative_impacts.sum().item(),
+                'max_impact_building': cumulative_impacts.argmax().item(),
+                'buildings_affected': (cumulative_impacts > self.min_impact).sum().item()
+            })
+            
+            # Store in temporal impacts
+            self.temporal_impacts[f'year_{year_idx + 1}'] = cumulative_impacts.clone()
+        
+        # Calculate cascade growth rate
+        if len(yearly_analysis) > 1:
+            growth_rates = []
+            for i in range(1, len(yearly_analysis)):
+                prev = yearly_analysis[i-1]['cumulative_impacts']
+                curr = yearly_analysis[i]['cumulative_impacts']
+                growth = (curr - prev) / prev if prev > 0 else 0
+                growth_rates.append(growth)
+            avg_growth = np.mean(growth_rates)
+        else:
+            avg_growth = 0
+        
+        return {
+            'yearly_analysis': yearly_analysis,
+            'final_cumulative_impact': cumulative_impacts.sum().item(),
+            'average_growth_rate': avg_growth,
+            'total_buildings_affected': (cumulative_impacts > self.min_impact).sum().item(),
+            'impact_distribution': {
+                'high': (cumulative_impacts > 0.7).sum().item(),
+                'medium': ((cumulative_impacts > 0.3) & (cumulative_impacts <= 0.7)).sum().item(),
+                'low': ((cumulative_impacts > self.min_impact) & (cumulative_impacts <= 0.3)).sum().item()
+            }
+        }
+    
+    def track_cascade_evolution(
+        self,
+        installation_history: List[Tuple[int, float, datetime]],
+        edge_index: torch.Tensor,
+        building_features: torch.Tensor,
+        time_window_days: int = 365
+    ) -> Dict:
+        """
+        Track how cascade effects evolve over time
+        
+        Args:
+            installation_history: List of (building_id, capacity, timestamp)
+            edge_index: Building connections
+            building_features: Building features
+            time_window_days: Time window for analysis
+            
+        Returns:
+            Evolution tracking metrics
+        """
+        from datetime import timedelta
+        
+        if not installation_history:
+            return {}
+        
+        # Sort by timestamp
+        sorted_history = sorted(installation_history, key=lambda x: x[2])
+        
+        # Group by time windows
+        start_date = sorted_history[0][2]
+        current_date = start_date
+        windows = []
+        current_window = []
+        
+        for building_id, capacity, timestamp in sorted_history:
+            if timestamp <= current_date + timedelta(days=time_window_days):
+                current_window.append((building_id, capacity))
+            else:
+                windows.append(current_window)
+                current_window = [(building_id, capacity)]
+                current_date = timestamp
+        
+        if current_window:
+            windows.append(current_window)
+        
+        # Analyze each window
+        window_analyses = []
+        cumulative_network_benefit = 0
+        
+        for window_idx, window in enumerate(windows):
+            window_impact = 0
+            window_benefits = {
+                'peak_reduction_kw': 0,
+                'voltage_improvement': 0,
+                'loss_reduction': 0
+            }
+            
+            for building_id, capacity in window:
+                cascade = self.analyze_cascade(
+                    building_id=building_id,
+                    capacity_kwp=capacity,
+                    graph_data={},
+                    edge_index=edge_index,
+                    building_features=building_features
+                )
+                
+                window_impact += cascade['impact_scores'].sum().item()
+                for key in window_benefits:
+                    if key in cascade['network_benefits']:
+                        window_benefits[key] += cascade['network_benefits'][key]
+            
+            cumulative_network_benefit += window_impact
+            
+            window_analyses.append({
+                'window': window_idx + 1,
+                'installations': len(window),
+                'total_capacity': sum(c for _, c in window),
+                'window_impact': window_impact,
+                'cumulative_impact': cumulative_network_benefit,
+                'benefits': window_benefits
+            })
+        
+        # Store in history
+        self.cascade_history.extend(window_analyses)
+        
+        return {
+            'num_windows': len(windows),
+            'window_analyses': window_analyses,
+            'total_installations': len(installation_history),
+            'final_network_benefit': cumulative_network_benefit,
+            'average_impact_per_installation': cumulative_network_benefit / len(installation_history) if installation_history else 0
         }
     
     def _create_adjacency(

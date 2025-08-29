@@ -1,0 +1,52 @@
+============================================================
+GNN MODEL EVALUATION SUMMARY
+============================================================
+
+TRAINING PERFORMANCE:
+------------------------------
+phase_1_discovery:
+  initial_loss: 3.9389
+  final_loss: 3.9321
+  loss_reduction: 0.0068
+  loss_reduction_pct: 0.1725
+  final_clusters: 9
+  cluster_count_stability: 11.1%
+  building_assignment_stability: 23.8%
+
+phase_2_semi_supervised:
+  initial_loss: 3.9269
+  final_loss: 3.9245
+  loss_reduction: 0.0024
+  loss_reduction_pct: 0.0612
+  final_clusters: 8
+  cluster_count_stability: 33.3%
+  building_assignment_stability: 42.6%
+
+phase_3_solar:
+  initial_loss: 3.1612
+  final_loss: 3.1511
+  loss_reduction: 0.0101
+  loss_reduction_pct: 0.3203
+  final_clusters: 1
+  cluster_count_stability: 100.0%
+  building_assignment_stability: 90.0%
+
+CLUSTER QUALITY:
+------------------------------
+  num_clusters: 9
+  size_std: 13.4063
+  size_balance: 0.0278
+  avg_cohesion: 3571.876220703125
+  avg_separation: 2680.21533203125
+  separation_cohesion_ratio: 0.7503662109375
+  is_collapsed: False
+  largest_cluster_ratio: 0.2250
+
+RECOMMENDATIONS:
+------------------------------
+1. Cluster sizes are highly imbalanced - consider balanced sampling or size penalties
+2. Poor cluster separation - increase embedding dimension or adjust clustering loss
+3. phase_1_discovery: Buildings jumping between clusters (only 30% stable) - increase momentum or add temporal smoothing
+4. phase_1_discovery: Number of clusters fluctuating - stabilize cluster formation
+5. phase_2_semi_supervised: Buildings jumping between clusters (only 34% stable) - increase momentum or add temporal smoothing
+6. phase_2_semi_supervised: Number of clusters fluctuating - stabilize cluster formation

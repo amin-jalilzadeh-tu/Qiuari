@@ -128,6 +128,89 @@ task:
       fair: 0.4
       poor: 0.0
 
+# Solar Roadmap Configuration
+roadmap:
+  # Planning parameters
+  default_timeframe_years: 5
+  annual_budget: 1000000  # euros
+  cost_per_kwp: 1200
+  
+  # Optimization strategies
+  # Options: linear, accelerated, cascade_optimized, cluster_balanced
+  default_strategy: "cascade_optimized"
+  
+  # Installation constraints
+  max_annual_capacity_mw: 5.0
+  min_installation_size_kwp: 3.0
+  max_installation_size_kwp: 10.0
+  
+  # Learning effects
+  learning_rate: 0.05  # Cost reduction per year
+  efficiency_improvement: 0.02  # Annual panel efficiency improvement
+  
+  # Cascade optimization parameters
+  cascade:
+    max_hops: 3
+    impact_decay: 0.7
+    min_impact: 0.1
+
+# Penetration Targets Configuration
+penetration:
+  # Maximum allowed penetration
+  max_penetration: 0.8  # 80% maximum
+  min_cluster_penetration: 0.1  # 10% minimum per cluster
+  
+  # Target types: area, capacity, buildings, energy
+  default_target_type: "area"
+  
+  # Progress tracking
+  track_cluster_balance: true
+  rebalance_frequency: "annual"
+
+# Temporal Evolution Configuration  
+temporal:
+  # Model parameters (inherits from model if not specified)
+  hidden_dim: 128
+  num_layers: 3
+  dropout: 0.2
+  
+  # Evolution tracking
+  stability_threshold: 0.8
+  min_cluster_size: 3
+  max_cluster_changes_per_year: 0.2  # 20% max change
+
+# Energy Flow Evolution
+energy_flow:
+  self_consumption_base: 0.3
+  sharing_efficiency: 0.85
+  grid_loss_factor: 0.03
+  
+  # P2P trading parameters
+  peer_trading_enabled: true
+  max_trading_distance: 3  # hops
+  trading_efficiency: 0.95
+
+# Economic Parameters (for roadmap)
+economic:
+  electricity_price: 0.25  # €/kWh
+  feed_in_tariff: 0.08  # €/kWh
+  annual_price_increase: 0.03  # 3% per year
+  discount_rate: 0.05  # For NPV calculations
+  
+  # Solar economics
+  solar:
+    cost_per_kwp: 1200  # €/kWp
+    maintenance_per_kwp_year: 20  # €/kWp/year
+    degradation_rate: 0.005  # 0.5% per year
+    lifetime_years: 25
+    
+  # ROI categories (years to payback)
+  roi_categories:
+    excellent: 5
+    good: 7
+    fair: 10
+    poor: 15
+
 # Visualization and Reporting
 visualization:
   enabled: true
@@ -142,12 +225,16 @@ visualization:
     cluster_quality: true
     intervention_recommendations: true
     stakeholder_report: true
+    roadmap_report: true  # NEW
   
   # Chart types to generate  
   charts:
     cluster_heatmap: true
     energy_flow_sankey: true
     temporal_patterns: true
+    roadmap_timeline: true  # NEW
+    penetration_progress: true  # NEW
+    investment_timeline: true  # NEW
     solar_roi_analysis: true
     economic_dashboard: true
     network_graph: true

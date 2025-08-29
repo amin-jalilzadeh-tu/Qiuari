@@ -1,0 +1,422 @@
+{
+  "cluster_assignments": [
+    8,
+    8,
+    6,
+    6,
+    3,
+    8,
+    0,
+    3,
+    9,
+    0,
+    0,
+    0,
+    0,
+    8,
+    9,
+    0,
+    0,
+    0,
+    0,
+    1,
+    8,
+    8,
+    8,
+    3,
+    3,
+    0,
+    3,
+    3,
+    0,
+    8,
+    3,
+    3,
+    0,
+    3,
+    0,
+    6,
+    0,
+    8,
+    0,
+    0,
+    8,
+    8,
+    3,
+    8,
+    8,
+    8,
+    3,
+    7,
+    0,
+    3,
+    8,
+    3,
+    8,
+    0,
+    0,
+    3,
+    7,
+    8,
+    0,
+    3,
+    0,
+    1,
+    7,
+    0,
+    7,
+    3,
+    7,
+    0,
+    0,
+    6,
+    8,
+    9,
+    7,
+    0,
+    0,
+    8,
+    3,
+    0,
+    0,
+    7,
+    3,
+    3,
+    2,
+    0,
+    1,
+    0,
+    8,
+    8,
+    3,
+    0,
+    9,
+    8,
+    8,
+    7,
+    3,
+    3,
+    8,
+    8,
+    0,
+    8,
+    0,
+    0,
+    0,
+    3,
+    0,
+    3,
+    0,
+    8,
+    0,
+    8,
+    6,
+    0,
+    3,
+    3,
+    3,
+    8,
+    7,
+    9,
+    3,
+    0,
+    0,
+    3,
+    3,
+    1,
+    0,
+    3,
+    0,
+    0,
+    3,
+    0,
+    9,
+    3,
+    6,
+    0,
+    3,
+    3,
+    8,
+    8,
+    8,
+    3,
+    3,
+    0,
+    0,
+    3,
+    8,
+    0,
+    9,
+    8,
+    0,
+    8,
+    3,
+    0,
+    8,
+    0,
+    9,
+    3,
+    0,
+    0,
+    6,
+    6
+  ],
+  "cluster_stability": {
+    "prev_clusters": "[0 0 0 0 1 0 3 4 0 0 1 2 0 4 2 0 4 0 8 3 3 0 8 0 0 8 3 8 2 0 8 0 0 0 3 3 8\n 0 0 0 3 3 4 2 0 0 0 8 0 0 8 3 0 0 8 0 3 3 4 8 0 0 0 3 3 4 1 0 3 0 0 2 3 4\n 0 0 3 0 3 8 4 8 0 0 0 2 8 0 3 0 3 3 0 8 0 3 2 8 3 3 0 8 0 3 0 4 3 3 0 0 0\n 8 4 3 0 0 2 0 0 2 4 0 5 9 5 0 7 1 0 2 0 9 3 3 0 3 3 0 0 0 3 0 0 8 2 8 1 0\n 8 7 8 4 0 8 3 6 3 4 8 3]",
+    "stability_scores": [
+      0.03125
+    ]
+  },
+  "energy_flows": {
+    "epoch_0": {
+      "cluster_0": {
+        "total_surplus": 100.46762084960938,
+        "total_deficit": 301.3529052734375,
+        "self_sufficiency": 0.6170623389466022,
+        "total_consumption": 524.5899658203125,
+        "total_generation": 323.7047119140625
+      },
+      "cluster_1": {
+        "total_surplus": 13.392629623413086,
+        "total_deficit": 12.337820053100586,
+        "self_sufficiency": 1.0,
+        "total_consumption": 54.84499740600586,
+        "total_generation": 55.899810791015625
+      },
+      "cluster_2": {
+        "total_surplus": 59.24909210205078,
+        "total_deficit": 228.3001708984375,
+        "self_sufficiency": 0.5202971900177318,
+        "total_consumption": 352.40802001953125,
+        "total_generation": 183.35690307617188
+      },
+      "cluster_3": {
+        "total_surplus": 9.810587882995605,
+        "total_deficit": 168.47186279296875,
+        "self_sufficiency": 0.22990058683336426,
+        "total_consumption": 206.02700805664062,
+        "total_generation": 47.36573028564453
+      },
+      "cluster_4": {
+        "total_surplus": 0.0,
+        "total_deficit": 17.885604858398438,
+        "self_sufficiency": 0.5317045313741288,
+        "total_consumption": 38.19300079345703,
+        "total_generation": 20.307392120361328
+      },
+      "cluster_5": {
+        "total_surplus": 54.4522819519043,
+        "total_deficit": 335.0832824707031,
+        "self_sufficiency": 0.4001278249128548,
+        "total_consumption": 467.8179931640625,
+        "total_generation": 187.18699645996094
+      },
+      "cluster_6": {
+        "total_surplus": 35.15756607055664,
+        "total_deficit": 644.3194580078125,
+        "self_sufficiency": 0.16518628590507997,
+        "total_consumption": 729.697998046875,
+        "total_generation": 120.53610229492188
+      },
+      "cluster_8": {
+        "total_surplus": 74.92896270751953,
+        "total_deficit": 426.1029052734375,
+        "self_sufficiency": 0.4255592808739677,
+        "total_consumption": 611.33203125,
+        "total_generation": 260.15802001953125
+      },
+      "cluster_9": {
+        "total_surplus": 55.61220169067383,
+        "total_deficit": 381.185791015625,
+        "self_sufficiency": 0.341185581860228,
+        "total_consumption": 494.18096923828125,
+        "total_generation": 168.607421875
+      }
+    },
+    "epoch_3": {
+      "cluster_1": {
+        "total_surplus": 22.30886459350586,
+        "total_deficit": 139.9285888671875,
+        "self_sufficiency": 0.5198332273601105,
+        "total_consumption": 244.9560089111328,
+        "total_generation": 127.33627319335938
+      },
+      "cluster_3": {
+        "total_surplus": 69.66889190673828,
+        "total_deficit": 166.5744171142578,
+        "self_sufficiency": 0.6728186823164682,
+        "total_consumption": 296.1830139160156,
+        "total_generation": 199.2774658203125
+      },
+      "cluster_4": {
+        "total_surplus": 104.29458618164062,
+        "total_deficit": 1045.616943359375,
+        "self_sufficiency": 0.2582377148264698,
+        "total_consumption": 1269.0350341796875,
+        "total_generation": 327.71270751953125
+      },
+      "cluster_6": {
+        "total_surplus": 113.71940612792969,
+        "total_deficit": 359.69677734375,
+        "self_sufficiency": 0.5558428234445513,
+        "total_consumption": 553.8070068359375,
+        "total_generation": 307.82965087890625
+      },
+      "cluster_8": {
+        "total_surplus": 85.63166809082031,
+        "total_deficit": 738.3878173828125,
+        "self_sufficiency": 0.359941999912545,
+        "total_consumption": 1019.8389892578125,
+        "total_generation": 367.0828857421875
+      },
+      "cluster_9": {
+        "total_surplus": 6.686960697174072,
+        "total_deficit": 64.83537292480469,
+        "self_sufficiency": 0.35643787265268034,
+        "total_consumption": 90.35400390625,
+        "total_generation": 32.205589294433594
+      }
+    },
+    "epoch_6": {
+      "cluster_0": {
+        "total_surplus": 21.942541122436523,
+        "total_deficit": 150.11387634277344,
+        "self_sufficiency": 0.403410277875743,
+        "total_consumption": 214.83999633789062,
+        "total_generation": 86.66866302490234
+      },
+      "cluster_1": {
+        "total_surplus": 0.0,
+        "total_deficit": 16.536558151245117,
+        "self_sufficiency": 0.47685668408259746,
+        "total_consumption": 31.610000610351562,
+        "total_generation": 15.073440551757812
+      },
+      "cluster_2": {
+        "total_surplus": 35.28423309326172,
+        "total_deficit": 128.91400146484375,
+        "self_sufficiency": 0.531448169627308,
+        "total_consumption": 199.8280029296875,
+        "total_generation": 106.19822692871094
+      },
+      "cluster_3": {
+        "total_surplus": 0.0,
+        "total_deficit": 5.143203258514404,
+        "self_sufficiency": 0.7463652967413883,
+        "total_consumption": 20.277999877929688,
+        "total_generation": 15.134796142578125
+      },
+      "cluster_4": {
+        "total_surplus": 83.55453491210938,
+        "total_deficit": 670.7754516601562,
+        "self_sufficiency": 0.2986188088834831,
+        "total_consumption": 837.2349853515625,
+        "total_generation": 250.0141143798828
+      },
+      "cluster_6": {
+        "total_surplus": 171.57655334472656,
+        "total_deficit": 902.915771484375,
+        "self_sufficiency": 0.41417218566855574,
+        "total_consumption": 1248.385986328125,
+        "total_generation": 517.0467529296875
+      },
+      "cluster_7": {
+        "total_surplus": 23.84000015258789,
+        "total_deficit": 196.84103393554688,
+        "self_sufficiency": 0.4486426517934198,
+        "total_consumption": 313.7729797363281,
+        "total_generation": 140.77194213867188
+      },
+      "cluster_8": {
+        "total_surplus": 54.092674255371094,
+        "total_deficit": 140.91018676757812,
+        "self_sufficiency": 0.6163474250241031,
+        "total_consumption": 226.2919921875,
+        "total_generation": 139.4744873046875
+      },
+      "cluster_9": {
+        "total_surplus": 8.633243560791016,
+        "total_deficit": 302.8897399902344,
+        "self_sufficiency": 0.22756577913665418,
+        "total_consumption": 380.947021484375,
+        "total_generation": 86.69050598144531
+      }
+    },
+    "epoch_9": {
+      "cluster_0": {
+        "total_surplus": 119.71125793457031,
+        "total_deficit": 1346.6658935546875,
+        "self_sufficiency": 0.2707307489831857,
+        "total_consumption": 1682.444091796875,
+        "total_generation": 455.4893493652344
+      },
+      "cluster_1": {
+        "total_surplus": 11.059598922729492,
+        "total_deficit": 96.272216796875,
+        "self_sufficiency": 0.2925654155438445,
+        "total_consumption": 120.4530029296875,
+        "total_generation": 35.24038314819336
+      },
+      "cluster_3": {
+        "total_surplus": 130.80621337890625,
+        "total_deficit": 294.5906982421875,
+        "self_sufficiency": 0.6811267097639161,
+        "total_consumption": 513.635009765625,
+        "total_generation": 349.85052490234375
+      },
+      "cluster_6": {
+        "total_surplus": 19.010637283325195,
+        "total_deficit": 65.06442260742188,
+        "self_sufficiency": 0.6078493343015661,
+        "total_consumption": 117.43899536132812,
+        "total_generation": 71.38521575927734
+      },
+      "cluster_7": {
+        "total_surplus": 23.949251174926758,
+        "total_deficit": 81.558837890625,
+        "self_sufficiency": 0.5718986951642604,
+        "total_consumption": 134.5699920654297,
+        "total_generation": 76.96040344238281
+      },
+      "cluster_8": {
+        "total_surplus": 80.18791961669922,
+        "total_deficit": 546.3969116210938,
+        "self_sufficiency": 0.39348143807954256,
+        "total_consumption": 768.6640014648438,
+        "total_generation": 302.45501708984375
+      },
+      "cluster_9": {
+        "total_surplus": 17.278167724609375,
+        "total_deficit": 84.4908676147461,
+        "self_sufficiency": 0.49435233629145725,
+        "total_consumption": 132.9239959716797,
+        "total_generation": 65.71128845214844
+      }
+    }
+  },
+  "pseudo_labels": {
+    "cluster_labels": {
+      "5": "poor",
+      "9": "poor",
+      "6": "poor",
+      "8": "fair",
+      "3": "good",
+      "2": "good",
+      "0": "poor",
+      "4": "poor"
+    },
+    "confidence": 0.7,
+    "quality_scores": {
+      "5": 0.25,
+      "9": 0.25,
+      "6": 0.25,
+      "8": 0.5,
+      "3": 0.75,
+      "2": 0.75,
+      "0": 0.25,
+      "4": 0.25
+    }
+  },
+  "solar_cascade_effects": {},
+  "num_buildings": 0
+}

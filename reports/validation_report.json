@@ -1,0 +1,415 @@
+{
+  "model_name": "HeteroEnergyGNN",
+  "validation_date": "2025-08-29T11:37:51.332734",
+  "overall_compliance": 73.03030303030303,
+  "critical_failures": [
+    "GNN Architecture Type: Not a GNN architecture",
+    "Message Passing Layers: Insufficient message passing layers",
+    "LV Boundary Constraint: 1 clusters cross LV boundaries",
+    "LV Boundary Enforcement: 1 clusters cross LV boundaries"
+  ],
+  "warnings": [
+    "Cluster Size Range: 1 clusters violate size constraints",
+    "Temporal Energy Patterns: No explicit temporal features found",
+    "Cluster Size Limits: 1 clusters violate size constraints"
+  ],
+  "recommendations": [
+    "Address remaining gaps to achieve full compliance",
+    "Review Architecture implementation - 2 critical components missing",
+    "Fix clustering constraints - LV boundaries and size limits must be enforced",
+    "Improve Clustering components - 1 partially compliant",
+    "Improve Energy components - 1 partially compliant",
+    "Improve Constraints components - 1 partially compliant"
+  ],
+  "performance_metrics": {
+    "num_clusters": 1,
+    "avg_cluster_size": 160.0,
+    "min_cluster_size": 160,
+    "max_cluster_size": 160,
+    "solar_output_dim": 4,
+    "total_parameters": 1234449,
+    "trainable_parameters": 1234449
+  },
+  "test_data_info": {
+    "num_buildings": 160,
+    "num_edges": 0
+  },
+  "requirements_checks": [
+    {
+      "requirement_id": "arch_gnn_type",
+      "requirement_name": "GNN Architecture Type",
+      "category": "Architecture",
+      "status": "failed",
+      "score": 0,
+      "details": {
+        "architecture": "HeteroEnergyGNN"
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "arch_node_types",
+      "requirement_name": "Heterogeneous Node Types",
+      "category": "Architecture",
+      "status": "passed",
+      "score": 100,
+      "details": {
+        "node_types": [
+          "cable_group",
+          "building",
+          "transformer"
+        ]
+      },
+      "evidence": [
+        "All required node types present: {'cable_group', 'building', 'transformer'}"
+      ]
+    },
+    {
+      "requirement_id": "arch_message_passing",
+      "requirement_name": "Message Passing Layers",
+      "category": "Architecture",
+      "status": "failed",
+      "score": 0,
+      "details": {
+        "num_layers": 0
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "arch_attention",
+      "requirement_name": "Attention Mechanisms",
+      "category": "Architecture",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Attention mechanisms detected"
+      ]
+    },
+    {
+      "requirement_id": "arch_mc_dropout",
+      "requirement_name": "MC Dropout for Uncertainty",
+      "category": "Architecture",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Dropout layers present",
+        "MC Dropout system available"
+      ]
+    },
+    {
+      "requirement_id": "cluster_dynamic",
+      "requirement_name": "Dynamic Sub-clustering",
+      "category": "Clustering",
+      "status": "passed",
+      "score": 100,
+      "details": {
+        "num_clusters": 10
+      },
+      "evidence": [
+        "Dynamic clustering with 10 clusters"
+      ]
+    },
+    {
+      "requirement_id": "cluster_size_range",
+      "requirement_name": "Cluster Size Range",
+      "category": "Clustering",
+      "status": "partial",
+      "score": 80,
+      "details": {
+        "cluster_sizes": [
+          160
+        ],
+        "violations": 1
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "cluster_lv_constraint",
+      "requirement_name": "LV Boundary Constraint",
+      "category": "Clustering",
+      "status": "failed",
+      "score": 0,
+      "details": {
+        "violations": 1
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "cluster_optimization",
+      "requirement_name": "Cluster Optimization",
+      "category": "Clustering",
+      "status": "not_tested",
+      "score": 0,
+      "details": {
+        "error": "'demand_kw'"
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "cluster_stability",
+      "requirement_name": "Cluster Stability",
+      "category": "Clustering",
+      "status": "not_tested",
+      "score": 0,
+      "details": {},
+      "evidence": []
+    },
+    {
+      "requirement_id": "energy_tracking",
+      "requirement_name": "Energy Flow Tracking",
+      "category": "Energy",
+      "status": "passed",
+      "score": 100,
+      "details": {
+        "num_epochs_tracked": 1
+      },
+      "evidence": [
+        "Energy flows tracked across epochs"
+      ]
+    },
+    {
+      "requirement_id": "energy_constraint",
+      "requirement_name": "Energy Sharing Constraint",
+      "category": "Energy",
+      "status": "not_tested",
+      "score": 0,
+      "details": {},
+      "evidence": []
+    },
+    {
+      "requirement_id": "energy_balance",
+      "requirement_name": "Energy Balance Calculation",
+      "category": "Energy",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Energy balance metrics calculated"
+      ]
+    },
+    {
+      "requirement_id": "energy_temporal",
+      "requirement_name": "Temporal Energy Patterns",
+      "category": "Energy",
+      "status": "partial",
+      "score": 50,
+      "details": {},
+      "evidence": []
+    },
+    {
+      "requirement_id": "quality_assessment",
+      "requirement_name": "Quality Assessment",
+      "category": "Quality",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Quality labeler component present"
+      ]
+    },
+    {
+      "requirement_id": "quality_metrics",
+      "requirement_name": "Quality Metrics",
+      "category": "Quality",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Quality metrics calculator available"
+      ]
+    },
+    {
+      "requirement_id": "quality_categorization",
+      "requirement_name": "Quality Categories",
+      "category": "Quality",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Cluster quality categorization present"
+      ]
+    },
+    {
+      "requirement_id": "solar_recommendations",
+      "requirement_name": "Solar Recommendations",
+      "category": "Solar",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Solar recommendation output present"
+      ]
+    },
+    {
+      "requirement_id": "solar_cascade",
+      "requirement_name": "Cascade Modeling",
+      "category": "Solar",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Cascade analyzer component present"
+      ]
+    },
+    {
+      "requirement_id": "solar_roi",
+      "requirement_name": "ROI Calculation",
+      "category": "Solar",
+      "status": "passed",
+      "score": 100,
+      "details": {
+        "roi_classes": 4
+      },
+      "evidence": [
+        "ROI categorization present"
+      ]
+    },
+    {
+      "requirement_id": "solar_roadmap",
+      "requirement_name": "Penetration Roadmap",
+      "category": "Solar",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Roadmap planner component present"
+      ]
+    },
+    {
+      "requirement_id": "learning_unsupervised",
+      "requirement_name": "Unsupervised Discovery",
+      "category": "Learning",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Unsupervised discovery phase implemented"
+      ]
+    },
+    {
+      "requirement_id": "learning_pseudo_labels",
+      "requirement_name": "Pseudo-label Generation",
+      "category": "Learning",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Pseudo-labels generated"
+      ]
+    },
+    {
+      "requirement_id": "learning_iterative",
+      "requirement_name": "Iterative Learning",
+      "category": "Learning",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Semi-supervised learning phase present"
+      ]
+    },
+    {
+      "requirement_id": "constraint_lv_boundary",
+      "requirement_name": "LV Boundary Enforcement",
+      "category": "Constraints",
+      "status": "failed",
+      "score": 0,
+      "details": {
+        "violations": 1
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "constraint_cluster_size",
+      "requirement_name": "Cluster Size Limits",
+      "category": "Constraints",
+      "status": "partial",
+      "score": 80,
+      "details": {
+        "cluster_sizes": [
+          160
+        ],
+        "violations": 1
+      },
+      "evidence": []
+    },
+    {
+      "requirement_id": "constraint_topology",
+      "requirement_name": "Network Topology",
+      "category": "Constraints",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Hierarchical topology present"
+      ]
+    },
+    {
+      "requirement_id": "uncertainty_confidence",
+      "requirement_name": "Confidence Intervals",
+      "category": "Uncertainty",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Uncertainty analyzer present"
+      ]
+    },
+    {
+      "requirement_id": "uncertainty_mc_dropout",
+      "requirement_name": "MC Dropout Usage",
+      "category": "Uncertainty",
+      "status": "passed",
+      "score": 100,
+      "details": {
+        "mc_iterations": 20
+      },
+      "evidence": [
+        "20 MC Dropout iterations configured"
+      ]
+    },
+    {
+      "requirement_id": "uncertainty_calibration",
+      "requirement_name": "Calibrated Confidence",
+      "category": "Uncertainty",
+      "status": "not_tested",
+      "score": 0,
+      "details": {},
+      "evidence": []
+    },
+    {
+      "requirement_id": "explain_clustering",
+      "requirement_name": "Clustering Explanations",
+      "category": "Explainability",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Explainability generator present"
+      ]
+    },
+    {
+      "requirement_id": "explain_solar",
+      "requirement_name": "Solar Explanations",
+      "category": "Explainability",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Explainability generator present"
+      ]
+    },
+    {
+      "requirement_id": "explain_human_readable",
+      "requirement_name": "Human-readable Summaries",
+      "category": "Explainability",
+      "status": "passed",
+      "score": 100,
+      "details": {},
+      "evidence": [
+        "Human-readable explanations generated"
+      ]
+    }
+  ]
+}

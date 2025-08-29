@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-08-29T11:38:11.079883",
+  "model_compliance": 73.03030303030303,
+  "critical_failures": 4,
+  "warnings": 3,
+  "roadmaps_generated": 0,
+  "recommendations": [
+    "Address remaining gaps to achieve full compliance",
+    "Review Architecture implementation - 2 critical components missing",
+    "Fix clustering constraints - LV boundaries and size limits must be enforced",
+    "Improve Clustering components - 1 partially compliant",
+    "Improve Energy components - 1 partially compliant"
+  ]
+}

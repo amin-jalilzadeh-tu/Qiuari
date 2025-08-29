@@ -1,0 +1,74 @@
+{
+  "timestamp": "2025-08-29T11:59:42.614591",
+  "training_summary": {
+    "phase_1_discovery": {
+      "initial_loss": 3.9336187839508057,
+      "final_loss": 3.927382469177246,
+      "loss_reduction": 0.00623631477355957,
+      "loss_reduction_pct": 0.15853887008582992,
+      "final_clusters": 7,
+      "cluster_count_stability": 0.0,
+      "building_assignment_stability": 0.27
+    },
+    "phase_2_semi_supervised": {
+      "initial_loss": 3.927738666534424,
+      "final_loss": 3.921428918838501,
+      "loss_reduction": 0.0063097476959228516,
+      "loss_reduction_pct": 0.1606458125558072,
+      "final_clusters": 9,
+      "cluster_count_stability": 0.2222222222222222,
+      "building_assignment_stability": 0.190625
+    },
+    "phase_3_solar": {
+      "initial_loss": 3.1542747020721436,
+      "final_loss": 3.1522536277770996,
+      "loss_reduction": 0.0020210742950439453,
+      "loss_reduction_pct": 0.06407413703429943,
+      "final_clusters": 1,
+      "cluster_count_stability": 1.0,
+      "building_assignment_stability": 0.9
+    }
+  },
+  "cluster_quality": {
+    "num_clusters": 5,
+    "cluster_sizes": [
+      95,
+      18,
+      5,
+      10,
+      32
+    ],
+    "size_std": 32.796341259353916,
+    "size_balance": 0.05263157894736842,
+    "avg_cohesion": 3019.34619140625,
+    "avg_separation": 1692.240966796875,
+    "separation_cohesion_ratio": 0.5604660511016846,
+    "is_collapsed": false,
+    "largest_cluster_ratio": 0.59375
+  },
+  "convergence_analysis": {
+    "phase_1_discovery": {
+      "converged": true,
+      "is_decreasing": true,
+      "is_plateaued": true
+    },
+    "phase_2_semi_supervised": {
+      "converged": true,
+      "is_decreasing": true,
+      "is_plateaued": true
+    },
+    "phase_3_solar": {
+      "converged": true,
+      "is_decreasing": true,
+      "is_plateaued": true
+    }
+  },
+  "recommendations": [
+    "Cluster sizes are highly imbalanced - consider balanced sampling or size penalties",
+    "Poor cluster separation - increase embedding dimension or adjust clustering loss",
+    "phase_1_discovery: Buildings jumping between clusters (only 28% stable) - increase momentum or add temporal smoothing",
+    "phase_1_discovery: Number of clusters fluctuating - stabilize cluster formation",
+    "phase_2_semi_supervised: Buildings jumping between clusters (only 23% stable) - increase momentum or add temporal smoothing",
+    "phase_2_semi_supervised: Number of clusters fluctuating - stabilize cluster formation"
+  ]
+}

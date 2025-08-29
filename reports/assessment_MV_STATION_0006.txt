@@ -1,0 +1,92 @@
+================================================================================
+INITIAL ASSESSMENT REPORT - MV STATION & LV GROUPS
+Generated: 2025-08-29 11:59
+================================================================================
+
+📊 MV STATION OVERVIEW
+Station ID: MV_STATION_0006
+Total LV Groups: 3
+Total Buildings: 27
+
+🎯 KEY METRICS
+Planning Priority Score: 2.51/10
+Average Diversity: 39.2%
+Poor Energy Labels (E/F/G): 4.8%
+Complementarity Potential: 45.1%
+Intervention Urgency: 27.2%
+
+📋 STRATEGIC ASSESSMENT
+⚠️ LIMITED potential for community approach
+   - Consider individual building optimizations
+   - May benefit from boundary adjustments
+
+🌟 TOP LV GROUPS FOR PILOT PROGRAM
+1. LV_GROUP_0027
+   - Buildings: 14
+   - Planning Score: 3.14/10
+   - Diversity: 51.6%
+   - Poor Labels: 14.3%
+2. LV_GROUP_0026
+   - Buildings: 5
+   - Planning Score: 2.75/10
+   - Diversity: 59.0%
+   - Poor Labels: 0.0%
+3. LV_GROUP_0033
+   - Buildings: 8
+   - Planning Score: 2.24/10
+   - Diversity: 41.1%
+   - Poor Labels: 0.0%
+
+
+💡 RECOMMENDATIONS
+4. SOLAR: 2 LV groups ready for solar deployment
+
+================================================================================
+DETAILED LV GROUP ANALYSIS
+================================================================================
+
+📍 LV Group: LV_GROUP_0027
+   Planning Score: 3.14/10
+   Buildings: 14
+   Function Diversity: 51.6%
+   Temporal Diversity: 37.2%
+   Poor Labels: 14.3%
+   Solar Ready: 25.9%
+   Complementarity: 49.8%
+
+📍 LV Group: LV_GROUP_0026
+   Planning Score: 2.75/10
+   Buildings: 5
+   Function Diversity: 59.0%
+   Temporal Diversity: 28.4%
+   Poor Labels: 0.0%
+   Solar Ready: 42.0%
+   Complementarity: 47.0%
+   → Opportunity: Solar installations
+
+📍 LV Group: LV_GROUP_0033
+   Planning Score: 2.24/10
+   Buildings: 8
+   Function Diversity: 41.1%
+   Temporal Diversity: 17.9%
+   Poor Labels: 0.0%
+   Solar Ready: 30.4%
+   Complementarity: 38.6%
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+Planning Score Distribution:
+  - Mean: 2.71
+  - Std Dev: 0.37
+  - Min: 2.24
+  - Max: 3.14
+
+Poor Label Distribution:
+  - >50% poor labels: 0 LV groups
+  - 30-50% poor labels: 0 LV groups
+  - <30% poor labels: 3 LV groups
+
+================================================================================
+END OF REPORT
+================================================================================

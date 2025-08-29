@@ -1,0 +1,61 @@
+{
+  "summary": {
+    "total_transactions": 3,
+    "total_energy_transferred_mwh": 0.0165,
+    "total_value_created": 2.4749999999999996,
+    "n_congestion_events": 0,
+    "n_communities_tracked": 1
+  },
+  "flow_analysis": {
+    "total_flows": 3,
+    "total_energy_transferred": 16.5,
+    "total_value_created": 2.4749999999999996,
+    "flow_types": {
+      "p2p": 3
+    },
+    "average_transaction_size": 5.5,
+    "peak_hour_flows": [
+      11,
+      12,
+      13
+    ],
+    "most_active_pairs": [
+      {
+        "from_id": "B_001",
+        "to_id": "B_002",
+        "energy_kwh": 16.5,
+        "total_value": 2.4749999999999996,
+        "flow_type": "p2p"
+      }
+    ],
+    "community_performance": {
+      "1": {
+        "total_shared": 0.0,
+        "n_transactions": 3,
+        "avg_transaction": 5.5,
+        "total_value": 2.4749999999999996
+      }
+    }
+  },
+  "grid_impacts": {
+    "avg_utilization": 0.5555555555555556,
+    "peak_utilization": 0.5555555555555556,
+    "total_losses_kwh": 9.0,
+    "avg_voltage_pu": 0.98,
+    "congestion_hours": 0,
+    "transformers_monitored": 1
+  },
+  "community_performance": {
+    "1": {
+      "avg_self_sufficiency": 0.75,
+      "total_shared_mwh": 0.135,
+      "avg_buildings": 3.0,
+      "peak_generation": 150.0,
+      "peak_consumption": 200.0
+    }
+  },
+  "peak_events": [],
+  "recommendations": [
+    "System operating efficiently - monitor for seasonal changes"
+  ]
+}

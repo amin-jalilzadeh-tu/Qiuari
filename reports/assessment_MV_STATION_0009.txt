@@ -1,0 +1,77 @@
+================================================================================
+INITIAL ASSESSMENT REPORT - MV STATION & LV GROUPS
+Generated: 2025-08-29 11:59
+================================================================================
+
+📊 MV STATION OVERVIEW
+Station ID: MV_STATION_0009
+Total LV Groups: 2
+Total Buildings: 61
+
+🎯 KEY METRICS
+Planning Priority Score: 2.92/10
+Average Diversity: 46.9%
+Poor Energy Labels (E/F/G): 11.6%
+Complementarity Potential: 53.1%
+Intervention Urgency: 28.2%
+
+📋 STRATEGIC ASSESSMENT
+⚠️ LIMITED potential for community approach
+   - Consider individual building optimizations
+   - May benefit from boundary adjustments
+
+🌟 TOP LV GROUPS FOR PILOT PROGRAM
+1. LV_GROUP_0036
+   - Buildings: 17
+   - Planning Score: 2.94/10
+   - Diversity: 68.0%
+   - Poor Labels: 11.8%
+2. LV_GROUP_0037
+   - Buildings: 44
+   - Planning Score: 2.91/10
+   - Diversity: 60.1%
+   - Poor Labels: 11.4%
+
+
+💡 RECOMMENDATIONS
+3. POTENTIAL: Establish peer-to-peer energy trading pilot
+
+================================================================================
+DETAILED LV GROUP ANALYSIS
+================================================================================
+
+📍 LV Group: LV_GROUP_0036
+   Planning Score: 2.94/10
+   Buildings: 17
+   Function Diversity: 68.0%
+   Temporal Diversity: 26.8%
+   Poor Labels: 11.8%
+   Solar Ready: 14.1%
+   Complementarity: 53.2%
+
+📍 LV Group: LV_GROUP_0037
+   Planning Score: 2.91/10
+   Buildings: 44
+   Function Diversity: 60.1%
+   Temporal Diversity: 32.8%
+   Poor Labels: 11.4%
+   Solar Ready: 13.5%
+   Complementarity: 53.1%
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+Planning Score Distribution:
+  - Mean: 2.93
+  - Std Dev: 0.01
+  - Min: 2.91
+  - Max: 2.94
+
+Poor Label Distribution:
+  - >50% poor labels: 0 LV groups
+  - 30-50% poor labels: 0 LV groups
+  - <30% poor labels: 2 LV groups
+
+================================================================================
+END OF REPORT
+================================================================================

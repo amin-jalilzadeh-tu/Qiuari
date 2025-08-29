@@ -382,11 +382,30 @@ class RealDataConnector:
         
         clusters = {}
         
+        # First try to get from current GNN system state
+        if self.gnn_system and hasattr(self.gnn_system, 'current_clusters'):
+            cluster_tensor = self.gnn_system.current_clusters
+            if cluster_tensor is not None and len(cluster_tensor) > 0:
+                if isinstance(cluster_tensor, torch.Tensor):
+                    assignments = cluster_tensor.cpu().numpy()
+                else:
+                    assignments = np.array(cluster_tensor)
+                
+                # Group by cluster
+                unique_clusters = np.unique(assignments)
+                for cluster_id in unique_clusters:
+                    cluster_mask = assignments == cluster_id
+                    building_ids = np.where(cluster_mask)[0]
+                    clusters[int(cluster_id)] = [f'B_{bid:03d}' for bid in building_ids]
+                    
+                logger.info(f"Retrieved {len(unique_clusters)} clusters from GNN current state")
+                return clusters
+        
         if self.gnn_system and hasattr(self.gnn_system, 'last_evaluation_results'):
             # Get from last GNN run
             results = self.gnn_system.last_evaluation_results
-            if 'final_clusters' in results:
-                cluster_tensor = results['final_clusters']
+            if 'final_clusters' in results or 'cluster_assignments' in results:
+                cluster_tensor = results.get('final_clusters', results.get('cluster_assignments'))
                 if isinstance(cluster_tensor, torch.Tensor):
                     assignments = cluster_tensor.cpu().numpy()
                     # Flatten if 2D array
