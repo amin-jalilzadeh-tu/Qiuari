@@ -1001,13 +1001,13 @@ if __name__ == "__main__":
     # Configuration (SAME AS PART 1)
     NEO4J_URI = "bolt://localhost:7687"
     NEO4J_USER = "neo4j"
-    NEO4J_PASSWORD = "aminasad"
+    NEO4J_PASSWORD = ""
     
     # PostgreSQL configuration (SAME AS PART 1)
-    PG_HOST = "localhost"
-    PG_DATABASE = "research"
-    PG_USER = "aminj"
-    PG_PASSWORD = "Aminej@geodan!"
+    PG_HOST = ""
+    PG_DATABASE = ""
+    PG_USER = ""
+    PG_PASSWORD = "@geodan!"
     
     print("Starting Adjacency Module (Part 2) using PostgreSQL data...")
     print(f"Connecting to PostgreSQL database: {PG_DATABASE}")

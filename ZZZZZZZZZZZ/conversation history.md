@@ -9,11 +9,10 @@ i have this data in my database. you connect it, explore my table, and see where
   {
     "label": "localhost",
     "host": "localhost",
-    "user": "aminj",
-    "port": 5433,
-    "ssl": false,
-    "database": "research",
-    "password": "Aminej@geodan!"
+    "user": "",
+    "port": ,
+    "database": "",
+    "password": "@!"
   }\
   \
   \
